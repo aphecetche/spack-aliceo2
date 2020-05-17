@@ -19,7 +19,7 @@ class Infologger(CMakePackage):
     # maintainers = ['github_user1', 'github_user2']
 
     version('master',branch='master') 
-    version('v1.3.9','350dbe5bd8d0a121e53828b79341487b')
+    version('1.3.9','350dbe5bd8d0a121e53828b79341487b')
     depends_on('cmake',type='build')
     depends_on('boost')
     depends_on('mariadb',when='-libonly')
