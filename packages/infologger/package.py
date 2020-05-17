@@ -9,17 +9,24 @@ class Infologger(CMakePackage):
     """AliceO2 logging library"""
 
     homepage = "https://github.com/AliceO2Group/InfoLogger"
+    url="https://github.com/AliceO2Group/InfoLogger/archive/v1.3.9.tar.gz"
     git = "https://github.com/AliceO2Group/InfoLogger.git"
+
+    variant('libonly',default=True,description='Builds only the library')
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
     version('master',branch='master') 
-
-    depends_on('cmake','type=build')
+    version('v1.3.9','350dbe5bd8d0a121e53828b79341487b')
+    depends_on('cmake',type='build')
     depends_on('boost')
+    depends_on('mariadb',when='-libonly')
+    depends_on('swig',when='-libonly',type='build')
+    depends_on('go',when='-libonly',type='build')
+   
 
     def cmake_args(self):
-        args = ['-DINFOLOGGER_BUILD_LIBONLY=1']
+        args = ['-DINFOLOGGER_BUILD_LIBONLY=%d' % (1 if '+libonly' in self.spec else 0)]
         return args
