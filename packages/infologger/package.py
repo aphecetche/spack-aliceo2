@@ -23,7 +23,7 @@ class Infologger(CMakePackage):
 
     depends_on('cmake',type='build')
     depends_on('boost')
-    depends_on('mariadb',when='-libonly')
+    depends_on('mariadb-client',when='-libonly')
     depends_on('swig',when='-libonly',type='build')
     depends_on('go',when='-libonly',type='build')
     depends_on('ninja', type='build')
