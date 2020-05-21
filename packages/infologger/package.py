@@ -21,11 +21,11 @@ class Infologger(CMakePackage):
     version('master',branch='master') 
     version('1.3.9','350dbe5bd8d0a121e53828b79341487b')
 
-    depends_on('cmake',type='build')
     depends_on('boost')
     depends_on('mariadb-client',when='-libonly')
     depends_on('swig',when='-libonly',type='build')
     depends_on('go',when='-libonly',type='build')
+    depends_on('cmake',type='build')
     depends_on('ninja', type='build')
 
     generator = 'Ninja'
