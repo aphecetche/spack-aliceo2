@@ -9,22 +9,22 @@ import sys
 class Fairmq(CMakePackage):
     """C++ Message Queuing Library and Framework"""
 
-    # FIXME: Add a proper url for your package's homepage here.
     homepage      = "https://github.com/FairRootGroup/FairMQ"
     url      = "https://github.com/FairRootGroup/FairMQ/archive/v1.3.9.tar.gz"
     git      = "https://github.com/FairRootGroup/FairMQ.git"
 
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers = ['github_user1', 'github_user2']
-
     version('1.4.16', sha256='d87885fa65154f0d113a55aa2863c400dc1c0340f211022c5f224d6e078513ba')
+
     version('1.4.15',
-            sha256='e73a67d331d5f478365e8585f5d58569d7b3be1776955c7c45d59eb67d77ca54',
-            preferred=True)
+            tag='v1.4.15',
+            submodules=True,
+            preferred=True,no_cache=True)
+
+    # TODO Once https://github.com/spack/spack/issues/14344 is resolved, enable
+    #      source caching again (by removing the `no_cache` argument).
+
     version('1.4.14', sha256='b6ac5f059bfb7ab63449548a58fb3fa0885a43986d9385dab9b731b0a845a7f1')
 
-    # FIXME: Add dependencies if required.
     depends_on('boost@1.72.0-alice1: +program_options+filesystem+date_time+regex')
     depends_on('fairlogger')
     depends_on('libzmq')
