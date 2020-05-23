@@ -6,7 +6,7 @@
 from spack import *
 
 
-class Readout(CMakePackage):
+class O2Readout(CMakePackage):
     """AliceO2 Readout Package"""
 
     # FIXME: Add a proper url for your package's homepage here.
@@ -25,15 +25,15 @@ class Readout(CMakePackage):
             preferred=True)
 
     depends_on('boost')
-    depends_on('aliceo2.common')
-    depends_on('aliceo2.infologger+libonly')
-    depends_on('aliceo2.monitoring')
-    depends_on('aliceo2.configuration')
-    depends_on('aliceo2.readoutcard')
+    depends_on('o2-common')
+    depends_on('o2-infologger+libonly')
+    depends_on('o2-monitoring')
+    depends_on('o2-configuration')
+    depends_on('o2-readoutcard')
     depends_on('fairlogger')
     depends_on('fairmq')
     depends_on('lz4')
-    depends_on('control-occplugin')
+    depends_on('o2-control-occplugin')
 
     depends_on('cmake',type='build')
     depends_on('ninja', type='build')

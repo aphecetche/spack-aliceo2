@@ -23,7 +23,7 @@
 from spack import *
 
 
-class Monitoring(CMakePackage):
+class O2Monitoring(CMakePackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.

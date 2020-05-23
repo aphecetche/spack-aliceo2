@@ -5,7 +5,7 @@
 
 from spack import *
 
-class Infologger(CMakePackage):
+class O2Infologger(CMakePackage):
     """AliceO2 logging library"""
 
     homepage = "https://github.com/AliceO2Group/InfoLogger"

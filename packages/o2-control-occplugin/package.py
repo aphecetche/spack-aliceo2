@@ -6,7 +6,7 @@
 
 from spack import *
 
-class ControlOccplugin(CMakePackage):
+class O2ControlOccplugin(CMakePackage):
     """Alice O2 Control and Configuration (OCC)"""
 
     homepage      = "https://github.com/AliceO2Group/Control"
@@ -27,7 +27,7 @@ class ControlOccplugin(CMakePackage):
     depends_on('boost@1.68:')
     depends_on('protobuf@3.11.4:')
     depends_on('openssl')
-    depends_on('infologger+libonly')
+    depends_on('o2-infologger+libonly')
     depends_on('fmt')
     depends_on('abseil-cpp')
     depends_on('grpc@1.27.3')
