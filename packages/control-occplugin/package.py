@@ -22,18 +22,18 @@ class ControlOccplugin(CMakePackage):
             sha256='1094767866330cb0158d9ba5af59dcb248dd0cb8f7e046aaec0cf46504af04d2',
             preferred=True)
 
-    depends_on('fairmq')
+    depends_on('fairmq@1.4.2:')
     depends_on('fairlogger')
-    depends_on('boost')
-    depends_on('protobuf')
+    depends_on('boost@1.68:')
+    depends_on('protobuf@3.11.4:')
     depends_on('openssl')
     depends_on('infologger+libonly')
     depends_on('fmt')
     depends_on('abseil-cpp')
+    depends_on('grpc@1.27.3')
 
     depends_on('cmake',type='build')
     depends_on('ninja', type='build')
-    depends_on('grpc', type='build')
 
     generator = 'Ninja'
 
