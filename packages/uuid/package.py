@@ -23,6 +23,8 @@ class Uuid(AutotoolsPackage):
     depends_on('pkgconfig')
 
     build_targets = [ 'libuuid.la' ]
+    install_targets = [ 'install-uuidincHEADERS' ]
+
     def autoreconf(self, spec, prefix):
         # FIXME: Modify the autoreconf method as necessary
         autoreconf('--install', '--verbose', '--force')
