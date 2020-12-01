@@ -28,20 +28,23 @@ class O2Common(CMakePackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://github.com/AliceO2Group/Common.git"
-    url      = "https://github.com/AliceO2Group/Common/archive/v1.4.9.tar.gz"
+    url = "https://github.com/AliceO2Group/Common/archive/v1.5.0.tar.gz"
     git = "https://github.com/AliceO2Group/Common.git"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
-    version('1.4.9', sha256='3ac14734488e7cf6a0ea7fda830f8e811a4483a662bb9bd5684c0aa6be182ea3')
+    version(
+        '1.5.0', sha256='0b320b24f797a197dd6e8b2db9f873e4eb305a904a321b2b0be7fac58f8b8379')
+    version(
+        '1.4.9', sha256='3ac14734488e7cf6a0ea7fda830f8e811a4483a662bb9bd5684c0aa6be182ea3')
 
     # FIXME: Add dependencies if required.
     # depends_on('foo')
 
     depends_on('boost')
-    depends_on('cmake',type='build')
+    depends_on('cmake', type='build')
     depends_on('ninja', type='build')
 
     generator = 'Ninja'
