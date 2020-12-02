@@ -32,7 +32,7 @@ class Asiofi(CMakePackage):
     version('0.2.0', sha256='2de5efd46d582f37d9863fb7d85106b1951cf54483f50da3eec3a9e22b1a8ec5')
 
     # FIXME: Add dependencies if required.
-    depends_on('boost')
+    depends_on('boost+container')
     depends_on('libfabric')
 
     depends_on('cmake',type='build')
