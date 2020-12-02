@@ -5,20 +5,22 @@
 
 from spack import *
 
+
 class O2Mcsteplogger(CMakePackage):
     """A facility to monitor step data of Virtual Monte Carlo simulation non-invasively."""
 
-    homepage="https://github.com/AliceO2Group/VMCStepLogger"
-    git="https://github.com/AliceO2Group/VMCStepLogger.git"
+    homepage = "https://github.com/AliceO2Group/VMCStepLogger"
+    git = "https://github.com/AliceO2Group/VMCStepLogger.git"
 
-    version('master',branch='master') 
+    version('master', branch='master')
 
     depends_on('root')
-    depends_on('cmake',type='build')
+    depends_on('cmake', type='build')
     depends_on('ninja', type='build')
 
     generator = 'Ninja'
 
     def cmake_args(self):
-        args = []
+        args = ["-DBUILD_SHARED_LIBS=ON",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]
         return args
