@@ -23,6 +23,8 @@ class Fairmq(CMakePackage):
     #TODO Once https://github.com/spack/spack/issues/14344 is resolved, enable
     #     source caching again (by removing the `no_cache` argument).
 
+
+    version('1.4.28', sha256='72ffbe3761746dccff39f384776a0ff3d40232c6396595068d1c8da98681b289')
     version('1.4.27',
             sha256='7e75375ac74444bd0aaf56b1da2603c541af5a4067b1fd68df4d1eaa442d99b3')
     version('1.4.26',
