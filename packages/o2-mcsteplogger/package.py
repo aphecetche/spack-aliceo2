@@ -14,11 +14,8 @@ class O2Mcsteplogger(CMakePackage):
 
     version('master', branch='master')
 
-    depends_on('root')
+    depends_on('root+http+xml~x~opengl+vmc')
     depends_on('cmake', type='build')
-    depends_on('ninja', type='build')
-
-    generator = 'Ninja'
 
     def cmake_args(self):
         args = ["-DBUILD_SHARED_LIBS=ON",

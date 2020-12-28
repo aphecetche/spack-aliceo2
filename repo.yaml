@@ -1,2 +1,2 @@
 repo:
-  namespace: cern.alice
+  namespace: 'cern.alice'
