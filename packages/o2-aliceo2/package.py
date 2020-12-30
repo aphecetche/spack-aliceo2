@@ -38,17 +38,20 @@ class O2Aliceo2(CMakePackage):
 
     # FIXME: Add dependencies if required.
     depends_on('protobuf')
-    depends_on('fairmq')
     depends_on('o2-infologger')
     depends_on('o2-configuration')
     depends_on('o2-monitoring')
     depends_on('o2-common')
     depends_on('rapidjson')
-    depends_on('fairroot')
+    depends_on('fairroot cxxstd=17',when='+sim')
+    depends_on('fairroot~sim cxxstd=17',when='~sim')
+
+    variant('sim',default=False, description='Enable simulation engines and event generators')
 
     def cmake_args(self):
         # FIXME: Add arguments other than
         # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
         # FIXME: If not needed delete this function
-        args = ["-DBUILD_SIMULATION=OFF"]
+        args = []
+        args.append('-DBUILD_SIMULATION=%s' % ( 'ON' if '+sim' in self.spec else 'OFF'))
         return args

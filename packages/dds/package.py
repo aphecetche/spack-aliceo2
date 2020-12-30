@@ -6,6 +6,8 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 from spack import *
+import inspect
+import multiprocessing
 
 class Dds(CMakePackage):
     """The Dynamic Deployment System (DDS)
@@ -40,7 +42,8 @@ class Dds(CMakePackage):
     # TODO Upstream the wn_bin fix
     patch('fix_uuid_init.patch', when='@2.5-odc:3.0')
 
-    depends_on('boost@1.67:1.72 +shared+log+thread+program_options+filesystem+system+regex+test', when='@2.4:')
+    depends_on('boost@1.67:1.72 +shared+log+thread+program_options+filesystem+system+regex+test',when='@2.4:3.4')
+    depends_on('boost@1.74: +shared+log+thread+program_options+filesystem+system+regex+test',when='@3.5:')
     # TODO No support for Boost 1.73, check if later releases will work
     # https://github.com/FairRootGroup/DDS/commit/e5b8ca86c46220238d130ac1f3f15dff32e85a2a
     # https://github.com/FairRootGroup/DDS/issues/305
@@ -56,7 +59,10 @@ class Dds(CMakePackage):
             description='Force the specified C++ standard when building.')
 
     build_targets = ['all', 'wn_bin']
-    parallel = False
+
+    def build(self, spec, prefix):
+      inspect.getmodule(self).make.jobs=multiprocessing.cpu_count()*2//5
+      super().build(spec,prefix)
 
     def cmake_args(self):
         args = []
