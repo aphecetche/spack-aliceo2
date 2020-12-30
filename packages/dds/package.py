@@ -7,7 +7,6 @@
 
 from spack import *
 
-
 class Dds(CMakePackage):
     """The Dynamic Deployment System (DDS)
        A tool-set that automates and significantly simplifies a deployment
@@ -20,7 +19,7 @@ class Dds(CMakePackage):
     maintainers = ['dennisklein', 'ChristianTackeGSI']
 
     version('develop', branch='master', get_full_repo=True)
-    version('3.5.3', commit='f1eae89fdff266be86ec962c19e1c7930baf002c', no_cache=True)
+    version('3.5.3', commit='f1eae89fdff266be86ec962c19e1c7930baf002c', no_cache=True, preferred=True)
     version('3.5.2', tag='3.5.2', commit='0813fd5772d1836c055370f4f16d46c961aa0d19', no_cache=True)
     version('3.4', tag='3.4', commit='e0900e946069d840c76e00f29113fd56158fdaa4', no_cache=True)
     version('3.2', tag='3.2', commit='03efdc71eb9aa35091ed1fbc41680c44e2ac7f54', no_cache=True)
@@ -57,6 +56,7 @@ class Dds(CMakePackage):
             description='Force the specified C++ standard when building.')
 
     build_targets = ['all', 'wn_bin']
+    parallel = False
 
     def cmake_args(self):
         args = []

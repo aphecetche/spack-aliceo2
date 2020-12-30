@@ -64,8 +64,8 @@ class Fairroot(CMakePackage):
         options = []
         if self.spec.satisfies('@:18,develop'):
             options.append('-DROOTSYS={0}'.format(self.spec['root'].prefix))
-            options.append('-DPYTHIA8_DIR={0}'.format(
-                self.spec['pythia8'].prefix))
+            if '+sim' in self.spec:
+              options.append('-DPYTHIA8_DIR={0}'.format(self.spec['pythia8'].prefix))
 
         options.append('-DBUILD_EXAMPLES:BOOL=%s' %
                        ('ON' if '+examples' in self.spec else 'OFF'))
