@@ -20,15 +20,15 @@ class Fairroot(CMakePackage):
     version('18.4.0', sha256='97ad86d039db195acf12e9978eb660daab0c91e95e517921bac5a0f157a3e309')
     version('18.2.1', sha256='a9c22965d2d99e385f64c0df1867b477b9c129bcd087ba3b683d0ada6f3d66d0')
 
-    variant('cxxstd', default='11', values=('11', '14', '17'), multi=False,
+    variant('cxxstd', default='17', values=('11', '14', '17'), multi=False,
             description='Use the specified C++ standard when building.')
-    variant('sim', default=True,
+    variant('sim', default=False,
             description='Enable simulation engines and event generators')
     variant('examples', default=False,
             description='Install examples')
 
     depends_on('cmake@3.13.4:', type='build')
-    depends_on('boost@1.68.0: cxxstd=11 +container')
+    depends_on('boost@1.68.0: cxxstd=17 +container')
     depends_on('fairlogger@1.4.0:')
     depends_on('fairmq@1.4.11:')
     depends_on('fairsoft-config', when='@:18,develop')
@@ -41,7 +41,7 @@ class Fairroot(CMakePackage):
     depends_on('protobuf')
     depends_on('pythia6', when='+sim')
     depends_on('pythia8', when='+sim')
-    depends_on('root+http')
+    depends_on('root+http+xml')
     depends_on('vgm', when="+sim")
     depends_on('vmc', when='@18.4: ^root@6.18:')
     depends_on('yaml-cpp', when='@18.2:')
