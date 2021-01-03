@@ -87,6 +87,8 @@ class Root(CMakePackage):
             description='Enable Aqua interface')
     variant('davix', default=True,
             description='Compile with external Davix')
+    variant('dataframe', default=True,
+            description='Enable ROOT RDataFrame')
     variant('emacs', default=False,
             description='Enable Emacs support')
     variant('examples', default=True,
@@ -498,6 +500,8 @@ class Root(CMakePackage):
             options.append(self.define_from_variant('pyroot', 'python'))
         else:
             options.append(self.define_from_variant('python'))
+
+        options.append(self.define_from_variant("dataframe","dataframe"))
 
         # #################### Compiler options ####################
 

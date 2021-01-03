@@ -24,38 +24,40 @@ from spack import *
 
 
 class O2Aliceo2(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+    """ O2 software project for the ALICE experiment at CERN
+    """
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url      = "https://github.com/AliceO2Group/AliceO2/archive/v20.49.tar.gz"
+    homepage = "https://aliceo2group.github.io"
+    url = "https://github.com/AliceO2Group/AliceO2/archive/v20.49.tar.gz"
 
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers = ['github_user1', 'github_user2']
+    version(
+        '20.49', sha256='f7bda483c4f6666aa6391af470d0bc15c74d4e6aa3632f8e1492496f80ea569f')
 
-    version('20.49', sha256='f7bda483c4f6666aa6391af470d0bc15c74d4e6aa3632f8e1492496f80ea569f')
+    variant('sim', default=False,
+            description='Enable simulation engines and event generators')
 
-    # FIXME: Add dependencies if required.
     depends_on('protobuf')
     depends_on('o2-infologger')
     depends_on('o2-configuration')
     depends_on('o2-monitoring')
     depends_on('o2-common')
     depends_on('rapidjson')
-    depends_on('fairroot',when='+sim')
-    depends_on('fairroot~sim',when='~sim')
+    depends_on('fairroot', when='+sim')
+    depends_on('fairroot~sim', when='~sim')
+    depends_on('root+http+dataframe')
+    depends_on('vmc')
     depends_on('libuv')
     depends_on('vc')
     depends_on('arrow')
     depends_on('ms_gsl')
 
-    variant('sim',default=False, description='Enable simulation engines and event generators')
-
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
         args = []
-        args.append('-DBUILD_SIMULATION=%s' % ( 'ON' if '+sim' in self.spec else 'OFF'))
+        args.append(self.define_from_variant("BUILD_SIMULATION", "sim"))
         return args
+
+    def patch(self):
+        filter_file(r'find_package\(fmt\)',
+                    '\n\n'+r'find_package(VMC)' + '\n\n'
+                    r'find_package(fmt)',
+                    'dependencies/O2Dependencies.cmake')
