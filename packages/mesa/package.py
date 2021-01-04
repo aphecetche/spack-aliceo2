@@ -19,7 +19,7 @@ class Mesa(MesonPackage):
     url = "https://archive.mesa3d.org/mesa-20.2.1.tar.xz"
 
     version('master', tag='master')
-    version('20.3.1', sha256='af751b49bb2ab0264d58c31e73d869e80333de02b2d1becc93f1b28c67aa780f')  
+    version('20.3.1', sha256='af751b49bb2ab0264d58c31e73d869e80333de02b2d1becc93f1b28c67aa780f')
     version('20.2.1', sha256='d1a46d9a3f291bc0e0374600bdcb59844fa3eafaa50398e472a36fc65fd0244a')
 
     depends_on('meson@0.52:', type='build')
@@ -101,8 +101,8 @@ class Mesa(MesonPackage):
         args_gallium_drivers = ['swrast']
         args_dri_drivers = []
 
-        opt_enable = lambda c, o: '-D%s=%sabled' % (o, 'en' if c else 'dis')
-        opt_bool = lambda c, o: '-D%s=%s' % (o, str(c).lower())
+        def opt_enable(c, o): return '-D%s=%sabled' % (o, 'en' if c else 'dis')
+        def opt_bool(c, o): return '-D%s=%s' % (o, str(c).lower())
         if spec.target.family == 'arm' or spec.target.family == 'aarch64':
             args.append('-Dlibunwind=disabled')
 
@@ -177,7 +177,7 @@ class Mesa(MesonPackage):
         args.append('-Ddri-drivers=' + ','.join(args_dri_drivers))
 
         if sys.platform == 'darwin':
-          args.append('-Dc_std=c11')
+            args.append('-Dc_std=c11')
 
         return args
 
@@ -223,9 +223,11 @@ class Mesa(MesonPackage):
                               root=self.spec.prefix,
                               recursive=True)
 
-    @when('arch=darwin-bigsur-skylake')
     def patch(self):
-      filter_file(r'C\(\(intptr_t\)4\)',r'C(static_cast<uint64_t>(4)) /* TOTO */',"src/gallium/drivers/swr/rasterizer/jitter/builder_mem.cpp")
-      filter_file(r'C\(\(uintptr_t\)(.*)\)',r'C(static_cast<uint64_t>(\1)) /* TOTO */',"src/gallium/drivers/swr/rasterizer/jitter/fetch_jit.cpp")
-      filter_file("^_llvm_method = 'auto'","_llvm_method = 'config-tool' # TOTO ","meson.build")
-
+        filter_file("^_llvm_method = 'auto'",
+                    "_llvm_method = 'config-tool' # TOTO TITI", "meson.build")
+        if self.spec.satisfies('arch=darwin-bigsur-skylake'):
+            filter_file(r'C\(\(intptr_t\)4\)', r'C(static_cast<uint64_t>(4)) /* TOTO */',
+                        "src/gallium/drivers/swr/rasterizer/jitter/builder_mem.cpp")
+            filter_file(r'C\(\(uintptr_t\)(.*)\)', r'C(static_cast<uint64_t>(\1)) /* TOTO */',
+                        "src/gallium/drivers/swr/rasterizer/jitter/fetch_jit.cpp")
