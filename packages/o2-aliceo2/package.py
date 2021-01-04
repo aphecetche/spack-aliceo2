@@ -49,7 +49,8 @@ class O2Aliceo2(CMakePackage):
     depends_on('libuv')
     depends_on('vc')
     depends_on('arrow')
-    depends_on('ms_gsl')
+    depends_on('ms_gsl@:2.1')
+    depends_on('benchmark')
 
     def cmake_args(self):
         args = []
@@ -61,3 +62,5 @@ class O2Aliceo2(CMakePackage):
                     '\n\n'+r'find_package(VMC)' + '\n\n'
                     r'find_package(fmt)',
                     'dependencies/O2Dependencies.cmake')
+        filter_file(r'ROOT::ROOTDataFrame', r'ROOT::ROOTDataFrame ROOT::VMC',
+                    'dependencies/FindFairRoot.cmake')

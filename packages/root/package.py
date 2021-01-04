@@ -123,6 +123,8 @@ class Root(CMakePackage):
     variant('mlp', default=False,
             description="Enable support for TMultilayerPerceptron "
             "classes' federation")
+    variant('monalisa', default=False,
+            description="Enable support for Monalisa")
     variant('mysql', default=False)
     variant('opengl', default=True,
             description='Enable OpenGL support')
@@ -266,8 +268,7 @@ class Root(CMakePackage):
     depends_on('xrootd@:4.99.99',    when='+xrootd')
     # depends_on('hdfs') - supported (TODO)
 
-    # Not supported
-    # depends_on('monalisa')
+    depends_on('apmon-cpp', when='+monalisa')
 
     # Grid packages - not supported yet by Spack
     # depends_on('castor')
@@ -414,6 +415,8 @@ class Root(CMakePackage):
                 'ON' if '+postgres' in spec else 'OFF'),
             '-Dpythia6:BOOL=%s' % (
                 'ON' if '+pythia6' in spec else 'OFF'),
+            '-Dpythia6_nolink:BOOL=%s' % (
+                'ON' if '+pythia6' in spec else 'OFF'),
             # Force not to build pythia8 (not supported yet by spack), to avoid
             # wrong defaults from ROOT at build time
             '-Dpythia8:BOOL=%s' % (
@@ -483,7 +486,6 @@ class Root(CMakePackage):
             '-Dglobus:BOOL=OFF',
             '-Dgnuinstall:BOOL=OFF',
             '-Dhdfs:BOOL=OFF',      # TODO pending to add
-            '-Dmonalisa:BOOL=OFF',  # not supported
             '-Drfio:BOOL=OFF',      # not supported
             '-Droottest:BOOL=OFF',  # requires network
             '-Druby:BOOL=OFF',      # unmantained upstream
@@ -502,6 +504,7 @@ class Root(CMakePackage):
             options.append(self.define_from_variant('python'))
 
         options.append(self.define_from_variant("dataframe","dataframe"))
+        options.append(self.define_from_variant("monalisa","monalisa"))
 
         # #################### Compiler options ####################
 
