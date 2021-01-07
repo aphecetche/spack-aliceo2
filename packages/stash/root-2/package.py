@@ -1,8 +1,9 @@
-# Copyright 2013-2021 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2020 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+# WARNING: taken from FairRootGroup/FairSoft/repos/fairsoft/packages
 
 from spack import *
 from spack.util.environment import is_system_path
@@ -81,8 +82,6 @@ class Root(CMakePackage):
         patch('root6-60606-mathmore.patch', when='@6.06.06')
 
     # ###################### Variants ##########################
-    # See README.md for specific notes about what ROOT configuration
-    # options are or are not supported, and why.
 
     variant('aqua', default=False,
             description='Enable Aqua interface')
@@ -121,11 +120,11 @@ class Root(CMakePackage):
     # otherwise it crashes with the internal minuit library
     variant('minuit', default=True,
             description='Automatically search for support libraries')
-    variant('monalisa', default=False,
-            description="Enable support for Monalisa")
     variant('mlp', default=False,
             description="Enable support for TMultilayerPerceptron "
             "classes' federation")
+    variant('monalisa', default=False,
+            description="Enable support for Monalisa")
     variant('mysql', default=False)
     variant('opengl', default=True,
             description='Enable OpenGL support')
@@ -159,6 +158,8 @@ class Root(CMakePackage):
             description='Build libTable contrib library')
     variant('tbb', default=True,
             description='TBB multi-threading support')
+    variant('test', default=False,
+            description='Enable test suit of ROOT with CTest')
     variant('threads', default=True,
             description='Enable using thread library')
     variant('tmva', default=False,
@@ -198,7 +199,6 @@ class Root(CMakePackage):
     depends_on('libice')
     depends_on('libpng')
     depends_on('lz4', when='@6.13.02:')  # See cmake_args, below.
-    depends_on('apmon-cpp', when='+monalisa')
     depends_on('ncurses')
     depends_on('pcre')
     depends_on('xxhash', when='@6.13.02:')  # See cmake_args, below.
@@ -210,6 +210,7 @@ class Root(CMakePackage):
     depends_on('libx11',  when="+x")
     depends_on('libxext', when="+x")
     depends_on('libxft',  when="+x")
+    depends_on('fontconfig',  when="+x")
     depends_on('libxpm',  when="+x")
     depends_on('libsm',   when="+x")
 
@@ -218,13 +219,14 @@ class Root(CMakePackage):
     depends_on('glew',  when="+x+opengl")
     depends_on('gl',    when="+x+opengl")
     depends_on('glu',   when="+x+opengl")
-    depends_on('gl2ps', when="+x+opengl")
+#    depends_on('gl2ps', when="+x+opengl")
 
     # Qt4
     depends_on('qt@:4.999', when='+qt4')
 
     # Python
-    depends_on('python@2.7:', when='+python', type=('build', 'run'))
+    depends_on('python@2.7:2.99',     when='@6.16', type=('build', 'run'))
+    depends_on('python@2.7:', when='@6.18:+python', type=('build', 'run'))
     depends_on('py-numpy', type=('build', 'run'), when='+tmva')
     # This numpy dependency was not intended and will hopefully
     # be fixed in 6.20.06.
@@ -232,18 +234,24 @@ class Root(CMakePackage):
     depends_on('py-numpy', type=('build', 'run'),
                when='@6.20.00:6.20.05 +python')
 
+    # Asimage variant would need one of these two
+    # For the moment, we use the libafterimage provided by the root sources
+    # depends_on('libafterimage',    when='+asimage') - not supported
+    # depends_on('afterstep@2.2.11', when='+asimage') - not supported
+
     # Optional dependencies
     depends_on('davix @0.7.1:', when='+davix')
     depends_on('cfitsio',   when='+fits')
     depends_on('fftw',      when='+fftw')
     depends_on('graphviz',  when='+graphviz')
     depends_on('gsl',       when='+gsl')
+#    depends_on('http',      when='+http')
     depends_on('jemalloc',  when='+jemalloc')
     depends_on('mysql-client',   when='+mysql')
     depends_on('openssl',   when='+ssl')
     depends_on('openssl',   when='+davix')  # Also with davix
     depends_on('postgresql', when='+postgres')
-    depends_on('pythia6+root', when='+pythia6')
+    depends_on('pythia6',  when='+pythia6')
     depends_on('pythia8',   when='+pythia8')
     depends_on('r',         when='+r', type=('build', 'run'))
     depends_on('r-rcpp',    when='+r', type=('build', 'run'))
@@ -254,9 +262,20 @@ class Root(CMakePackage):
     depends_on('tbb',       when='+tbb')
     depends_on('unuran',    when='+unuran')
     depends_on('vc',        when='+vc')
+    depends_on('veccore',   when='+veccore')
     depends_on('vdt',       when='+vdt')
-    depends_on('libxml2',   when='+xml')
+    depends_on('libxml2~python',   when='+xml')
     depends_on('xrootd@:4.99.99',    when='+xrootd')
+    # depends_on('hdfs') - supported (TODO)
+
+    depends_on('apmon-cpp', when='+monalisa')
+
+    # Grid packages - not supported yet by Spack
+    # depends_on('castor')
+    # depends_on('chirp')
+    # depends_on('dcap')
+    # depends_on('gfal')
+    # depends_on('rfio')
 
     # ###################### Conflicts ######################
 
@@ -264,30 +283,16 @@ class Root(CMakePackage):
     # See https://sft.its.cern.ch/jira/browse/ROOT-7517
     conflicts('%intel')
 
-    # ROOT <6.08 was incompatible with the GCC 5+ ABI
-    conflicts('%gcc@5.0.0:', when='@:6.07.99')
-
-    # The version of Clang featured in ROOT <6.12 fails to build with
-    # GCC 9.2.1, which we can safely extrapolate to the GCC 9 series.
-    conflicts('%gcc@9.0.0:', when='@:6.11.99')
-
-    # ROOT <6.14 was incompatible with Python 3.7+
-    conflicts('^python@3.7:', when='@:6.13.99 +python')
-
-    # See README.md
-    conflicts('+http',
-              msg='HTTP server currently unsupported due to dependency issues')
-
     # Incompatible variants
     conflicts('+opengl', when='~x', msg='OpenGL requires X')
-    conflicts('+tmva', when='~gsl', msg='TVMA requires GSL')
+    conflicts('+tmva', when='~gsl', msg="TVMA requires GSL")
     conflicts('+tmva', when='~mlp', msg='TVMA requires MLP')
-    conflicts('cxxstd=11', when='+root7', msg='root7 requires at least C++14')
+    conflicts('cxxstd=11', when='+root7', msg="root7 requires at least C++14")
 
     # Feature removed in 6.18:
-    for pkg in ('memstat', 'qt4', 'table'):
-        conflicts('+' + pkg, when='@6.18.00:',
-                  msg='Obsolete option +{0} selected.'.format(pkg))
+    [(conflicts('+{0}'.format(pkg), when='@6.18.00:',
+                msg='Obsolete option +{0} selected.'.format(pkg))) for pkg in
+     ('memstat', 'qt4', 'table')]
 
     def cmake_args(self):
         spec = self.spec
@@ -295,43 +300,36 @@ class Root(CMakePackage):
         define_from_variant = self.define_from_variant
         options = []
 
-        # ###################### Boolean Options ######################
-        # For option list format see _process_opts(), below.
+        # #################### Base Settings #######################
+
+        options.extend([
+            '-Dexplicitlink=ON',
+            '-Dexceptions=ON',
+            '-Dfail-on-missing=ON',
+            '-Dshared=ON',
+            '-Dsoversion=ON',
+            '-Dasimage:BOOL=ON',  # if afterimage is taken from builtin
+            '-Dastiff:BOOL=ON',   # asimage and astiff must be ON too
+        ])
 
         # Options controlling gross build / config behavior.
         options += [
-            define('cxxmodules', False),
-            define('exceptions', True),
-            define('explicitlink', True),
-            define('fail-on-missing', True),
-            define_from_variant('fortran'),
-            define_from_variant('gminimal'),
-            define('gnuinstall', False),
             define('libcxx', False),
-            define('pch', True),
-            define('roottest', False),
-            define_from_variant('rpath'),
-            define('runtime_cxxmodules', False),
-            define('shared', True),
-            define('soversion', True),
-            define('testing', self.run_tests),
-            define_from_variant('thread', 'threads')
         ]
 
         # Options related to ROOT's ability to download and build its own
         # dependencies. Per Spack convention, this should generally be avoided.
         options += [
+            define('builtin_llvm', True),
             define('builtin_afterimage', True),
             define('builtin_cfitsio', False),
             define('builtin_davix', False),
             define('builtin_fftw3', False),
             define('builtin_freetype', False),
             define('builtin_ftgl', False),
-            define('builtin_gl2ps', False),
+            define('builtin_gl2ps', True),
             define('builtin_glew', False),
             define('builtin_gsl', False),
-            define('builtin_llvm', True),
-            define('builtin_lz4', self.spec.satisfies('@6.12.02:6.12.99')),
             define('builtin_lzma', False),
             define('builtin_openssl', False),
             define('builtin_pcre', False),
@@ -341,130 +339,223 @@ class Root(CMakePackage):
             define('builtin_vdt', False),
             define('builtin_veccore', False),
             define('builtin_xrootd', False),
-            define('builtin_xxhash', self.spec.satisfies('@6.12.02:6.12.99')),
             define('builtin_zlib', False)
         ]
 
+        # LZ4 and xxhash do not work as external deps for older versions
+        options.extend([
+            '-Dbuiltin_lz4:BOOL=%s' % (
+                'ON' if self.spec.satisfies('@6.12.02:6.12.99') else 'OFF'),
+            '-Dbuiltin_xxhash:BOOL=%s' % (
+                'ON' if self.spec.satisfies('@6.12.02:6.12.99') else 'OFF'),
+        ])
+
+        # #################### ROOT options #######################
+
         # Features
-        options += [
-            define('afdsmrgd', False),
-            define('afs', False),
-            define('alien', False),
-            define('arrow', False),
-            define('asimage', True),
-            define('astiff', True),
-            define('bonjour', False),
-            define('castor', False),
-            define('ccache', False),
-            define('chirp', False),
-            define('cling', True),
-            define_from_variant('cocoa', 'aqua'),
-            define('dataframe', True),
-            define_from_variant('davix'),
-            define('dcache', False),
-            define_from_variant('fftw3', 'fftw'),
-            define_from_variant('fitsio', 'fits'),
-            define_from_variant('ftgl', 'opengl'),
-            define_from_variant('gdml'),
-            define_from_variant('genvector', 'math'),
-            define('geocad', False),
-            define('gfal', False),
-            define_from_variant('gl2ps', 'opengl'),
-            define('glite', False),
-            define('globus', False),
-            define_from_variant('gsl_shared', 'gsl'),
-            define_from_variant('gviz', 'graphviz'),
-            define('hdfs', False),
-            define_from_variant('http'),  # See conflicts
-            define_from_variant('imt', 'tbb'),
-            define_from_variant('jemalloc'),
+        options.extend([
+            '-Dx11:BOOL=%s' % (
+                'ON' if '+x' in spec else 'OFF'),
+            '-Dxft:BOOL=%s' % (
+                'ON' if '+x' in spec else 'OFF'),
+            '-Dbonjour:BOOL=OFF',
+            '-Dcocoa:BOOL=%s' % (
+                'ON' if '+aqua' in spec else 'OFF'),
+            # -Dcxxmodules=OFF # use clang C++ modules
+            '-Ddavix:BOOL=%s' % (
+                'ON' if '+davix' in spec else 'OFF'),
+            '-Dfftw3:BOOL=%s' % (
+                'ON' if '+fftw' in spec else 'OFF'),
+            '-Dfitsio:BOOL=%s' % (
+                'ON' if '+fits' in spec else 'OFF'),
+            '-Dfortran:BOOL=%s' % (
+                'ON' if '+fortran' in spec else 'OFF'),
+            '-Dftgl:BOOL=%s' % (
+                'ON' if '+opengl' in spec else 'OFF'),
+            '-Dgdml:BOOL=%s' % (
+                'ON' if '+gdml' in spec else 'OFF'),
+            '-Dgl2ps:BOOL=%s' % (
+                'ON' if '+opengl' in spec else 'OFF'),
+            '-Dgenvector:BOOL=%s' % (
+                'ON' if '+math' in spec else 'OFF'),  # default ON
+            '-Dgminimal:BOOL=%s' % (  # Reduce unwanted surprises
+                'ON' if '+gminimal' in spec else 'OFF'),  # Default ON
+            '-Dgsl_shared:BOOL=%s' % (
+                'ON' if '+gsl' in spec else 'OFF'),
+            '-Dgviz:BOOL=%s' % (
+                'ON' if '+graphviz' in spec else 'OFF'),
+            '-Dhttp:BOOL=%s' % (
+                'ON' if '+http' in spec else 'OFF'),
+            '-Dimt:BOOL=%s' % (
+                'ON' if '+tbb' in spec else 'OFF'),
+            '-Djemalloc:BOOL=%s' % (
+                'ON' if '+jemalloc' in spec else 'OFF'),
             define('krb5', False),
             define('ldap', False),
-            define_from_variant('mathmore', 'math'),
-            define_from_variant('memstat'),  # See conflicts
-            define('minimal', False),
-            define_from_variant('minuit'),
-            define_from_variant('minuit2', 'minuit'),
-            define_from_variant('mlp'),
-            define('monalisa', False),
-            define_from_variant('mysql'),
+            '-Dmathmore:BOOL=%s' % (
+                'ON' if '+math' in spec else 'OFF'),
+            '-Dmemstat:BOOL=%s' % (
+                'ON' if '+memstat' in spec else 'OFF'),
+            '-Dminimal:BOOL=%s' % (
+                'ON' if '+minimal' in spec else 'OFF'),
+            '-Dminuit:BOOL=%s' % (
+                'ON' if '+minuit' in spec else 'OFF'),
+            '-Dminuit2:BOOL=%s' % (
+                'ON' if '+minuit' in spec else 'OFF'),
+            '-Dmlp:BOOL=%s' % (
+                'ON' if '+mlp' in spec else 'OFF'),
+            '-Dmysql:BOOL=%s' % (
+                'ON' if '+mysql' in spec else 'OFF'),
             define('odbc', False),
-            define_from_variant('opengl'),
-            define('oracle', False),
-            define_from_variant('pgsql', 'postgres'),
-            define_from_variant('pythia6'),
-            define_from_variant('pythia8'),
-            define_from_variant('qt', 'qt4'),  # See conflicts
-            define_from_variant('qtgsi', 'qt4'),  # See conflicts
-            define_from_variant('r'),
-            define('rfio', False),
-            define_from_variant('roofit'),
-            define_from_variant('root7'),  # See conflicts
-            define('ruby', False),
-            define('sapdb', False),
-            define_from_variant('shadowpw', 'shadow'),
+            '-Dopengl:BOOL=%s' % (
+                'ON' if '+opengl' in spec else 'OFF'),
+            '-Dpch:BOOL=%s' % (
+                'ON' if '+pch' in spec else 'OFF'),  # needs cling
+            '-Dpgsql:BOOL=%s' % (
+                'ON' if '+postgres' in spec else 'OFF'),
+            '-Dpythia6:BOOL=%s' % (
+                'ON' if '+pythia6' in spec else 'OFF'),
+            '-Dpythia6_nolink:BOOL=%s' % (
+                'ON' if '+pythia6' in spec else 'OFF'),
+            # Force not to build pythia8 (not supported yet by spack), to avoid
+            # wrong defaults from ROOT at build time
+            '-Dpythia8:BOOL=%s' % (
+                'ON' if '+pythia8' in spec else 'OFF'),
+            '-Dpython:BOOL=%s' % (
+                'ON' if self.spec.satisfies('+python ^python@2.7:2.99.99')
+                else 'OFF'),
+            '-Dpython3:BOOL=%s' % (
+                'ON' if self.spec.satisfies('+python ^python@3.0:')
+                else 'OFF'),
+            '-Dqt:BOOL=%s' % (
+                'ON' if '+qt4' in spec else 'OFF'),
+            '-Dqtgsi:BOOL=%s' % (
+                'ON' if '+qt4' in spec else 'OFF'),
+            '-Dr:BOOL=%s' % (
+                'ON' if '+R' in spec else 'OFF'),
+            '-Droofit:BOOL=%s' % (
+                'ON' if '+roofit' in spec else 'OFF'),
+            '-Droot7:BOOL=%s' % (
+                'ON' if '+root7' in spec else 'OFF'),  # requires C++14
+            '-Dwebui:BOOL=%s' % (
+                'ON' if '+root7' in spec else 'OFF'),  # requires root7
+            '-Drpath:BOOL=%s' % (
+                'ON' if '+rpath' in spec else 'OFF'),
+            '-Dshadowpw:BOOL=%s' % (
+                'ON' if '+shadow' in spec else 'OFF'),
             define_from_variant('spectrum'),
-            define_from_variant('sqlite'),
-            define('srp', False),
-            define_from_variant('ssl'),
-            define_from_variant('table'),
-            define_from_variant('tbb'),
-            define('tcmalloc', False),
-            define_from_variant('tmva'),
-            define_from_variant('unuran'),
-            define_from_variant('vc'),
-            define_from_variant('vdt'),
-            define('veccore', False),
-            define_from_variant('vmc'),
-            define_from_variant('webui', 'root7'),  # requires root7
-            define_from_variant('x11', 'x'),
-            define_from_variant('xft', 'x'),
-            define_from_variant('xml'),
-            define_from_variant('xrootd')
-        ]
+            '-Dsqlite:BOOL=%s' % (
+                'ON' if '+sqlite' in spec else 'OFF'),
+            '-Dssl:BOOL=%s' % (
+                'ON' if '+ssl' in spec else 'OFF'),
+            '-Dtable:BOOL=%s' % (
+                'ON' if '+table' in spec else 'OFF'),
+            '-Dtbb:BOOL=%s' % (
+                'ON' if '+tbb' in spec else 'OFF'),
+            '-Dtesting:BOOL=%s' % (
+                'ON' if '+test' in spec else 'OFF'),
+            '-Dthread:BOOL=%s' % (
+                'ON' if '+threads' in spec else 'OFF'),
+            '-Dtmva:BOOL=%s' % (
+                'ON' if '+tmva' in spec else 'OFF'),
+            '-Dunuran:BOOL=%s' % (
+                'ON' if '+unuran' in spec else 'OFF'),
+            '-Dvc:BOOL=%s' % (
+                'ON' if '+vc' in spec else 'OFF'),
+            '-Dveccore:BOOL=%s' % (
+                 'ON' if '+veccore' in spec else 'OFF'),  # not supported
+            '-Dvdt:BOOL=%s' % (
+                'ON' if '+vdt' in spec else 'OFF'),
+            '-Dxml:BOOL=%s' % (
+                'ON' if '+xml' in spec else 'OFF'),  # default ON
+            '-Dxrootd:BOOL=%s' % (
+                'ON' if '+xrootd' in spec else 'OFF'),  # default ON
+
+            # Fixed options
+            '-Dafdsmrgd:BOOL=OFF',  # not supported
+            '-Dafs:BOOL=OFF',       # not supported
+            '-Dalien:BOOL=OFF',
+            '-Dcastor:BOOL=OFF',    # not supported
+            '-Dccache:BOOL=OFF',    # not supported
+            '-Dchirp:BOOL=OFF',
+            '-Dcling:BOOL=ON',
+            '-Ddcache:BOOL=OFF',    # not supported
+            '-Dgeocad:BOOL=OFF',    # not supported
+            '-Dgfal:BOOL=OFF',      # not supported
+            '-Dglite:BOOL=OFF',     # not supported
+            '-Dglobus:BOOL=OFF',
+            '-Dgnuinstall:BOOL=OFF',
+            '-Dhdfs:BOOL=OFF',      # TODO pending to add
+            '-Drfio:BOOL=OFF',      # not supported
+            '-Droottest:BOOL=OFF',  # requires network
+            '-Druby:BOOL=OFF',      # unmantained upstream
+            # Use clang C++ modules, experimental
+            '-Druntime_cxxmodules:BOOL=OFF',
+            '-Dsapdb:BOOL=OFF',     # option not implemented
+            '-Dsrp:BOOL=OFF',       # option not implemented
+            '-Dtcmalloc:BOOL=OFF'
+
+        ])
 
         # Some special features
         if self.spec.satisfies('@6.20:'):
-            options.append(define_from_variant('pyroot', 'python'))
+            options.append(self.define_from_variant('pyroot', 'python'))
         else:
-            options.append(define_from_variant('python'))
+            options.append(self.define_from_variant('python'))
+
+        options.append(self.define_from_variant("dataframe","dataframe"))
+        options.append(self.define_from_variant("monalisa","monalisa"))
 
         # #################### Compiler options ####################
 
-        if sys.platform == 'darwin' and self.compiler.cc == 'gcc':
-            cflags = '-D__builtin_unreachable=__builtin_trap'
-            options.extend([
-                define('CMAKE_C_FLAGS', cflags),
-                define('CMAKE_CXX_FLAGS', cflags),
-            ])
+        if sys.platform == 'darwin':
+            if self.compiler.cc == 'gcc':
+                options.extend([
+                    '-DCMAKE_C_FLAGS=-D__builtin_unreachable=__builtin_trap',
+                    '-DCMAKE_CXX_FLAGS=-D__builtin_unreachable=__builtin_trap',
+                ])
 
-        # Method for selecting C++ standard depends on ROOT version
-        if self.spec.satisfies('@6.18.00:'):
-            options.append(define_from_variant('CMAKE_CXX_STANDARD', 'cxxstd'))
-        else:
-            options.append(define('cxx' + self.spec.variants['cxxstd'].value,
-                                  True))
+        options.append(
+            '-Dcxx{0}=ON'.format(self.spec.variants['cxxstd'].value)
+        )
+
+        if 'mysql-client' in self.spec:
+            options.append('-DCMAKE_PROGRAM_PATH={0}'.format(
+                self.spec['mysql-client'].prefix.bin))
+
+        if '+python' in self.spec or '@6.16' in self.spec:
+            options.append('-DPYTHON_EXECUTABLE={0}/python'.format(
+                self.spec['python'].prefix.bin))
 
         if '+x+opengl' in self.spec:
-            ftgl_prefix = self.spec['ftgl'].prefix
-            options.append(define('FTGL_ROOT_DIR', ftgl_prefix))
-            options.append(define('FTGL_INCLUDE_DIR', ftgl_prefix.include))
+            options.append('-DGLU_INCLUDE_DIR={0}'.format(
+                self.spec['glu'].prefix.include))
+#            options.append('-DFTGL_INCLUDE_DIR={0}'.format(
+#                self.spec['ftgl'].prefix.include))
+
+            options.append('-DFONTCONFIG_INCLUDE_DIR={0}'.format(
+                self.spec['fontconfig'].prefix.include))
+
+        # see https://github.com/spack/spack/pull/11579
         if '+python' in self.spec:
-            # See https://github.com/spack/spack/pull/11579
-            options.append(define('PYTHON_EXECUTABLE',
-                                  spec['python'].command.path))
+            options.append('-DPYTHON_EXECUTABLE=%s' %
+                           spec['python'].command.path)
 
         return options
 
-    def setup_build_environment(self, env):
+    def setup_environment(self, spack_env, run_env):
         spec = self.spec
 
-        if 'lz4' in spec:
-            env.append_path('CMAKE_PREFIX_PATH', spec['lz4'].prefix)
+        run_env.set('ROOTSYS', self.prefix)
+        run_env.set('ROOT_VERSION', 'v{0}'.format(self.version.up_to(1)))
+        run_env.prepend_path('PYTHONPATH', self.prefix.lib)
+        if 'lz4' in self.spec:
+            spack_env.append_path('CMAKE_PREFIX_PATH',
+                                  self.spec['lz4'].prefix)
 
         # This hack is made necessary by a header name collision between
         # asimage's "import.h" and Python's "import.h" headers...
-        env.set('SPACK_INCLUDE_DIRS', '', force=True)
+        spack_env.set('SPACK_INCLUDE_DIRS', '', force=True)
 
         # ...but it breaks header search for any ROOT dependency which does not
         # use CMake. To resolve this, we must bring back those dependencies's
@@ -474,13 +565,19 @@ class Root(CMakePackage):
         # into SPACK_INCLUDE_DIRS, even in a deprioritized form, because some
         # system/compiler combinations don't like having -I/usr/include around.
         def add_include_path(dep_name):
-            include_path = spec[dep_name].prefix.include
+            try:
+                include_path = self.spec[dep_name].prefix.include
+            except KeyError:
+                return
             if not is_system_path(include_path):
-                env.append_path('SPACK_INCLUDE_DIRS', include_path)
+                spack_env.append_path('SPACK_INCLUDE_DIRS', include_path)
+
+        # The internal afterimage needs those sometimes:
+        add_include_path('zlib')
+        add_include_path('libpng')
+        add_include_path('jpeg')
 
         # With that done, let's go fixing those deps
-        if spec.satisfies('@:6.12.99'):
-            add_include_path('zlib')
         if '+x' in spec:
             if spec.satisfies('@:6.08.99') or spec.satisfies('@6.22:'):
                 add_include_path('xextproto')
@@ -491,24 +588,14 @@ class Root(CMakePackage):
             add_include_path('glew')
             add_include_path('mesa-glu')
 
-    def setup_run_environment(self, env):
-        env.set('ROOTSYS', self.prefix)
-        env.set('ROOT_VERSION', 'v{0}'.format(self.version.up_to(1)))
-        env.prepend_path('PYTHONPATH', self.prefix.lib)
-
-    def setup_dependent_build_environment(self, env, dependent_spec):
-        env.set('ROOTSYS', self.prefix)
-        env.set('ROOT_VERSION', 'v{0}'.format(self.version.up_to(1)))
-        env.prepend_path('PYTHONPATH', self.prefix.lib)
-        env.prepend_path('PATH', self.prefix.bin)
-        env.append_path('CMAKE_MODULE_PATH', self.prefix.cmake)
-        if "+rpath" not in self.spec:
-            env.prepend_path('LD_LIBRARY_PATH', self.prefix.lib)
-
-    def setup_dependent_run_environment(self, env, dependent_spec):
-        env.set('ROOTSYS', self.prefix)
-        env.set('ROOT_VERSION', 'v{0}'.format(self.version.up_to(1)))
-        env.prepend_path('PYTHONPATH', self.prefix.lib)
-        env.prepend_path('PATH', self.prefix.bin)
-        if "+rpath" not in self.spec:
-            env.prepend_path('LD_LIBRARY_PATH', self.prefix.lib)
+    def setup_dependent_environment(self, spack_env, run_env, dependent_spec):
+        spack_env.set('ROOTSYS', self.prefix)
+        spack_env.set('ROOT_VERSION', 'v{0}'.format(self.version.up_to(1)))
+        spack_env.prepend_path('PYTHONPATH', self.prefix.lib)
+        spack_env.prepend_path('PATH', self.prefix.bin)
+        spack_env.append_path('CMAKE_MODULE_PATH', '{0}/cmake'
+                              .format(self.prefix))
+        run_env.set('ROOTSYS', self.prefix)
+        run_env.set('ROOT_VERSION', 'v{0}'.format(self.version.up_to(1)))
+        run_env.prepend_path('PYTHONPATH', self.prefix.lib)
+        run_env.prepend_path('PATH', self.prefix.bin)
