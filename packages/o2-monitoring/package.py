@@ -28,14 +28,17 @@ class O2Monitoring(CMakePackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://github.com/AliceO2Group/Monitoring"
-    url      = "https://github.com/AliceO2Group/Monitoring/archive/v3.0.7.tar.gz"
-    git      = "https://github.com/AliceO2Group/Monitoring.git"
+    url = "https://github.com/AliceO2Group/Monitoring/archive/v3.0.7.tar.gz"
+    git = "https://github.com/AliceO2Group/Monitoring.git"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
-    version('3.1.0', sha256='bec5ce7e809cc4ac08e524da8dde6f1967170488a7d27b5fe4fb2a41330ebedb')
+    version('3.4.0',
+            sha256='648d4c73d4794ee5b1763b2b574c357fcf9ea7e44c980f4aaeeee2edca6084b7')
+    version(
+        '3.1.0', sha256='bec5ce7e809cc4ac08e524da8dde6f1967170488a7d27b5fe4fb2a41330ebedb')
 
     # FIXME: Add dependencies if required.
     depends_on('apmon-cpp')

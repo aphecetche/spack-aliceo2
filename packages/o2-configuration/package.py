@@ -17,6 +17,7 @@ class O2Configuration(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version('2.5.0', sha256='8a1be54bbc59dd85248d0a986da3324ea2fac74a7f5c634f8495e3c86df01657')
     version('2.3.1', sha256='66cb9de9461c6cce8af21ea1fb6df1dba5de888aa01694f57749e6ade4a9c7af')
 
     # FIXME: Add dependencies if required.

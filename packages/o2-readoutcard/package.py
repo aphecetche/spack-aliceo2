@@ -17,7 +17,8 @@ class O2Readoutcard(CMakePackage):
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
-
+    
+    version('0.26.0', sha256='5ffe927559fb345851e5ef99eb644e65f09851f2ec635371cb99137042ddec75')
     version('0.21.1', sha256='cf918d1960d5657ac36e448357b94c5ec9d37a38725a27ecd787bfca494c28ad')
 
     # FIXME: Add dependencies if required.
