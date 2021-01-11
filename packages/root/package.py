@@ -275,8 +275,8 @@ class Root(CMakePackage):
     conflicts('^python@3.7:', when='@:6.13.99 +python')
 
     # See README.md
-    conflicts('+http',
-              msg='HTTP server currently unsupported due to dependency issues')
+    # conflicts('+http',
+    #          msg='HTTP server currently unsupported due to dependency issues')
 
     # Incompatible variants
     conflicts('+opengl', when='~x', msg='OpenGL requires X')
