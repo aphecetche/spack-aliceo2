@@ -86,9 +86,11 @@ class Root(CMakePackage):
 
     variant('aqua', default=False,
             description='Enable Aqua interface')
+    variant('arrow', default=False,
+            description='Enable Arrow interface')
     variant('davix', default=True,
             description='Compile with external Davix')
-    variant('dataframe', default=True,
+    variant('dataframe', default=False,
             description='Enable ROOT RDataFrame')
     variant('emacs', default=False,
             description='Enable Emacs support')
@@ -233,6 +235,7 @@ class Root(CMakePackage):
                when='@6.20.00:6.20.05 +python')
 
     # Optional dependencies
+    depends_on('arrow', when='+arrow')
     depends_on('davix @0.7.1:', when='+davix')
     depends_on('cfitsio',   when='+fits')
     depends_on('fftw',      when='+fftw')
@@ -350,7 +353,7 @@ class Root(CMakePackage):
             define('afdsmrgd', False),
             define('afs', False),
             define('alien', False),
-            define('arrow', False),
+            define_from_variant('arrow', 'arrow'),
             define('asimage', True),
             define('astiff', True),
             define('bonjour', False),
