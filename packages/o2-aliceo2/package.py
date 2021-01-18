@@ -34,7 +34,7 @@ class O2Aliceo2(CMakePackage):
     version('noana', '65a2f7da91c8be474a6f09dd457b0cde6b651a85f1709e848eb52c2819652d16',
             url='https://github.com/aphecetche/AliceO2/archive/add-cmake-build-option-to-disable-analysis.tar.gz')
 
-    version('noana-2', '962bffb58d3ef0042f57be81a9cc033270bc7d1140221dcb2eed277a04d4e386',
+    version('noana-2', '73b768e77e5e9c604e097c5c39c1346275fa15dd3b940cf29778aa17e49284cd',
             url='https://github.com/aphecetche/AliceO2/archive/mods-for-spack.tar.gz')
 
     version(
@@ -53,7 +53,8 @@ class O2Aliceo2(CMakePackage):
     depends_on('rapidjson')
     depends_on('fairroot', when='+sim')
     depends_on('fairroot~sim', when='~sim')
-    depends_on('root+http+dataframe+arrow')
+    depends_on('root+http+dataframe+arrow', when='~sim')
+    depends_on('root+http+dataframe+arrow+pythia6+pythia8', when='+sim')
     depends_on('vmc')
     depends_on('libuv')
     depends_on('vc')
@@ -61,7 +62,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('cppgsl@:2.1')
     depends_on('benchmark')
 
-    depends_on('pythia6',when='+sim')
+    depends_on('pythia6+root',when='+sim')
     depends_on('pythia8',when='+sim')
 
     depends_on('ninja', type='build')
