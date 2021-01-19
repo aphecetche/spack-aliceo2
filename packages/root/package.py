@@ -84,7 +84,7 @@ class Root(CMakePackage):
     # See README.md for specific notes about what ROOT configuration
     # options are or are not supported, and why.
 
-    variant('aqua', default=False,
+    variant('aqua', default=sys.platform=='darwin',
             description='Enable Aqua interface')
     variant('arrow', default=False,
             description='Enable Arrow interface')
@@ -129,7 +129,7 @@ class Root(CMakePackage):
             description="Enable support for TMultilayerPerceptron "
             "classes' federation")
     variant('mysql', default=False)
-    variant('opengl', default=True,
+    variant('opengl', default=sys.platform!='darwin',
             description='Enable OpenGL support')
     variant('postgres', default=False,
             description='Enable postgres support')

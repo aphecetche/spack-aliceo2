@@ -59,7 +59,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('libuv')
     depends_on('vc')
     depends_on('arrow')
-    depends_on('cppgsl@:2.1')
+    depends_on('cppgsl')
     depends_on('benchmark')
 
     depends_on('pythia6+root',when='+sim')
