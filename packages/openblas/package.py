@@ -5,10 +5,10 @@
 
 import os
 import re
-import sys
-
 from spack import *
 from spack.package_test import compare_output_file, compile_c_and_execute
+import sys
+import platform
 
 class Openblas(MakefilePackage):
     """OpenBLAS: An optimized BLAS library"""
@@ -284,7 +284,10 @@ class Openblas(MakefilePackage):
         if self.spec.satisfies('~lapack'):
             make_defs.append('NO_LAPACK=1')
 
-        print('make_defs=',make_defs)
+
+        if sys.platform=='darwin' and platform.machine()=="arm64":
+           make_defs.append('NO_LAPACK=1')
+           make_defs.append('MACOSX_DEPLOYMENT_TARGET=11.1')
 
         return make_defs
 
