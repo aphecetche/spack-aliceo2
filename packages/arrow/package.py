@@ -16,6 +16,7 @@ class Arrow(CMakePackage, CudaPackage):
     homepage = "http://arrow.apache.org"
     url = "https://github.com/apache/arrow/archive/apache-arrow-0.9.0.tar.gz"
 
+    version('2021.19.01',sha256='2f55cf91be82ed58909f67dd9932993f0db71fbb735061924d01d1adce74671c',url='https://github.com/apache/arrow/tarball/50ba53446ecc43a74d0edb35e8c0b23263d0440a')
     version(
         '2.0.0', sha256='ea299df9cf440cfc43393ce12ee6d9a4c9d0dfa9fde33c3bc9b70ec25520a844')
     version(
@@ -82,11 +83,11 @@ class Arrow(CMakePackage, CudaPackage):
 
         filter_file(r'set\(ARROW_LLVM_VERSIONS "10" "9" "8" "7"\)',
                     'set(ARROW_LLVM_VERSIONS "11" "10" "9" "8" "7")',
-                    'cpp/CMakeLists.txt')
+                    'cpp/CMakeLists.txt', when='@:2.0.0')
 
         filter_file(r'#include <llvm/Support/DynamicLibrary\.h>',
                     r'#include <llvm/Support/DynamicLibrary.h>' + '\n' + r'#include <llvm/Support/Host.h>',
-                    'cpp/src/gandiva/engine.cc')
+                    'cpp/src/gandiva/engine.cc',when='@2.0.0')
 
     def cmake_args(self):
         args = [
