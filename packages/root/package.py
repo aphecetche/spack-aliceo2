@@ -7,13 +7,14 @@
 from spack import *
 from spack.util.environment import is_system_path
 import sys
+import platform
 
 
 class Root(CMakePackage):
     """ROOT is a data analysis framework."""
 
     homepage = "https://root.cern.ch"
-    url      = "https://root.cern/download/root_v6.16.00.source.tar.gz"
+    url = "https://root.cern/download/root_v6.16.00.source.tar.gz"
 
     tags = ['hep']
 
@@ -26,6 +27,10 @@ class Root(CMakePackage):
             branch='master')
 
     # Development version (when more recent than production).
+
+    # patch branches snapshots
+    version('6.22.06-patches-2021.14.01', sha256='5abbd1a3f9a3c1eb8aef202cd590676f2fcc45223b52bd5a6339f76ffeb67c5c',
+            url='https://github.com/root-project/root/tarball/071a4c3f09cb7d3847a77c6eec707040b3d26eeb')
 
     # Production version
     version('6.22.06', sha256='c4688784a7e946cd10b311040b6cf0b2f75125a7520e04d1af0b746505911b57')
@@ -84,7 +89,7 @@ class Root(CMakePackage):
     # See README.md for specific notes about what ROOT configuration
     # options are or are not supported, and why.
 
-    variant('aqua', default=sys.platform=='darwin',
+    variant('aqua', default=False,
             description='Enable Aqua interface')
     variant('arrow', default=False,
             description='Enable Arrow interface')
@@ -129,7 +134,8 @@ class Root(CMakePackage):
             description="Enable support for TMultilayerPerceptron "
             "classes' federation")
     variant('mysql', default=False)
-    variant('opengl', default=sys.platform!='darwin',
+    variant('ninja', default=False, description='Build with Ninja')
+    variant('opengl', default=True,
             description='Enable OpenGL support')
     variant('postgres', default=False,
             description='Enable postgres support')
@@ -173,7 +179,7 @@ class Root(CMakePackage):
             description='Enable set of fast and vectorisable math functions')
     variant('vmc', default=False,
             description='Enable the Virtual Monte Carlo interface')
-    variant('x', default=sys.platform!='darwin',
+    variant('x', default=True,
             description='Enable set of graphical options')
     variant('xml', default=True,
             description='Enable XML parser interface')
@@ -193,6 +199,7 @@ class Root(CMakePackage):
     depends_on('cmake@3.4.3:', type='build', when='@:6.16.99')
     depends_on('cmake@3.9:', type='build', when='@6.18.00:')
     depends_on('pkgconfig', type='build')
+    depends_on('ninja', type='build', when='+ninja')
 
     depends_on('blas')
     depends_on('freetype')
@@ -289,6 +296,8 @@ class Root(CMakePackage):
     conflicts('+tmva', when='~mlp', msg='TVMA requires MLP')
     conflicts('cxxstd=11', when='+root7', msg='root7 requires at least C++14')
 
+    conflicts('+tbb', when='@:6.24' and platform.mac_ver()
+              [0] == '11.1' and platform.mac_ver()[2] == 'arm64')
     # Feature removed in 6.18:
     for pkg in ('memstat', 'qt4', 'table'):
         conflicts('+' + pkg, when='@6.18.00:',
