@@ -285,9 +285,7 @@ class Openblas(MakefilePackage):
             make_defs.append('NO_LAPACK=1')
 
 
-        if sys.platform=='darwin' and platform.machine()=="arm64":
-           make_defs.append('NO_LAPACK=1')
-           make_defs.append('MACOSX_DEPLOYMENT_TARGET=11.1')
+        print('make_defs=',make_defs)
 
         return make_defs
 
