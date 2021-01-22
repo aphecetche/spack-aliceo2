@@ -173,7 +173,7 @@ class Root(CMakePackage):
             description='Enable set of fast and vectorisable math functions')
     variant('vmc', default=False,
             description='Enable the Virtual Monte Carlo interface')
-    variant('x', default=True,
+    variant('x', default=sys.platform!='darwin',
             description='Enable set of graphical options')
     variant('xml', default=True,
             description='Enable XML parser interface')
@@ -216,11 +216,12 @@ class Root(CMakePackage):
     depends_on('libsm',   when="+x")
 
     # OpenGL
-    depends_on('ftgl@2.4.0:',  when="+x+opengl")
-    depends_on('glew',  when="+x+opengl")
-    depends_on('gl',    when="+x+opengl")
-    depends_on('glu',   when="+x+opengl")
-    depends_on('gl2ps', when="+x+opengl")
+    depends_on('ftgl@2.4.0:',  when="+opengl")
+    if sys.platform != 'darwin':
+        depends_on('glew',  when="+x+opengl")
+        depends_on('gl',    when="+x+opengl")
+        depends_on('glu',   when="+x+opengl")
+        depends_on('gl2ps', when="+x+opengl")
 
     # Qt4
     depends_on('qt@:4.999', when='+qt4')
@@ -282,7 +283,8 @@ class Root(CMakePackage):
     #          msg='HTTP server currently unsupported due to dependency issues')
 
     # Incompatible variants
-    conflicts('+opengl', when='~x', msg='OpenGL requires X')
+    if sys.platform != 'darwin':
+        conflicts('+opengl', when='~x', msg='OpenGL requires X')
     conflicts('+tmva', when='~gsl', msg='TVMA requires GSL')
     conflicts('+tmva', when='~mlp', msg='TVMA requires MLP')
     conflicts('cxxstd=11', when='+root7', msg='root7 requires at least C++14')
