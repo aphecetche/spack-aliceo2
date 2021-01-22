@@ -217,11 +217,11 @@ class Root(CMakePackage):
 
     # OpenGL
     depends_on('ftgl@2.4.0:',  when="+opengl")
+    depends_on('glew',  when="+opengl")
+    depends_on('gl2ps', when="+opengl")
     if sys.platform != 'darwin':
-        depends_on('glew',  when="+x+opengl")
         depends_on('gl',    when="+x+opengl")
         depends_on('glu',   when="+x+opengl")
-        depends_on('gl2ps', when="+x+opengl")
 
     # Qt4
     depends_on('qt@:4.999', when='+qt4')
@@ -492,7 +492,7 @@ class Root(CMakePackage):
             add_include_path('fontconfig')
             add_include_path('libx11')
             add_include_path('xproto')
-        if '+opengl' in spec:
+        if '+opengl' in spec and sys.platform != 'darwin':
             add_include_path('glew')
             add_include_path('mesa-glu')
 
