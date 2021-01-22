@@ -15,7 +15,7 @@ class Rapidjson(CMakePackage):
 
     version('2020.01.04',sha256='7021c782e4b78391320efabb4d35554e406c1a2c6255c2dfc01089b38398c042',
     url='https://github.com/Tencent/rapidjson/tarball/585042c02ba6350e10fc43df8beee1bc097f4c5f')
-    version('1.1.0', sha256='bf7ced29704a1e696fbccf2a2b4ea068e7774fa37f6d7dd4039d0787f8bed98e')
+    version('1.1.0', sha256='bf7ced29704a1e696fbccf2a2b4ea068e7774fa37f6d7dd4039d0787f8bed98e',preferred=True)
     version('1.0.2', sha256='c3711ed2b3c76a5565ee9f0128bb4ec6753dbcc23450b713842df8f236d08666')
     version('1.0.1', sha256='a9003ad5c6384896ed4fd1f4a42af108e88e1b582261766df32d717ba744ee73')
     version('1.0.0', sha256='4189b32b9c285f34b37ffe4c0fd5627c1e59c2444daacffe5a96fdfbf08d139b')

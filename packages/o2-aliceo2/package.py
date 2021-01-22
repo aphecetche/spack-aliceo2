@@ -88,3 +88,6 @@ class O2Aliceo2(CMakePackage):
                     'dependencies/O2Dependencies.cmake')
         filter_file(r'ROOT::ROOTDataFrame', r'ROOT::ROOTDataFrame ROOT::VMC',
                     'dependencies/FindFairRoot.cmake')
+        filter_file(r'NAMES libpythia6.so libpythia6.dylib',
+                'NAMES libpythia6.so libpythia6.dylib libPythia6.so libPythia6.dylib',
+                'dependencies/Findpythia6.cmake')
