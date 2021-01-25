@@ -25,8 +25,8 @@ class Gl2ps(CMakePackage):
 
     depends_on('cmake@2.8:', type='build')
 
-    #depends_on('freeglut')
-    depends_on('gl', when=sys.platform!='darwin')
+    depends_on('glu')
+    depends_on('gl')
 
     depends_on('libpng', when='+png')
     depends_on('zlib',   when='+zlib')
