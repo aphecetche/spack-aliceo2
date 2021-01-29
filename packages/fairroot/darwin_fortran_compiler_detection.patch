@@ -1,0 +1,24 @@
+diff -bur ./CMakeLists.txt /Users/laurent/tmp/FairRoot-18.4.2/CMakeLists.txt
+--- a/CMakeLists.txt	2021-01-29 23:09:06.000000000 +0100
++++ b/CMakeLists.txt	2020-11-11 03:01:53.000000000 +0100
+@@ -34,7 +34,7 @@
+ # Set name of our project to "FAIRROOT".
+ # Has to be done after check of cmake version
+ # This also sets ${FAIRROOT_VERSION} to the provided VERSION value, which would be empty if not set here explicitly
+-project(FAIRROOT VERSION ${FAIRROOT_MAJOR_VERSION}.${FAIRROOT_MINOR_VERSION}.${FAIRROOT_PATCH_VERSION})
++project(FAIRROOT VERSION ${FAIRROOT_MAJOR_VERSION}.${FAIRROOT_MINOR_VERSION}.${FAIRROOT_PATCH_VERSION} LANGUAGES C CXX Fortran)
+ # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/
+ # is checked
+ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+diff -bur ./cmake/modules/CheckCompiler.cmake /Users/laurent/tmp/FairRoot-18.4.2/cmake/modules/CheckCompiler.cmake
+--- a/cmake/modules/CheckCompiler.cmake	2021-01-29 23:12:44.000000000 +0100
++++ b/cmake/modules/CheckCompiler.cmake	2020-11-11 03:01:53.000000000 +0100
+@@ -194,7 +194,7 @@
+         SET(CMAKE_Fortran_FLAGS "-m64")
+       ENDIF(MAC_OS_10_5 OR MAC_OS_10_6 OR MAC_OS_10_7)
+ 
+-      Execute_Process(COMMAND gfortran -print-file-name=libgfortran.dylib
++      Execute_Process(COMMAND ${CMAKE_Fortran_COMPILER} -print-file-name=libgfortran.dylib
+                       OUTPUT_VARIABLE FORTRAN_LIBDIR
+                      )
+       Get_Filename_Component(FORTRAN_LIBDIR ${FORTRAN_LIBDIR}

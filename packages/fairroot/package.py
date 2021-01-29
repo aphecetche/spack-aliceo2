@@ -53,6 +53,7 @@ class Fairroot(CMakePackage):
     patch('find_pythia8_cmake.patch', when='@:18.4.0 +sim')
     patch('support_geant4_with_external_clhep_18.2.patch', when='@18.2 +sim')
     patch('support_geant4_with_external_clhep.patch', when='@18.4 +sim ^Geant4@:10.5')
+    patch('darwin_fortran_compiler_detection.patch',when='@18.4:')
 
     def setup_build_environment(self, env):
         super(Fairroot, self).setup_build_environment(env)
