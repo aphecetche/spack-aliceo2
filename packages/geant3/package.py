@@ -3,63 +3,42 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+# ----------------------------------------------------------------------------
+# If you submit this package back to Spack as a pull request,
+# please first remove this boilerplate and all FIXME comments.
+#
+# This is a template package file for Spack.  We've put "FIXME"
+# next to all the things you'll want to change. Once you've handled
+# them, you can save this file and test your package like this:
+#
+#     spack install geant3
+#
+# You can edit this file again by typing:
+#
+#     spack edit geant3
+#
+# See the Spack documentation for more information on packaging.
+# ----------------------------------------------------------------------------
+
 from spack import *
 
 
 class Geant3(CMakePackage):
-    """Simulation software using Monte Carlo methods to describe how particles pass through matter.."""
+    """Simulation software using Monte Carlo methods to describe how particles
+    pass through matter."""
 
-    homepage = "https://root.cern.ch/vmc"
-    git      = "https://github.com/FairRootGroup/geant3.git"
+    homepage = "https://github.com/vmc-project/geant3"
+    url      = "https://github.com/vmc-project/geant3/archive/v3-7.tar.gz"
 
-    version('3.7', tag='v3-7_fairsoft', commit='12092fb6d0ab5249699c8fd2d3af409ac878f262')
-    version('3.0', tag='v3-0_fairsoft', commit='be5ef650befe0927a9f762b98f4ea5dfb4af0624')
-    version('2.7', tag='v2-7_fairsoft', commit='f4eb0984938c5a0e8795324bac495d319cf0397e')
-
-    variant('build_type', default='Nightly',
-            description='CMake build type',
-            values=('Nightly'))
-    variant('cxxstd', default='default',
-            values=('11', '14', '17'),
-            multi=False,
-            description='Force the specified C++ standard when building.')
+    version('3-7', sha256='36cd57c6e5a54ff11e8687b30f54d774b676e06c55658cbc1ad787d1fadbe509')
+    version('3-6', sha256='e2c8f2c8397431218f90e03cafe54aa0de0474536cb9de921573ca670abfd0e0')
+    version('3-5', sha256='5bec0b442bbb3456d5cd1751ac9f90f1da48df0fcb7f6bf0a86c566bfc408261')
+    version('3-4', sha256='c7b487ab4fb4e6479c652b9b11dcafb686edf35e2f2048045c501e4f5597d62c')
 
     depends_on('root')
-    depends_on('vmc', when='@3:')
-
-    patch('gcalor_stringsize.patch', level=0, when='@:3.6')
-    patch('dict_fixes_30.patch', when='@3.0')
-    patch('gfortran10_support.patch', when='@:3.6')
-    patch('fix_geane_propagator_v2-7_fairsoft.patch', when="@2.7")
-    patch('fix_geane_propagator_v3-0_fairsoft.patch', when="@3.0")
-    patch('fix_gfortran_7.patch', when='%gcc@7') # see https://github.com/alisw/alidist/issues/1345
 
     def cmake_args(self):
-        options = []
-        cxxstd = self.spec.variants['cxxstd'].value
-        if cxxstd == 'default' and self.spec.satisfies('@:2.7'):
-            # geant3 2.7 needs an explicit CXX setting on macOS 11
-            cxxstd = '11'
-        if cxxstd != 'default':
-            options.append(self.define('CMAKE_CXX_STANDARD', cxxstd))
-        options.append('-DCMAKE_INSTALL_LIBDIR:PATH=lib')
-        options.append('-DROOT_DIR={0}'.format(
-                self.spec['root'].prefix))
-        if self.spec.satisfies('@3.7:'):
-            options.append('-DBUILD_GCALOR=ON')
-
-        return options
-
-    def common_env_setup(self, env):
-        env.set('G3SYS', join_path(self.prefix.share, 'geant3'))
-        # So that root finds the shared library / rootmap
-        env.prepend_path("LD_LIBRARY_PATH", self.prefix.lib)
-
-    def setup_run_environment(self, env):
-        self.common_env_setup(env)
-
-    def setup_dependent_build_environment(self, env, dependent_spec):
-        self.common_env_setup(env)
-
-    def setup_dependent_run_environment(self, env, dependent_spec):
-        self.common_env_setup(env)
+        args = []
+        if self.satisfies('%gcc10:'):
+            args.append('-DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch -fallow-invalid-boz"')
+        return args
