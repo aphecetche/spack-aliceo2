@@ -37,7 +37,7 @@ class Arrow(CMakePackage, CudaPackage):
 
     depends_on('boost@1.60:')
     depends_on('cmake@3.2.0:', type='build')
-    depends_on('flatbuffers build_type=Release')  # only Release contains flatc
+    depends_on('flatbuffers')
     depends_on('llvm+clang', when='+gandiva')
     depends_on('lz4', when='+lz4')
     depends_on('ninja', type='build')
