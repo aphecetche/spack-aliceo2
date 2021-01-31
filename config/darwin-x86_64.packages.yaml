@@ -1,0 +1,10 @@
+packages:
+  all:
+    providers:
+      gl: [apple-opengl]
+      glu: [apple-glu]
+      mpi: [mpich~fortran]
+      blas: [openblas~lapack]
+      lapack: [openblas~lapack]
+  openblas:
+    variants: ~lapack

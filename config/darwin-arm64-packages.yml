@@ -1,9 +1,0 @@
-packages:
-  all:
-    variants: cxxstd=17
-  python: 
-    version: ['3.9.1:']
-  llvm:
-    variants: ~lldb
-  root:
-    variants: ~tbb
