@@ -35,10 +35,14 @@ class Geant3(CMakePackage):
     version('3-5', sha256='5bec0b442bbb3456d5cd1751ac9f90f1da48df0fcb7f6bf0a86c566bfc408261')
     version('3-4', sha256='c7b487ab4fb4e6479c652b9b11dcafb686edf35e2f2048045c501e4f5597d62c')
 
-    depends_on('root')
+    depends_on('root~vmc')
+    depends_on('vmc')
+
+    variant('cxxstd',default='11',values=('11','14','17'),multi=False,description="Require a specific C++ standard")
 
     def cmake_args(self):
         args = []
-        if self.satisfies('%gcc10:'):
+        if self.spec.satisfies('%gcc@10:'):
             args.append('-DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch -fallow-invalid-boz"')
+        args.append(self.define_from_variant('CMAKE_CXX_STANDARD','cxxstd'))
         return args
