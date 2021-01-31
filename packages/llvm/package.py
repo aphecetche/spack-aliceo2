@@ -368,8 +368,8 @@ class Llvm(CMakePackage, CudaPackage):
     def setup_build_environment(self, env):
         env.append_flags("CXXFLAGS", self.compiler.cxx11_flag)
         #env.set("SPACK_TARGET_ARGS","")
-        if sys.platform == 'darwin':
-          env.set('MACOSX_DEPLOYMENT_TARGET', platform.mac_ver()[0])
+        # if sys.platform == 'darwin':
+        #   env.set('MACOSX_DEPLOYMENT_TARGET', platform.mac_ver()[0])
 
     def setup_run_environment(self, env):
         if "+clang" in self.spec:

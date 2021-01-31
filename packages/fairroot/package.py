@@ -16,6 +16,7 @@ class Fairroot(CMakePackage):
     git = "https://github.com/FairRootGroup/FairRoot.git"
 
     version('develop', branch='dev')
+    version('18.4.2', sha256='abc0ae6e2ba0315a8eecf59cdbf1388dbd1fe6423ab4caaa64f19332252fe05c')
     version('18.4.1', sha256='d8455c4bb705a2d5989ad947ffc50bb2f0d00affb649bb5e30d9463b5be0b490')
     version('18.4.0', sha256='97ad86d039db195acf12e9978eb660daab0c91e95e517921bac5a0f157a3e309')
     version('18.2.1', sha256='a9c22965d2d99e385f64c0df1867b477b9c129bcd087ba3b683d0ada6f3d66d0')
@@ -52,6 +53,7 @@ class Fairroot(CMakePackage):
     patch('find_pythia8_cmake.patch', when='@:18.4.0 +sim')
     patch('support_geant4_with_external_clhep_18.2.patch', when='@18.2 +sim')
     patch('support_geant4_with_external_clhep.patch', when='@18.4 +sim ^Geant4@:10.5')
+    patch('darwin_fortran_compiler_detection.patch',when='@18.4:')
 
     def setup_build_environment(self, env):
         super(Fairroot, self).setup_build_environment(env)
@@ -59,6 +61,7 @@ class Fairroot(CMakePackage):
             env.append_flags('CXXFLAGS',
                 '-std=c++%s' % self.spec.variants['cxxstd'].value)
         env.unset('SIMPATH')
+        env.unset('FAIRSOFT')
         env.unset('FAIRSOFT_ROOT')
 
     def cmake_args(self):

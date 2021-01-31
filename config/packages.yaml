@@ -1,0 +1,12 @@
+packages:
+  git:
+    buildable: false
+    externals:
+    - spec: git@2.24.3~tcltk
+      prefix: /usr
+  all:
+    variants: cxxstd=17
+  root:
+    variants: +monalisa cxxstd=17
+  llvm: 
+    variants: ~lldb +compiler-rt +clang +llvm_dylib

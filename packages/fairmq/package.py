@@ -56,13 +56,18 @@ class Fairmq(CMakePackage):
             values=('11', '14', '17'),
             multi=False,
             description='Force the specified C++ standard when building.')
-    conflicts('cxxstd=11', when='@1.4.11:')
+    variant('pmix',default=False,description='Enable PMIx plugin')
+    variant('dds',default=False,description='Enable DDS plugin')
+    variant('sdk',default=False,description='Build controller SDK')
 
-    patch('fix_find_dds.patch', when='@1.4.0:1.4.4')
+    conflicts('cxxstd=11', when='@1.4.11:')
+    conflicts('+sdk',when='~dds', msg='Controller SDK requires DDS')
+
+    patch('fix_find_dds.patch', when='@1.4.0:1.4.4 +dds')
     patch('use_bundled_gtest_149.patch', when='@1.4.9:1.4.16')
     patch('missing_stdexcept_header.patch', when='@:1.4.19')
     patch('fix_cpp17moveinsertable_assertion_xcode12.patch', when='@1.4.8:1.4.23')
-    patch('update_command_format_in_pmix_plugin.patch', when='@1.4.23')
+    patch('update_command_format_in_pmix_plugin.patch', when='@1.4.23 +pmix')
 
     depends_on('googletest@1.7:', when='@:1.4.8')
     depends_on('boost@1.64: +container+program_options+thread+system+filesystem+regex+date_time', when='@1.3')
@@ -78,11 +83,11 @@ class Fairmq(CMakePackage):
         depends_on('zeromq@4.1.5:')
     depends_on('nanomsg@1.1.5:', when='@:1.4.16')
     depends_on('msgpack-c@3.1:', when='@:1.4.16')
-    depends_on('dds@2.4', when='@:1.4.9')
-    depends_on('dds@2.5-odc', when='@1.4.10')
-    depends_on('dds@3.0:', when='@1.4.11:')
+    depends_on('dds@2.4', when='@:1.4.9 +dds')
+    depends_on('dds@2.5-odc', when='@1.4.10 +dds')
+    depends_on('dds@3.0:', when='@1.4.11: +dds')
     depends_on('flatbuffers', when='@1.4.9:')
-    depends_on('pmix@2.1.4:', when='@1.4:')
+    depends_on('pmix@2.1.4:', when='@1.4: +pmix')
 
     depends_on('cmake@3.9.4:', type='build', when='@1.3')
     depends_on('cmake@3.10:', type='build', when='@1.4.0:1.4.7')
@@ -95,16 +100,16 @@ class Fairmq(CMakePackage):
         args = []
         args.append('-DDISABLE_COLOR=ON')
         args.append('-DBUILD_NANOMSG_TRANSPORT=ON')
-        args.append('-DBUILD_DDS_PLUGIN=ON')
+        args.append(self.define_from_variant('BUILD_DDS_PLUGIN','dds'))
         cxxstd = self.spec.variants['cxxstd'].value
         if cxxstd != 'default':
            args.append('-DCMAKE_CXX_STANDARD={0}'.format(cxxstd))
         if self.spec.satisfies('@1.4:'):
-           args.append('-DBUILD_PMIX_PLUGIN=ON')
+           args.append(self.define_from_variant('BUILD_PMIX_PLUGIN','pmix'))
         if self.spec.satisfies('@1.4.9:'):
-           args.append('-DBUILD_SDK_COMMANDS=ON')
+           args.append(self.define_from_variant('BUILD_SDK_COMMANDS','sdk'))
         if self.spec.satisfies('@1.4.11:'):
-           args.append('-DBUILD_SDK=ON')
+           args.append(self.define_from_variant('BUILD_SDK','sdk'))
         # NOTE Support for building the ofi transport will be added at a later
         #      point in time.
         # args.append('-DBUILD_OFI_TRANSPORT=ON')

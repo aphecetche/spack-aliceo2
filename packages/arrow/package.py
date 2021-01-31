@@ -17,6 +17,8 @@ class Arrow(CMakePackage, CudaPackage):
     url = "https://github.com/apache/arrow/archive/apache-arrow-0.9.0.tar.gz"
 
     version(
+        '3.0.0', sha256='fc461c4f0a60e7470a7c58b28e9344aa8fb0be5cc982e9658970217e084c3a82')
+    version(
         '2.0.0', sha256='ea299df9cf440cfc43393ce12ee6d9a4c9d0dfa9fde33c3bc9b70ec25520a844')
     version(
         '1.0.1', sha256='dac59f4d42416224419c020ed2e8f8371e85c1d9ff4368ed5b5c026ee28d3fd4')
@@ -35,41 +37,40 @@ class Arrow(CMakePackage, CudaPackage):
 
     depends_on('boost@1.60:')
     depends_on('cmake@3.2.0:', type='build')
-    depends_on('flatbuffers build_type=Release')  # only Release contains flatc
-    depends_on('python', when='+python')
+    depends_on('flatbuffers')
+    depends_on('llvm+clang', when='+gandiva')
+    depends_on('lz4', when='+lz4')
+    depends_on('ninja', type='build')
+    depends_on('orc', when='+orc')
+    depends_on('protobuf', when='+gandiva')
     depends_on('py-numpy', when='+python')
+    depends_on('python', when='+python')
     depends_on('rapidjson')
-    depends_on('utf8proc')
+    depends_on('re2+shared', when='+gandiva')
     depends_on('snappy~shared', when='+snappy')
+    depends_on('thrift+pic', when='+parquet')
+    depends_on('utf8proc')
     depends_on('zlib+pic', when='+zlib')
     depends_on('zstd+pic', when='+zstd')
-    depends_on('lz4', when='+lz4')
-    depends_on('thrift+pic', when='+parquet')
-    depends_on('orc', when='+orc')
-    depends_on('re2+shared', when='+gandiva')
-    depends_on('llvm', when='+gandiva')
-    depends_on('protobuf', when='+gandiva')
 
-    variant('build_type', default='Release',
-            description='CMake build type',
-            values=('Debug', 'FastDebug', 'Release'))
-    variant('python', default=False, description='Build Python interface')
-    variant('parquet', default=False, description='Build Parquet interface')
-    variant('orc', default=False, description='Build integration with Apache ORC')
+    variant('brotli', default=False, description='Build support for Brotli compression')
+    variant('build_type', default='Release', description='CMake build type', values=('Debug', 'FastDebug', 'Release'))
+    variant('compute', default=True, description='Computational kernel functions and other support')
+    variant('cxxstd',default='11',values=('11','17'),multi=False,description='Require a specific C++ standard')
     variant('gandiva', default=True, description='Build Gandiva support')
+    variant('glog', default=False, description='Build libraries with glog support for pluggable logging')
+    variant('hdfs', default=False, description='Integration with libhdfs for accessing the Hadoop Filesystem')
+    variant('ipc', default=True, description='Build the Arrow IPC extensions')
+    variant('jemalloc', default=False, description='Build the Arrow jemalloc-based allocator')
     variant('lz4', default=True, description='Build support for lz4 compression')
-    variant('snappy', default=False,
-            description='Build support for Snappy compression')
-    variant('zstd', default=False,
-            description='Build support for ZSTD compression')
-    variant('brotli', default=False,
-            description='Build support for Brotli compression')
-    variant('zlib', default=True,
-            description='Build support for zlib (gzip) compression')
-    variant('compute', default=True,
-            description='Computational kernel functions and other support')
-    variant('hdfs', default=False,
-            description='Integration with libhdfs for accessing the Hadoop Filesystem')
+    variant('orc', default=False, description='Build integration with Apache ORC')
+    variant('parquet', default=False, description='Build Parquet interface')
+    variant('python', default=False, description='Build Python interface')
+    variant('shared', default=True, description='Build shared libs')
+    variant('snappy', default=False, description='Build support for Snappy compression')
+    variant('tensorflow', default=False, description='Build Arrow with TensorFlow support enabled')
+    variant('zlib', default=True, description='Build support for zlib (gzip) compression')
+    variant('zstd', default=False, description='Build support for ZSTD compression')
 
     root_cmakelists_dir = 'cpp'
 
@@ -82,47 +83,45 @@ class Arrow(CMakePackage, CudaPackage):
 
         filter_file(r'set\(ARROW_LLVM_VERSIONS "10" "9" "8" "7"\)',
                     'set(ARROW_LLVM_VERSIONS "11" "10" "9" "8" "7")',
-                    'cpp/CMakeLists.txt')
+                    'cpp/CMakeLists.txt', when='@:2.0.0')
 
         filter_file(r'#include <llvm/Support/DynamicLibrary\.h>',
-                    r'#include <llvm/Support/DynamicLibrary.h>' + '\n' + r'#include <llvm/Support/Host.h>',
-                    'cpp/src/gandiva/engine.cc')
+                    r'#include <llvm/Support/DynamicLibrary.h>' +
+                    '\n' + r'#include <llvm/Support/Host.h>',
+                    'cpp/src/gandiva/engine.cc', when='@2.0.0')
 
     def cmake_args(self):
         args = [
-            "-DARROW_USE_SSE=ON",
-            "-DARROW_BUILD_SHARED=ON",
-            "-DARROW_BUILD_STATIC=OFF",
-            "-DARROW_BUILD_TESTS=OFF",
             '-DARROW_DEPENDENCY_SOURCE=SYSTEM',
             '-DARROW_NO_DEPRECATED_API=ON'
         ]
 
+        if self.spec.satisfies('+shared'):
+            args.append(self.define('BUILD_SHARED','ON'))
+        else:
+            args.append(self.define('BUILD_SHARED','OFF'))
+            args.append(self.define('BUILD_STATIC','ON'))
+
+        if self.spec.satisfies('@:0.11.99'):
+            # ARROW_USE_SSE was removed in 0.12
+            # see https://issues.apache.org/jira/browse/ARROW-3844
+            args.append(self.define('ARROW_USE_SSE','ON'))
+
+        args.append(self.define_from_variant("ARROW_COMPUTE", "compute"))
+        args.append(self.define_from_variant("ARROW_CUDA", "cuda"))
         args.append(self.define_from_variant("ARROW_GANDIVA", "gandiva"))
+        args.append(self.define_from_variant("ARROW_GLOG", "glog"))
+        args.append(self.define_from_variant("ARROW_HDFS", "hdfs"))
+        args.append(self.define_from_variant("ARROW_IPC", "ipc"))
+        args.append(self.define_from_variant("ARROW_JEMALLOC", "jemalloc"))
+        args.append(self.define_from_variant("ARROW_ORC", "orc"))
+        args.append(self.define_from_variant("ARROW_PARQUET", "parquet"))
+        args.append(self.define_from_variant("ARROW_PYTHON", "python"))
+        args.append(self.define_from_variant("ARROW_TENSORFLOW", "tensorflow"))
+        args.append(self.define_from_variant("ARROW_WITH_BROTLI", "brotli"))
         args.append(self.define_from_variant("ARROW_WITH_LZ4", "lz4"))
         args.append(self.define_from_variant("ARROW_WITH_SNAPPY", "snappy"))
-        args.append(self.define_from_variant("ARROW_WITH_ZSTD", "zstd"))
-        args.append(self.define_from_variant("ARROW_WITH_BROTLI", "brotli"))
         args.append(self.define_from_variant("ARROW_WITH_ZLIB", "zlib"))
-        args.append(self.define_from_variant("ARROW_CUDA", "cuda"))
-        args.append(self.define_from_variant("ARROW_PYTHON", "python"))
-        args.append(self.define_from_variant("ARROW_PARQUET", "parquet"))
-        args.append(self.define_from_variant("ARROW_ORC", "orc"))
-        args.append(self.define_from_variant("ARROW_COMPUTE", "compute"))
-        args.append(self.define_from_variant("ARROW_HDFS", "hdfs"))
-
-        args.append(self.define("CLANG_EXECUTABLE", path.join(
-            self.spec["llvm"].prefix.bin, "clang")))
-        args.append(self.define("CMAKE_INSTALL_RPATH_USE_LINK_PATH", True))
-        # args.append(self.define("LLVM_ROOT",path.join(self.spec["llvm"].prefix.lib,"cmake")))
-        args.append(self.define("LLVM_ROOT", self.spec["llvm"].prefix.lib))
-        args.append(self.define("utf8proc_ROOT", self.spec["utf8proc"].prefix))
-
-        print("ARGS=", args)
-
-        # for dep in ('flatbuffers', 'rapidjson', 'snappy', 'zlib', 'zstd'):
-        #     args.append("-D{0}_HOME={1}".format(dep.upper(),
-        #                                         self.spec[dep].prefix))
-        # args.append("-DZLIB_LIBRARIES={0}".format(self.spec['zlib'].libs))
+        args.append(self.define_from_variant("ARROW_WITH_ZSTD", "zstd"))
 
         return args

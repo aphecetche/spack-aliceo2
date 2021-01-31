@@ -5,10 +5,10 @@
 
 import os
 import re
-import sys
-
 from spack import *
 from spack.package_test import compare_output_file, compile_c_and_execute
+import sys
+import platform
 
 class Openblas(MakefilePackage):
     """OpenBLAS: An optimized BLAS library"""
@@ -283,6 +283,7 @@ class Openblas(MakefilePackage):
        
         if self.spec.satisfies('~lapack'):
             make_defs.append('NO_LAPACK=1')
+
 
         print('make_defs=',make_defs)
 

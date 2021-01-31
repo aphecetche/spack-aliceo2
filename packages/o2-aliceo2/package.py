@@ -31,39 +31,32 @@ class O2Aliceo2(CMakePackage):
     homepage = "https://aliceo2group.github.io"
     url = "https://github.com/AliceO2Group/AliceO2/archive/v20.49.tar.gz"
 
-    version('noana', '65a2f7da91c8be474a6f09dd457b0cde6b651a85f1709e848eb52c2819652d16',
-            url='https://github.com/aphecetche/AliceO2/archive/add-cmake-build-option-to-disable-analysis.tar.gz')
+    version('21.03',sha256='7f7060e3140f14a30fe54985ad22dfd322d7abb876e6fff526a1969823f18736')
 
-    version('noana-2', '73b768e77e5e9c604e097c5c39c1346275fa15dd3b940cf29778aa17e49284cd',
-            url='https://github.com/aphecetche/AliceO2/archive/mods-for-spack.tar.gz')
+    variant('sim', default=False, description='Enable simulation engines and event generators')
+    variant('analysis', default=False, description='Enable analysis code')
+    variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")
+    variant('upgrades',default=True,description='Include code for detector upgrades')
 
-    version(
-        '20.49', sha256='f7bda483c4f6666aa6391af470d0bc15c74d4e6aa3632f8e1492496f80ea569f')
-
-    variant('sim', default=False,
-            description='Enable simulation engines and event generators')
-    variant('analysis', default=True,
-            description='Enable analysis code')
-
-    depends_on('protobuf')
-    depends_on('o2-infologger')
-    depends_on('o2-configuration')
-    depends_on('o2-monitoring')
-    depends_on('o2-common')
-    depends_on('rapidjson')
+    depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd cxxstd=17')
+    depends_on('benchmark')
+    depends_on('cppgsl@:2.99 cxxstd=17',when='cxxstd=17')
     depends_on('fairroot', when='+sim')
     depends_on('fairroot~sim', when='~sim')
-    depends_on('root+http+dataframe+arrow', when='~sim')
-    depends_on('root+http+dataframe+arrow+pythia6+pythia8', when='+sim')
-    depends_on('vmc')
     depends_on('libuv')
-    depends_on('vc')
-    depends_on('arrow')
-    depends_on('cppgsl@:2.1')
-    depends_on('benchmark')
-
+    depends_on('o2-common')
+    depends_on('o2-configuration')
+    depends_on('o2-infologger')
+    depends_on('o2-monitoring')
+    depends_on('protobuf')
     depends_on('pythia6+root',when='+sim')
     depends_on('pythia8',when='+sim')
+    depends_on('hepmc3',when='+sim')
+    depends_on('rapidjson')
+    depends_on('root+http+dataframe+arrow', when='~sim')
+    depends_on('root+http+dataframe+arrow+pythia6+pythia8', when='+sim')
+    depends_on('vc')
+    depends_on('vmc')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'
@@ -76,6 +69,8 @@ class O2Aliceo2(CMakePackage):
         args = []
         args.append(self.define_from_variant("BUILD_SIMULATION", "sim"))
         args.append(self.define_from_variant("BUILD_ANALYSIS", "analysis"))
+        args.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
+        args.append(self.define_from_variant("ENABLE_UPGRADES", "upgrades"))
         return args
 
     def setup_build_environment(self,env):
