@@ -6,7 +6,8 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 from spack import *
-
+import sys
+import platform
 
 class Fairroot(CMakePackage):
     """C++ simulation, reconstruction and analysis framework for particle physics experiments"""
@@ -54,6 +55,8 @@ class Fairroot(CMakePackage):
     patch('support_geant4_with_external_clhep_18.2.patch', when='@18.2 +sim')
     patch('support_geant4_with_external_clhep.patch', when='@18.4 +sim ^Geant4@:10.5')
     patch('darwin_fortran_compiler_detection.patch',when='@18.4:')
+    if sys.platform=='darwin' and platform.machine() == 'arm64':
+        patch('darwin_arm64_do_not_force_compiler.patch',when='@18.4:')
 
     def setup_build_environment(self, env):
         super(Fairroot, self).setup_build_environment(env)
@@ -91,3 +94,4 @@ class Fairroot(CMakePackage):
 
     def setup_dependent_run_environment(self, env, dependent_spec):
         self.common_env_setup(env)
+
