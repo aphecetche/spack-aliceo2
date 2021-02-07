@@ -32,6 +32,8 @@ class Rapidjson(CMakePackage):
 
     if sys.platform == 'darwin' and platform.machine() == 'arm64':
         patch('darwin-arm64.patch', when='@2020:')
+
+    if sys.platform == 'darwin':
         version('2020.01.04', sha256='7021c782e4b78391320efabb4d35554e406c1a2c6255c2dfc01089b38398c042',
                 url='https://github.com/Tencent/rapidjson/tarball/585042c02ba6350e10fc43df8beee1bc097f4c5f', preferred=True)
     else:
