@@ -1,0 +1,11 @@
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/EventVisualisation/Detectors/src/DataInterpreterITS.cxx ../spack-src/EventVisualisation/Detectors/src/DataInterpreterITS.cxx
+--- a/EventVisualisation/Detectors/src/DataInterpreterITS.cxx	2021-02-07 16:51:21.000000000 +0100
++++ b/EventVisualisation/Detectors/src/DataInterpreterITS.cxx	2021-02-07 18:08:20.000000000 +0100
+@@ -31,6 +31,7 @@
+ #include <TVector2.h>
+ 
+ #include <gsl/span>
++#include <gsl/span_ext>
+ 
+ using namespace std;
+ 

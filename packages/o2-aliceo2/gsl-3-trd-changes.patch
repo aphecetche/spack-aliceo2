@@ -1,0 +1,12 @@
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/Detectors/TRD/workflow/src/TRDGlobalTrackingSpec.cxx ./Detectors/TRD/workflow/src/TRDGlobalTrackingSpec.cxx
+--- a/Detectors/TRD/workflow/src/TRDGlobalTrackingSpec.cxx	2021-02-07 17:27:22.000000000 +0100
++++ b/Detectors/TRD/workflow/src/TRDGlobalTrackingSpec.cxx	2021-02-07 18:16:01.000000000 +0100
+@@ -94,7 +94,7 @@
+   std::vector<int> trdTriggerIndices;
+ 
+   for (int iEv = 0; iEv < nCollisions; ++iEv) {
+-    const auto& trg = triggerRecords.at(iEv);
++    const auto& trg = triggerRecords[iEv];
+     int nTrackletsCurrent = trg.getNumberOfObjects();
+     int iFirstTracklet = trg.getFirstEntry();
+     int64_t evTime = trg.getBCData().toLong() * o2::constants::lhc::LHCBunchSpacingNS; // event time in ns

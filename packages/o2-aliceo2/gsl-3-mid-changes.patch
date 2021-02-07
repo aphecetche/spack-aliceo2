@@ -1,0 +1,58 @@
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/Detectors/MUON/MID/Simulation/include/MIDSimulation/DigitsMerger.h ../spack-src/Detectors/MUON/MID/Simulation/include/MIDSimulation/DigitsMerger.h
+--- a/Detectors/MUON/MID/Simulation/include/MIDSimulation/DigitsMerger.h	2021-02-07 16:51:21.000000000 +0100
++++ b/Detectors/MUON/MID/Simulation/include/MIDSimulation/DigitsMerger.h	2021-02-07 17:56:58.000000000 +0100
+@@ -30,6 +30,7 @@
+  public:
+   void process(const std::vector<ColumnDataMC>& inDigitStore, const o2::dataformats::MCTruthContainer<MCLabel>& inMCContainer, const std::vector<ROFRecord>& inROFRecords, bool mergeInBunchPileup = true);
+ 
++  const std::vector<ColumnData> getColumnDataNonMC() const;
+   /// Gets the merged column data
+   const std::vector<ColumnDataMC>& getColumnData() const { return mDigitStore; }
+   /// Gets the merged MC labels
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/Detectors/MUON/MID/Simulation/src/DigitsMerger.cxx ../spack-src/Detectors/MUON/MID/Simulation/src/DigitsMerger.cxx
+--- a/Detectors/MUON/MID/Simulation/src/DigitsMerger.cxx	2021-02-07 16:51:21.000000000 +0100
++++ b/Detectors/MUON/MID/Simulation/src/DigitsMerger.cxx	2021-02-07 17:57:59.000000000 +0100
+@@ -70,5 +70,13 @@
+     mDigitsLabels.clear();
+   }
+ }
++
++  const std::vector<ColumnData> DigitsMerger::getColumnDataNonMC() const
++  {
++      std::vector<ColumnData> v;
++      v.insert(v.begin(),mDigitStore.begin(),mDigitStore.end());
++      return v; 
++  }
++      
+ } // namespace mid
+ } // namespace o2
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/Detectors/MUON/MID/Simulation/test/testSimulation.cxx ../spack-src/Detectors/MUON/MID/Simulation/test/testSimulation.cxx
+--- a/Detectors/MUON/MID/Simulation/test/testSimulation.cxx	2021-02-07 16:51:21.000000000 +0100
++++ b/Detectors/MUON/MID/Simulation/test/testSimulation.cxx	2021-02-07 17:58:44.000000000 +0100
+@@ -395,7 +395,7 @@
+     rofRecords.clear();
+     rofRecords.emplace_back(o2::constants::lhc::LHCBunchSpacingNS * ievent, EventType::Standard, 0, digitStoreMC.size());
+     simDigitizer.digitsMerger.process(digitStoreMC, digitLabelsMC, rofRecords);
+-    simClustering.preClusterizer.process(simDigitizer.digitsMerger.getColumnData(), simDigitizer.digitsMerger.getROFRecords());
++    simClustering.preClusterizer.process(simDigitizer.digitsMerger.getColumnDataNonMC(), simDigitizer.digitsMerger.getROFRecords());
+     simClustering.clusterizer.process(simClustering.preClusterizer.getPreClusters(), simClustering.preClusterizer.getROFRecords());
+     nRecoClusters = simClustering.clusterizer.getClusters().size();
+     ss << "nRecoClusters: " << nRecoClusters << "  nGenClusters: " << nGenClusters << "\n";
+@@ -438,7 +438,7 @@
+     digitLabelsAccum.mergeAtBack(digitLabelsMC);
+   }
+   simDigitizer.digitsMerger.process(digitsAccum, digitLabelsAccum, digitsROF);
+-  simClustering.preClusterizer.process(simDigitizer.digitsMerger.getColumnData(), simDigitizer.digitsMerger.getROFRecords());
++  simClustering.preClusterizer.process(simDigitizer.digitsMerger.getColumnDataNonMC(), simDigitizer.digitsMerger.getROFRecords());
+   simClustering.correlation.clear();
+   simClustering.clusterizer.process(simClustering.preClusterizer.getPreClusters(), simClustering.preClusterizer.getROFRecords());
+   simClustering.preClusterLabeler.process(simClustering.preClusterizer.getPreClusters(), simDigitizer.digitsMerger.getMCContainer(), simClustering.preClusterizer.getROFRecords(), simDigitizer.digitsMerger.getROFRecords());
+@@ -532,7 +532,7 @@
+   }
+ 
+   simDigitizer.digitsMerger.process(digitsAccum, digitLabelsAccum, digitsROF);
+-  simClustering.preClusterizer.process(simDigitizer.digitsMerger.getColumnData(), simDigitizer.digitsMerger.getROFRecords());
++  simClustering.preClusterizer.process(simDigitizer.digitsMerger.getColumnDataNonMC(), simDigitizer.digitsMerger.getROFRecords());
+   simClustering.correlation.clear();
+   simClustering.clusterizer.process(simClustering.preClusterizer.getPreClusters(), simClustering.preClusterizer.getROFRecords());
+   simClustering.preClusterLabeler.process(simClustering.preClusterizer.getPreClusters(), simDigitizer.digitsMerger.getMCContainer(), simClustering.preClusterizer.getROFRecords(), simDigitizer.digitsMerger.getROFRecords());

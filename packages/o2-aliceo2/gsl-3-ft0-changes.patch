@@ -1,0 +1,11 @@
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/Detectors/FIT/FT0/reconstruction/src/ReadRaw.cxx ../spack-src/Detectors/FIT/FT0/reconstruction/src/ReadRaw.cxx
+--- a/Detectors/FIT/FT0/reconstruction/src/ReadRaw.cxx	2021-02-07 16:51:21.000000000 +0100
++++ b/Detectors/FIT/FT0/reconstruction/src/ReadRaw.cxx	2021-02-07 18:05:36.000000000 +0100
+@@ -60,6 +60,7 @@
+ #include "TBranch.h"
+ #include "CommonConstants/LHCConstants.h"
+ #include "DetectorsRaw/RDHUtils.h"
++#include <gsl/gsl>
+ 
+ using namespace o2::ft0;
+ using RDHUtils = o2::raw::RDHUtils;

@@ -1,0 +1,11 @@
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/Analysis/Core/include/AnalysisCore/HFConfigurables.h ./Analysis/Core/include/AnalysisCore/HFConfigurables.h
+--- a/Analysis/Core/include/AnalysisCore/HFConfigurables.h	2021-02-07 16:51:21.000000000 +0100
++++ b/Analysis/Core/include/AnalysisCore/HFConfigurables.h	2021-02-07 18:12:44.000000000 +0100
+@@ -16,6 +16,7 @@
+ #define O2_ANALYSIS_HFCONFIGURABLES_H
+ 
+ #include <TMath.h>
++#include <TObject.h>
+ 
+ class HFTrackIndexSkimsCreatorConfigs
+ {

@@ -1,0 +1,28 @@
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/DataFormats/Detectors/TPC/include/DataFormatsTPC/ClusterNativeHelper.h DataFormats/Detectors/TPC/include/DataFormatsTPC/ClusterNativeHelper.h
+--- a/DataFormats/Detectors/TPC/include/DataFormatsTPC/ClusterNativeHelper.h	2021-02-07 16:51:21.000000000 +0100
++++ b/DataFormats/Detectors/TPC/include/DataFormatsTPC/ClusterNativeHelper.h	2021-02-07 17:22:10.000000000 +0100
+@@ -382,7 +382,7 @@
+       continue;
+     }
+     o2::dataformats::ConstMCTruthContainerView<o2::MCCompLabel> const* labelsptr = nullptr;
+-    int extent = 0;
++    size_t extent = 0;
+     if (index < mcinputs.size()) {
+       labelsptr = &mcinputs[index];
+       extent = 1;
+diff -bur /Users/laurent/github.com/AliceO2Group/AliceO2/DataFormats/Detectors/TPC/include/DataFormatsTPC/CompressedClusters.h DataFormats/Detectors/TPC/include/DataFormatsTPC/CompressedClusters.h
+--- a/DataFormats/Detectors/TPC/include/DataFormatsTPC/CompressedClusters.h	2021-02-07 16:51:21.000000000 +0100
++++ b/DataFormats/Detectors/TPC/include/DataFormatsTPC/CompressedClusters.h	2021-02-07 17:25:12.000000000 +0100
+@@ -86,10 +86,10 @@
+   CompressedClustersROOT(const CompressedClustersFlat& v) : CompressedClusters(v) {}
+   CompressedClustersROOT(const CompressedClusters& v) : CompressedClusters(v) {}
+   // flatbuffer used for streaming
+-  int flatdataSize = 0;
++  size_t flatdataSize = 0;
+   char* flatdata = nullptr; //[flatdataSize]
+ 
+-  ClassDefNV(CompressedClustersROOT, 2);
++  ClassDefNV(CompressedClustersROOT, 3);
+ };
+ 
+ struct CompressedClustersFlat : private CompressedClustersCounters, private CompressedClustersOffsets {

@@ -23,6 +23,8 @@
 from spack import *
 import inspect
 import multiprocessing
+import sys
+import platform
 
 class O2Aliceo2(CMakePackage):
     """ O2 software project for the ALICE experiment at CERN
@@ -40,7 +42,12 @@ class O2Aliceo2(CMakePackage):
 
     depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd cxxstd=17')
     depends_on('benchmark')
-    depends_on('cppgsl@:2.99 cxxstd=17',when='cxxstd=17')
+
+    if sys.platform == 'darwin' and platform.machine() == 'arm64':
+       depends_on('cppgsl@3: cxxstd=17',when='cxxstd=17')
+    else:
+       depends_on('cppgsl@:2.99 cxxstd=17',when='cxxstd=17')
+
     depends_on('fairroot', when='+sim')
     depends_on('fairroot~sim', when='~sim')
     depends_on('libuv')
@@ -60,6 +67,17 @@ class O2Aliceo2(CMakePackage):
 
     depends_on('ninja', type='build')
     generator = 'Ninja'
+
+    if sys.platform == 'darwin' and platform.machine() == 'arm64':
+        patch('no_cpuid_on_apple_silicon.patch')
+
+    patch('gsl-3-does-not-have-at-method.patch',when='^cppgsl@3:')
+    patch('gsl-3-tpc-changes.patch',when='^cppgsl@3:')
+    patch('gsl-3-mid-changes.patch',when='^cppgsl@3:')
+    patch('gsl-3-ft0-changes.patch',when='^cppgsl@3:')
+    patch('gsl-3-eve-changes.patch',when='^cppgsl@3:')
+    patch('gsl-3-trd-changes.patch',when='^cppgsl@3:')
+    patch('analysis-changes.patch')
 
 #    def build(self, spec, prefix):
 #        inspect.getmodule(self).make.jobs=multiprocessing.cpu_count()*2//5
@@ -91,3 +109,9 @@ class O2Aliceo2(CMakePackage):
         filter_file(r'NAMES libpythia6.so libpythia6.dylib',
                 'NAMES libpythia6.so libpythia6.dylib libPythia6.so libPythia6.dylib',
                 'dependencies/Findpythia6.cmake')
+            
+        if self.spec["cppgsl"].satisfies('@3:'):
+            filter_file('::index_type','::size_type','Framework/Core/include/Framework/TMessageSerializer.h')
+            filter_file('::index_type','::size_type','DataFormats/simulation/include/SimulationDataFormat/ConstMCTruthContainer.h')
+            filter_file('::index_type','::size_type','Detectors/GlobalTracking/include/GlobalTracking/MatchTOF.h')
+            filter_file('::index_type','::size_type','Utilities/O2Device/include/O2Device/Utilities.h')
