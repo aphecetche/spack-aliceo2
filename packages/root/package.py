@@ -529,3 +529,11 @@ class Root(CMakePackage):
         env.prepend_path('PATH', self.prefix.bin)
         if "+rpath" not in self.spec:
             env.prepend_path('LD_LIBRARY_PATH', self.prefix.lib)
+
+    def patch(self):
+        if sys.platform=='darwin' and platform.machine()=='arm64':
+            # gfortran from gcc 10 dev does not accept -m64 option
+            filter_file(
+            r'_Fortran_FLAGS} -m64',
+            '_Fortran_FLAGS}',
+            'cmake/modules/SetUpMacOS.cmake')
