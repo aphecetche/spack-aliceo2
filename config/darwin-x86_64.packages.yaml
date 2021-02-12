@@ -8,3 +8,7 @@ packages:
       lapack: [openblas~lapack]
   openblas:
     variants: ~lapack
+  # python:
+  #   version: ['3.9.1:']
+  root:
+    variants: +aqua ~x ~tbb +monalisa +http +dataframe +arrow cxxstd=17
