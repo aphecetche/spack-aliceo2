@@ -33,12 +33,13 @@ class O2Aliceo2(CMakePackage):
     homepage = "https://aliceo2group.github.io"
     url = "https://github.com/AliceO2Group/AliceO2/archive/v20.49.tar.gz"
 
+    version('21.05',sha256='d54fc6db40c71a9b8f01466509638127df945cb2806e31699a9d25deb39382d7')
     version('21.03',sha256='7f7060e3140f14a30fe54985ad22dfd322d7abb876e6fff526a1969823f18736')
 
     variant('sim', default=False, description='Enable simulation engines and event generators')
     variant('analysis', default=False, description='Enable analysis code')
     variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")
-    variant('upgrades',default=True,description='Include code for detector upgrades')
+    variant('upgrades',default=False,description='Include code for detector upgrades')
 
     depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd cxxstd=17')
     depends_on('benchmark')
@@ -78,6 +79,7 @@ class O2Aliceo2(CMakePackage):
     patch('gsl-3-eve-changes.patch',when='^cppgsl@3:')
     patch('gsl-3-trd-changes.patch',when='^cppgsl@3:')
     patch('analysis-changes.patch')
+    patch('phos-base-geometry.patch',when='@21.05')
 
 #    def build(self, spec, prefix):
 #        inspect.getmodule(self).make.jobs=multiprocessing.cpu_count()*2//5
