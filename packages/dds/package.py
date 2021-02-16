@@ -18,10 +18,12 @@ class Dds(CMakePackage):
 
     homepage = "http://dds.gsi.de"
     git = "https://github.com/FairRootGroup/DDS"
+    url = "https://github.com/FairRootGroup/DDS/archive/3.5.4.tar.gz"
     maintainers = ['dennisklein', 'ChristianTackeGSI']
 
     version('develop', branch='master', get_full_repo=True)
-    version('3.5.3', commit='f1eae89fdff266be86ec962c19e1c7930baf002c', no_cache=True, preferred=True)
+    version('3.5.4', sha256='901fc9cb5197c01a3824bb5cc6c9ad21cb2f93e764d99d7948d65b63670cf635')
+    version('3.5.3', commit='f1eae89fdff266be86ec962c19e1c7930baf002c', no_cache=True)
     version('3.5.2', tag='3.5.2', commit='0813fd5772d1836c055370f4f16d46c961aa0d19', no_cache=True)
     version('3.4', tag='3.4', commit='e0900e946069d840c76e00f29113fd56158fdaa4', no_cache=True)
     version('3.2', tag='3.2', commit='03efdc71eb9aa35091ed1fbc41680c44e2ac7f54', no_cache=True)
@@ -64,8 +66,15 @@ class Dds(CMakePackage):
       inspect.getmodule(self).make.jobs=multiprocessing.cpu_count()*2//5
       super().build(spec,prefix)
 
+    @run_before('cmake')
+    def create_version(self):
+        with open('version','w') as f:
+            f.write('{}'.format(self.version))
+
     def cmake_args(self):
         args = []
+        #args.append(self.define('Boost_NO_SYSTEM_PATHS',True))
+        #args.append(self.define('BOOST_ROOT',self.spec['boost'].prefix))
         if self.spec.satisfies('@:2.5'):
             args.append('-DBUILD_SHARED_LIBS=ON')
         cxxstd = self.spec.variants['cxxstd'].value
