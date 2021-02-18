@@ -3,23 +3,6 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install aliceo2
-#
-# You can edit this file again by typing:
-#
-#     spack edit aliceo2
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack import *
 import inspect
 import multiprocessing
@@ -32,7 +15,9 @@ class O2Aliceo2(CMakePackage):
 
     homepage = "https://aliceo2group.github.io"
     url = "https://github.com/AliceO2Group/AliceO2/archive/v20.49.tar.gz"
+    git = "https://github.com/AliceO2Group/AliceO2.git"
 
+    version('dev', branch='dev')
     version('21.05',sha256='d54fc6db40c71a9b8f01466509638127df945cb2806e31699a9d25deb39382d7')
     version('21.03',sha256='7f7060e3140f14a30fe54985ad22dfd322d7abb876e6fff526a1969823f18736')
 

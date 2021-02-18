@@ -1,0 +1,8 @@
+# This is a Spack Environment file.
+# #
+# # It describes a set of packages to be installed, along with
+# # configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: [o2-aliceo2@21.05~analysis~sim~upgrades]
+  view: false
