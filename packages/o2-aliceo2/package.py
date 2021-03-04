@@ -18,6 +18,7 @@ class O2Aliceo2(CMakePackage):
     git = "https://github.com/AliceO2Group/AliceO2.git"
 
     version('dev', branch='dev')
+    version('21.09',sha256='588f9c9a934f5fa29373c64a5e6b9617299bc58f6940e570ad032c78b1b972c9')
     version('21.05',sha256='d54fc6db40c71a9b8f01466509638127df945cb2806e31699a9d25deb39382d7')
     version('21.03',sha256='7f7060e3140f14a30fe54985ad22dfd322d7abb876e6fff526a1969823f18736')
 
@@ -57,13 +58,13 @@ class O2Aliceo2(CMakePackage):
     if sys.platform == 'darwin' and platform.machine() == 'arm64':
         patch('no_cpuid_on_apple_silicon.patch')
 
-    patch('gsl-3-does-not-have-at-method.patch',when='^cppgsl@3:')
-    patch('gsl-3-tpc-changes.patch',when='^cppgsl@3:')
-    patch('gsl-3-mid-changes.patch',when='^cppgsl@3:')
-    patch('gsl-3-ft0-changes.patch',when='^cppgsl@3:')
-    patch('gsl-3-eve-changes.patch',when='^cppgsl@3:')
-    patch('gsl-3-trd-changes.patch',when='^cppgsl@3:')
-    patch('analysis-changes.patch')
+    patch('gsl-3-does-not-have-at-method.patch',when='@:21.08 ^cppgsl@3:')
+    patch('gsl-3-tpc-changes.patch',when='@:21.08 ^cppgsl@3:')
+    patch('gsl-3-mid-changes.patch',when='@:21.08 ^cppgsl@3:')
+    patch('gsl-3-ft0-changes.patch',when='@:21.08 ^cppgsl@3:')
+    patch('gsl-3-eve-changes.patch',when='@:21.08 ^cppgsl@3:')
+    patch('gsl-3-trd-changes.patch',when='@:21.08 ^cppgsl@3:')
+    patch('analysis-changes.patch',when='+analysis')
     patch('phos-base-geometry.patch',when='@21.05')
 
 #    def build(self, spec, prefix):

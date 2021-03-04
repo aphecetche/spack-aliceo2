@@ -14,7 +14,7 @@ class O2Qualitycontrol(CMakePackage):
 
     version('master',branch='master')
 
-    version('1.10.0', sha256='3dcdb7330bb5e1b671ad6497eb22d8960894e2b5fecd95976548b06218640293')
+    version('1.11.0', sha256='b764f8ed16707493003b66845a90c9c79d49bb3d6b2d57f38760fbf324ab6308')
 
     depends_on('o2-aliceo2')
     depends_on('o2-control+occ')
