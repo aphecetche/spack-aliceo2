@@ -57,8 +57,8 @@ class Fairmq(CMakePackage):
             multi=False,
             description='Force the specified C++ standard when building.')
     variant('pmix',default=False,description='Enable PMIx plugin')
-    variant('dds',default=False,description='Enable DDS plugin')
-    variant('sdk',default=False,description='Build controller SDK')
+    variant('dds',default=True,description='Enable DDS plugin')
+    variant('sdk',default=True,description='Build controller SDK')
 
     conflicts('cxxstd=11', when='@1.4.11:')
     conflicts('+sdk',when='~dds', msg='Controller SDK requires DDS')

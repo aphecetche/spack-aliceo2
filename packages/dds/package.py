@@ -22,6 +22,11 @@ class Dds(CMakePackage):
     maintainers = ['dennisklein', 'ChristianTackeGSI']
 
     version('develop', branch='master', get_full_repo=True)
+    version('3.5.9', sha256='632dd966e63e0ec8ff584bd3fb23584495f46c0afabe0fb03d455946b6cfeb66')
+    version('3.5.8', sha256='461c8932993fb8c671a8e3bc32190c1ce40e407e1fa4f2c3894f0ec1cf62f2da')
+    version('3.5.7', sha256='03998b67b732535265746800ca69f798d6c0d5d4f86eedd8c30896a62e5be5b5')
+    version('3.5.6', sha256='b99160f7862646162d922c0c37c4a64d6bfccad3f99b55fbbd3a76252592117f')
+    version('3.5.5', sha256='fb47e42466926e195cc5a795fc6043a44aa337e416aaa0bdf0d9cfb099d25e9b')
     version('3.5.4', sha256='901fc9cb5197c01a3824bb5cc6c9ad21cb2f93e764d99d7948d65b63670cf635')
     version('3.5.3', commit='f1eae89fdff266be86ec962c19e1c7930baf002c', no_cache=True)
     version('3.5.2', tag='3.5.2', commit='0813fd5772d1836c055370f4f16d46c961aa0d19', no_cache=True)
@@ -45,7 +50,7 @@ class Dds(CMakePackage):
     patch('fix_uuid_init.patch', when='@2.5-odc:3.0')
 
     depends_on('boost@1.67:1.72 +shared+log+thread+program_options+filesystem+system+regex+test',when='@2.4:3.4')
-    depends_on('boost@1.74: +shared+log+thread+program_options+filesystem+system+regex+test',when='@3.5:')
+    depends_on('boost@1.74: +shared+atomic+log+thread+program_options+filesystem+system+regex+test',when='@3.5:')
     # TODO No support for Boost 1.73, check if later releases will work
     # https://github.com/FairRootGroup/DDS/commit/e5b8ca86c46220238d130ac1f3f15dff32e85a2a
     # https://github.com/FairRootGroup/DDS/issues/305
