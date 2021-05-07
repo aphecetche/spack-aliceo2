@@ -1,0 +1,21 @@
+#!/bin/sh
+
+  if [ "$#" -ne 2 ]; then
+      echo "Must get exactly two arguments"
+      exit 2
+  else
+    arg=$1
+    pkg=$2
+    if [ "$pkg" == "zeromq" ]; then
+       pkg="cppzmq"
+    fi
+    if [ "$pkg" == "freetype2" ]; then
+       pkg="freetype"
+    fi
+    if [ "$arg" != "--prefix" ]; then
+      echo "only --prefix arg is supported"
+      exit 3
+    else
+      /Users/laurent/github.com/spack/spack/bin/spack find --format "{prefix}" $pkg | head -1
+    fi
+  fi
