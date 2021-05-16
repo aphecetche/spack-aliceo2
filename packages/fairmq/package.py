@@ -13,10 +13,12 @@ class Fairmq(CMakePackage):
 
     homepage = 'https://github.com/FairRootGroup/FairMQ'
     git = 'https://github.com/FairRootGroup/FairMQ.git'
+    url ="https://github.com/FairRootGroup/FairMQ/archive/refs/tags/v1.4.37.tar.gz"
     maintainers = ['dennisklein', 'ChristianTackeGSI']
     generator = 'Ninja'
 
     version('develop', branch='dev', submodules=True, get_full_repo=True)
+    version('1.4.37', sha256='8d76e19233885b253f2440ecdfb4c59cb9b96dc3673cbc4560152c111bf4571c')
     version('1.4.26', tag='v1.4.26', commit='49d8a1b4dda2c2d446b73a1e39303b581f06f048', submodules=True, no_cache=True)
     version('1.4.25', tag='v1.4.25', commit='1b30f3ac142165b5d17d8ac3ec616414946e23bf', submodules=True, no_cache=True)
     version('1.4.24', tag='v1.4.24', commit='35c7959c530c010da718892fd3948467f104d267', submodules=True, no_cache=True)
@@ -69,7 +71,8 @@ class Fairmq(CMakePackage):
     patch('fix_cpp17moveinsertable_assertion_xcode12.patch', when='@1.4.8:1.4.23')
     patch('update_command_format_in_pmix_plugin.patch', when='@1.4.23 +pmix')
 
-    depends_on('googletest@1.7:', when='@:1.4.8')
+    #depends_on('googletest@1.7:', when='@:1.4.8')
+    depends_on('googletest@1.7:')
     depends_on('boost@1.64: +container+program_options+thread+system+filesystem+regex+date_time', when='@1.3')
     depends_on('boost@1.64: +container+program_options+filesystem+date_time+regex', when='@1.4:')
     conflicts('^boost@1.70:', when='^cmake@:3.14')
@@ -86,9 +89,11 @@ class Fairmq(CMakePackage):
     depends_on('dds@2.4', when='@:1.4.9 +dds')
     depends_on('dds@2.5-odc', when='@1.4.10 +dds')
     depends_on('dds@3.0:', when='@1.4.11: +dds')
+    depends_on('dds@3.5.3:', when='@1.4.27: +dds')
     depends_on('flatbuffers', when='@1.4.9:')
     depends_on('pmix@2.1.4:', when='@1.4: +pmix')
-
+    depends_on('asio@1.18.0:',when='+sdk')
+    depends_on('picosha2',when='+sdk')
     depends_on('cmake@3.9.4:', type='build', when='@1.3')
     depends_on('cmake@3.10:', type='build', when='@1.4.0:1.4.7')
     depends_on('cmake@3.11:', type='build', when='@1.4.8:1.4.12')
@@ -96,11 +101,16 @@ class Fairmq(CMakePackage):
     depends_on('git', type='build')
     depends_on('ninja', type='build')
 
+    def patch(self):
+        filter_file(r'build_bundled\(PicoSHA2',r'#build_bundled(PicoSH2','CMakeLists.txt')
+
     def cmake_args(self):
         args = []
         args.append('-DDISABLE_COLOR=ON')
         args.append('-DBUILD_NANOMSG_TRANSPORT=ON')
+        args.append('-DUSE_EXTERNAL_GTEST=BOOL:ON')
         args.append(self.define_from_variant('BUILD_DDS_PLUGIN','dds'))
+#        args.append('-DCMAKE_PREFIX_PATH={}'.format(self.spec["picosha2"].prefix))
         cxxstd = self.spec.variants['cxxstd'].value
         if cxxstd != 'default':
            args.append('-DCMAKE_CXX_STANDARD={0}'.format(cxxstd))
@@ -112,7 +122,7 @@ class Fairmq(CMakePackage):
            args.append(self.define_from_variant('BUILD_SDK','sdk'))
         # NOTE Support for building the ofi transport will be added at a later
         #      point in time.
-        # args.append('-DBUILD_OFI_TRANSPORT=ON')
+        #args.append('-DBUILD_OFI_TRANSPORT=BOOL:ON')
         if self.spec.satisfies('^boost@:1.69.99'):
             args.append('-DBoost_NO_BOOST_CMAKE=ON')
         return args

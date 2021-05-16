@@ -35,6 +35,7 @@ class Root(CMakePackage):
             url='https://github.com/root-project/root/tarball/071a4c3f09cb7d3847a77c6eec707040b3d26eeb')
 
     # Production version
+    version('6.24.00',sha256='9da30548a289211c3122d47dacb07e85d35e61067fac2be6c5a5ff7bda979989',preferred=True)
     version('6.22.06', sha256='c4688784a7e946cd10b311040b6cf0b2f75125a7520e04d1af0b746505911b57')
     version('6.22.02', sha256='89784afa9c9047e9da25afa72a724f32fa8aa646df267b7731e4527cc8a0c340')
     version('6.22.00', sha256='efd961211c0f9cd76cf4a486e4f89badbcf1d08e7535bba556862b3c1a80beed')

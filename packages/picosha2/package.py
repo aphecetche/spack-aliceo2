@@ -1,4 +1,4 @@
-# Copyright 2013-2020 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2021 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -11,11 +11,11 @@
 # next to all the things you'll want to change. Once you've handled
 # them, you can save this file and test your package like this:
 #
-#     spack install monitoring
+#     spack install picosha2
 #
 # You can edit this file again by typing:
 #
-#     spack edit monitoring
+#     spack edit picosha2
 #
 # See the Spack documentation for more information on packaging.
 # ----------------------------------------------------------------------------
@@ -23,32 +23,20 @@
 from spack import *
 
 
-class O2Monitoring(CMakePackage):
+class Picosha2(Package):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://github.com/AliceO2Group/Monitoring"
-    url = "https://github.com/AliceO2Group/Monitoring/archive/v3.0.7.tar.gz"
-    git = "https://github.com/AliceO2Group/Monitoring.git"
+    homepage = "https://www.example.com"
+    url      = "https://github.com/okdshin/PicoSHA2/archive/refs/tags/v1.0.0.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
-    version('3.8.4', sha256='56dfd6fd12575b4efd53797ce825a6e3bfa9f4d2a6dd70345c07cf1b433bf92b')
+    version('1.0.0', sha256='dec99b43440157847cf5dadfad060b9154749523da28eb1599872f87d1ea8e4b')
 
-    version('3.4.0',
-            sha256='648d4c73d4794ee5b1763b2b574c357fcf9ea7e44c980f4aaeeee2edca6084b7')
-    version(
-        '3.1.0', sha256='bec5ce7e809cc4ac08e524da8dde6f1967170488a7d27b5fe4fb2a41330ebedb')
 
-    # FIXME: Add dependencies if required.
-    depends_on('apmon-cpp')
-    depends_on('boost')
-
-    def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
-        return args
+    def install(self, spec, prefix):
+        mkdirp(prefix.include)
+        install('picosha2.h',prefix.include)

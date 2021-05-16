@@ -22,6 +22,10 @@ class Dds(CMakePackage):
     maintainers = ['dennisklein', 'ChristianTackeGSI']
 
     version('develop', branch='master', get_full_repo=True)
+
+    version('3.5.12', sha256='2f76e70d4f689020030b3ea780916d01acb1cc31e0e34edd4c168046d9491ff3')
+    version('3.5.11', sha256='c478f3907a74681fd4cb51887a03f3497010e286531563943706d557ed472ec1')
+    version('3.5.10', sha256='ac899977d2705e2a0c5cfc1b0ec46387bf96d561d92e9e08509dda093edb264a',preferred=True)
     version('3.5.9', sha256='632dd966e63e0ec8ff584bd3fb23584495f46c0afabe0fb03d455946b6cfeb66')
     version('3.5.8', sha256='461c8932993fb8c671a8e3bc32190c1ce40e407e1fa4f2c3894f0ec1cf62f2da')
     version('3.5.7', sha256='03998b67b732535265746800ca69f798d6c0d5d4f86eedd8c30896a62e5be5b5')
@@ -46,6 +50,7 @@ class Dds(CMakePackage):
     patch('fix_wn_bin_3.2_3.5.2.patch', when='@3.2:3.5.2')
     patch('fix_wn_bin_3.5.3.patch', when='@3.5.3')
     patch('fix_wn_bin_master.patch', when='@develop')
+    patch('fix_wn_bin_3.5.4_3.5.10.patch', when='@3.5.4:3.5.10')
     # TODO Upstream the wn_bin fix
     patch('fix_uuid_init.patch', when='@2.5-odc:3.0')
 
