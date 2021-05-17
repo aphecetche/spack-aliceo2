@@ -25,7 +25,7 @@ class Fairroot(CMakePackage):
     version('18.4.5',sha256='483578dccb8722bd7e51133d4025906f8dff8f52d361e67c019fdff99e032279')
     version('18.4.4',sha256='831fcf861710a6c8953a13580ab2f0f855cb0adb2710884be24b2a9edbe42b08')
     version('18.4.3',sha256='243ca688505893e935eb1e1c876e4519c980d409e6602d560c6c983d6366109f')
-    version('18.4.2',sha256='abc0ae6e2ba0315a8eecf59cdbf1388dbd1fe6423ab4caaa64f19332252fe05c')
+    version('18.4.2',sha256='abc0ae6e2ba0315a8eecf59cdbf1388dbd1fe6423ab4caaa64f19332252fe05c',preferred=True)
     version('18.4.1',sha256='d8455c4bb705a2d5989ad947ffc50bb2f0d00affb649bb5e30d9463b5be0b490')
     version('18.4.0',sha256='97ad86d039db195acf12e9978eb660daab0c91e95e517921bac5a0f157a3e309')
 
@@ -63,7 +63,7 @@ class Fairroot(CMakePackage):
     patch('find_pythia8_cmake.patch', when='@:18.4.0 +sim')
     patch('support_geant4_with_external_clhep_18.2.patch', when='@18.2 +sim')
     patch('support_geant4_with_external_clhep.patch', when='@18.4 +sim ^Geant4@:10.5')
-    patch('darwin_fortran_compiler_detection.patch',when='@18.4:')
+    patch('darwin_fortran_compiler_detection.patch',when='@18.4.2:')
     if sys.platform=='darwin' and platform.machine() == 'arm64':
         patch('darwin_arm64_do_not_force_compiler.patch',when='@18.4:')
 

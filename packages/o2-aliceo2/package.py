@@ -18,10 +18,7 @@ class O2Aliceo2(CMakePackage):
     git = "https://github.com/AliceO2Group/AliceO2.git"
 
     version('dev', branch='dev')
-    version('20210512', sha256='5d5626647666969df74573e6ba6f3f7f4a904c081332e3218a2670b7d1ad5733')
-    version('21.09',sha256='588f9c9a934f5fa29373c64a5e6b9617299bc58f6940e570ad032c78b1b972c9')
-    version('21.05',sha256='d54fc6db40c71a9b8f01466509638127df945cb2806e31699a9d25deb39382d7')
-    version('21.03',sha256='7f7060e3140f14a30fe54985ad22dfd322d7abb876e6fff526a1969823f18736')
+    version('20210516', sha256='5d5626647666969df74573e6ba6f3f7f4a904c081332e3218a2670b7d1ad5733')
 
     variant('sim', default=False, description='Enable simulation engines and event generators')
     variant('analysis', default=False, description='Enable analysis code')
@@ -31,10 +28,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd cxxstd=17')
     depends_on('benchmark')
 
-    if sys.platform == 'darwin' and platform.machine() == 'arm64':
-       depends_on('cppgsl@3: cxxstd=17',when='cxxstd=17')
-    else:
-       depends_on('cppgsl@:2.99 cxxstd=17',when='cxxstd=17')
+    depends_on('cppgsl@3: cxxstd=17',when='cxxstd=17')
 
     depends_on('fairroot', when='+sim')
     depends_on('fairroot~sim', when='~sim')

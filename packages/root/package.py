@@ -28,11 +28,11 @@ class Root(CMakePackage):
 
     # Development version (when more recent than production).
 
-    version('2021.02.06',sha256='ff2fb00e5e79eb53b9b9506db4576e35a1d8aebad49ce60f24d50cab3430d0c1',url='https://github.com/root-project/root/tarball/54b53e52f7992466a55dd75ad73199bbb1a62832')
+    #version('2021.02.06',sha256='ff2fb00e5e79eb53b9b9506db4576e35a1d8aebad49ce60f24d50cab3430d0c1',url='https://github.com/root-project/root/tarball/54b53e52f7992466a55dd75ad73199bbb1a62832')
 
     # patch branches snapshots
-    version('6.22.06-patches-2021.14.01', sha256='5abbd1a3f9a3c1eb8aef202cd590676f2fcc45223b52bd5a6339f76ffeb67c5c',
-            url='https://github.com/root-project/root/tarball/071a4c3f09cb7d3847a77c6eec707040b3d26eeb')
+    #version('6.22.06-patches-2021.14.01', sha256='5abbd1a3f9a3c1eb8aef202cd590676f2fcc45223b52bd5a6339f76ffeb67c5c',
+    #        url='https://github.com/root-project/root/tarball/071a4c3f09cb7d3847a77c6eec707040b3d26eeb')
 
     # Production version
     version('6.24.00',sha256='9da30548a289211c3122d47dacb07e85d35e61067fac2be6c5a5ff7bda979989',preferred=True)
@@ -217,7 +217,7 @@ class Root(CMakePackage):
     depends_on('xz')
     depends_on('zlib')
     depends_on('zstd', when='@6.20:')
-    depends_on('nlohmann-json', when='@2021:')
+    depends_on('nlohmann-json', when='@6.24:')
 
     # X-Graphics
     depends_on('libx11',  when="+x")

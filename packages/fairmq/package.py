@@ -103,6 +103,7 @@ class Fairmq(CMakePackage):
 
     def patch(self):
         filter_file(r'build_bundled\(PicoSHA2',r'#build_bundled(PicoSH2','CMakeLists.txt')
+        filter_file(r'get_git_version\(\)','get_git_version(DEFAULT_VERSION {})'.format(self.version),'CMakeLists.txt')
 
     def cmake_args(self):
         args = []
