@@ -472,6 +472,9 @@ class Root(CMakePackage):
             options.append(define('PYTHON_EXECUTABLE',
                                   spec['python'].command.path))
 
+        if '+pythia6' in self.spec:
+            options.append(define('pythia6_nolink',True))
+
         return options
 
     def setup_build_environment(self, env):

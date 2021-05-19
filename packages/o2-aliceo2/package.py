@@ -8,6 +8,7 @@ import inspect
 import multiprocessing
 import sys
 import platform
+import os
 
 class O2Aliceo2(CMakePackage):
     """ O2 software project for the ALICE experiment at CERN
@@ -53,12 +54,6 @@ class O2Aliceo2(CMakePackage):
     if sys.platform == 'darwin' and platform.machine() == 'arm64':
         patch('no_cpuid_on_apple_silicon.patch')
 
-    patch('gsl-3-does-not-have-at-method.patch',when='@:21.08 ^cppgsl@3:')
-    patch('gsl-3-tpc-changes.patch',when='@:21.08 ^cppgsl@3:')
-    patch('gsl-3-mid-changes.patch',when='@:21.08 ^cppgsl@3:')
-    patch('gsl-3-ft0-changes.patch',when='@:21.08 ^cppgsl@3:')
-    patch('gsl-3-eve-changes.patch',when='@:21.08 ^cppgsl@3:')
-    patch('gsl-3-trd-changes.patch',when='@:21.08 ^cppgsl@3:')
     patch('analysis-changes.patch',when='+analysis')
     patch('phos-base-geometry.patch',when='@21.05')
 
@@ -72,6 +67,9 @@ class O2Aliceo2(CMakePackage):
         args.append(self.define_from_variant("BUILD_ANALYSIS", "analysis"))
         args.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         args.append(self.define_from_variant("ENABLE_UPGRADES", "upgrades"))
+        args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
+        if sys.platform == 'darwin':
+            args.append(self.define("CMAKE_CXX_EXTENSIONS",False))
         return args
 
     def setup_build_environment(self,env):
@@ -81,6 +79,13 @@ class O2Aliceo2(CMakePackage):
         if self.spec.satisfies('+sim'):
           env.set('PYTHIA6_ROOT',self.spec['pythia6'].prefix)
           env.set('PYTHIA_ROOT',self.spec['pythia8'].prefix)
+          env.set('HEPMC3_ROOT',self.spec['hepmc3'].prefix)
+
+    def setup_environment(self, spack_env, run_env):
+        run_env.set('O2_ROOT',self.prefix)
+        run_env.set('VMCWORKDIR',os.path.join(self.prefix,"share"))
+        # if self.spec.satisfies('+sim'):
+        #     run_env.set('HEPMC3_ROOT',self.spec['hepmc3'].prefix)
 
     def patch(self):
         filter_file(r'find_package\(fmt\)',
@@ -93,8 +98,8 @@ class O2Aliceo2(CMakePackage):
                 'NAMES libpythia6.so libpythia6.dylib libPythia6.so libPythia6.dylib',
                 'dependencies/Findpythia6.cmake')
             
-        if self.spec["cppgsl"].satisfies('@3:'):
-            filter_file('::index_type','::size_type','Framework/Core/include/Framework/TMessageSerializer.h')
-            filter_file('::index_type','::size_type','DataFormats/simulation/include/SimulationDataFormat/ConstMCTruthContainer.h')
-            filter_file('::index_type','::size_type','Detectors/GlobalTracking/include/GlobalTracking/MatchTOF.h')
-            filter_file('::index_type','::size_type','Utilities/O2Device/include/O2Device/Utilities.h')
+        # if self.spec["cppgsl"].satisfies('@3:'):
+        #     filter_file('::index_type','::size_type','Framework/Core/include/Framework/TMessageSerializer.h')
+        #     filter_file('::index_type','::size_type','DataFormats/simulation/include/SimulationDataFormat/ConstMCTruthContainer.h')
+        #     filter_file('::index_type','::size_type','Detectors/GlobalTracking/include/GlobalTracking/MatchTOF.h')
+        #     filter_file('::index_type','::size_type','Utilities/O2Device/include/O2Device/Utilities.h')

@@ -38,6 +38,8 @@ class Fairroot(CMakePackage):
     variant('examples', default=False,
             description='Install examples')
 
+    depends_on('ninja', type='build')
+    generator = 'Ninja'
     depends_on('cmake@3.13.4:', type='build')
     depends_on('boost@1.68.0: +container')
     depends_on('fairlogger@1.4.0:')
@@ -93,7 +95,8 @@ class Fairroot(CMakePackage):
 
     def common_env_setup(self, env):
         # So that root finds the shared library / rootmap
-        env.prepend_path("LD_LIBRARY_PATH", self.prefix.lib)
+        # env.prepend_path("LD_LIBRARY_PATH", self.prefix.lib)
+        pass
 
     def setup_run_environment(self, env):
         self.common_env_setup(env)
