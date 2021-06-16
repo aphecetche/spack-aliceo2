@@ -13,7 +13,8 @@ class O2Control(Package):
     url = "https://github.com/AliceO2Group/Control/archive/v0.20.3.tar.gz"
     git = "https://github.com/AliceO2Group/Control.git"
 
-    version('0.20.3', sha256='4dc36bff618e9aec24d3dd6ee2b1f8db75713c144c349a9c5abd48542d956af4')
+    version('0.23.1', sha256='d3af6914723268a3067b182532e3ec6dff225fe043f160a4e48e9a1848d51a9a')
+    #version('0.20.3', sha256='4dc36bff618e9aec24d3dd6ee2b1f8db75713c144c349a9c5abd48542d956af4')
 
     variant('core',default=True,description='build control core')
     variant('occ',default=True,description='build control occ plugin')
@@ -22,7 +23,7 @@ class O2Control(Package):
     depends_on('fairmq',when='+occ')
     depends_on('fairlogger',when='+occ')
     depends_on('boost',when='+occ')
-    depends_on('protobuf',when='+occ')
+    depends_on('protobuf@3.14.3:',when='+occ')
     depends_on('openssl',when='+occ')
     depends_on('o2-infologger+libonly',when='+occ')
     depends_on('o2-configuration',when='+occ')

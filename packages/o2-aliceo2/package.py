@@ -39,12 +39,12 @@ class O2Aliceo2(CMakePackage):
     depends_on('o2-infologger')
     depends_on('o2-monitoring')
     depends_on('protobuf')
-    depends_on('pythia6+root',when='+sim')
+    depends_on('pythia6',when='+sim')
     depends_on('pythia8',when='+sim')
     depends_on('hepmc3',when='+sim')
     depends_on('rapidjson')
-    depends_on('root+http+dataframe+arrow', when='~sim')
-    depends_on('root+http+dataframe+arrow+pythia6+pythia8', when='+sim')
+    depends_on('root+http+dataframe+arrow~vmc', when='~sim')
+    depends_on('root+http+dataframe+arrow+pythia6+pythia8~vmc', when='+sim')
     depends_on('vc')
     depends_on('vmc')
 
@@ -97,9 +97,3 @@ class O2Aliceo2(CMakePackage):
         filter_file(r'NAMES libpythia6.so libpythia6.dylib',
                 'NAMES libpythia6.so libpythia6.dylib libPythia6.so libPythia6.dylib',
                 'dependencies/Findpythia6.cmake')
-            
-        # if self.spec["cppgsl"].satisfies('@3:'):
-        #     filter_file('::index_type','::size_type','Framework/Core/include/Framework/TMessageSerializer.h')
-        #     filter_file('::index_type','::size_type','DataFormats/simulation/include/SimulationDataFormat/ConstMCTruthContainer.h')
-        #     filter_file('::index_type','::size_type','Detectors/GlobalTracking/include/GlobalTracking/MatchTOF.h')
-        #     filter_file('::index_type','::size_type','Utilities/O2Device/include/O2Device/Utilities.h')

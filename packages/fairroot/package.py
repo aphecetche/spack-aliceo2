@@ -52,7 +52,7 @@ class Fairroot(CMakePackage):
     depends_on('googletest@1.7.0:')
     depends_on('msgpack-c@3.1:', when='+examples')
     depends_on('protobuf')
-    depends_on('pythia6+root', when='+sim')
+    depends_on('pythia6', when='+sim')
     depends_on('pythia8', when='+sim')
     depends_on('root+http',when='~sim')
     depends_on('root+http+pythia6+pythia8',when='+sim')
