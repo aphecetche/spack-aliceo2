@@ -53,7 +53,8 @@ class Arrow(CMakePackage, CudaPackage):
     depends_on('thrift+pic', when='+parquet')
     depends_on('utf8proc')
     depends_on('zlib+pic', when='+zlib')
-    depends_on('zstd+pic', when='+zstd')
+    # depends_on('zstd+pic', when='+zstd')
+    depends_on('zstd', when='+zstd')
     depends_on('openssl',when='@4.0.0:')
 
     variant('brotli', default=False, description='Build support for Brotli compression')

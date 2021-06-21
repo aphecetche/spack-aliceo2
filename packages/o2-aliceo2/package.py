@@ -71,6 +71,13 @@ class O2Aliceo2(CMakePackage):
         if sys.platform == 'darwin':
             args.append(self.define("CMAKE_CXX_EXTENSIONS",False))
         return args
+  
+    def setup_root_include_path(self,env):
+        # this is needed e.g. to compile Root macros for the tests
+        for d in self.spec.traverse():
+            #print(d.name,d.prefix.include)
+            env.append_path("ROOT_INCLUDE_PATH",d.prefix.include)
+        env.append_path("ROOT_INCLUDE_PATH",self.prefix.include)
 
     def setup_build_environment(self,env):
         # FIXME: this should not be necessary with Spack, but 
@@ -80,12 +87,17 @@ class O2Aliceo2(CMakePackage):
           env.set('PYTHIA6_ROOT',self.spec['pythia6'].prefix)
           env.set('PYTHIA_ROOT',self.spec['pythia8'].prefix)
           env.set('HEPMC3_ROOT',self.spec['hepmc3'].prefix)
+        self.setup_root_include_path(env)
 
     def setup_environment(self, spack_env, run_env):
         run_env.set('O2_ROOT',self.prefix)
         run_env.set('VMCWORKDIR',os.path.join(self.prefix,"share"))
+        run_env.append_path("ROOT_INCLUDE_PATH",self.prefix.include)
+        run_env.append_path("ROOT_INCLUDE_PATH",os.path.join(self.prefix.include,"GPU"))
         # if self.spec.satisfies('+sim'):
         #     run_env.set('HEPMC3_ROOT',self.spec['hepmc3'].prefix)
+        self.setup_root_include_path(run_env)
+
 
     def patch(self):
         filter_file(r'find_package\(fmt\)',

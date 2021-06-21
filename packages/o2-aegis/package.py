@@ -31,7 +31,7 @@ class O2Aegis(CMakePackage):
     homepage = "https://github.com/AliceO2Group/AEGIS/"
     url      = "https://github.com/AliceO2Group/AEGIS/archive/refs/tags/v1.4.tar.gz"
 
-
+    variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")
     version('1.4', sha256='14238e5eb128dd817013001bcce51470b08818a647477755055d9bc5fbc84947')
 
     depends_on('root+pythia6+pythia8~vmc')
@@ -42,6 +42,7 @@ class O2Aegis(CMakePackage):
     def cmake_args(self):
         args = []
         args.append(self.define("CMAKE_Fortran_FLAGS","-fallow-argument-mismatch"))
+        #args.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         return args
 
     def patch(self):
@@ -49,3 +50,7 @@ class O2Aegis(CMakePackage):
         filter_file('find_package\(ROOT REQUIRED COMPONENTS EG\)','find_package(ROOT REQUIRED COMPONENTS EG)\nfind_package(VMC)\n','GeneratorCosmics/CMakeLists.txt')
         filter_file('\${ROOT_LIBRARIES}','PUBLIC ROOT::VMC','GeneratorParam/CMakeLists.txt')
         filter_file('find_package\(ROOT REQUIRED COMPONENTS EG\)','find_package(ROOT REQUIRED COMPONENTS EG)\nfind_package(VMC)\n','GeneratorParam/CMakeLists.txt')
+
+    def setup_environment(self,spack_env,run_env):
+        run_env.set('AEGIS_ROOT',self.prefix)
+        run_env.append_path('ROOT_INCLUDE_PATH',self.prefix.include)

@@ -100,6 +100,7 @@ class Fairroot(CMakePackage):
 
     def setup_run_environment(self, env):
         self.common_env_setup(env)
+        env.prepend_path("ROOT_INCLUDE_PATH",self.prefix.include)
 
     def setup_dependent_build_environment(self, env, dependent_spec):
         self.common_env_setup(env)
