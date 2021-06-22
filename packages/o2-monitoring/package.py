@@ -35,12 +35,11 @@ class O2Monitoring(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version('3.8.6', sha256='327c4d018e59c541f062d4d3e53f21d0cce51bf870ca5603ebeb44d2401fcd3c')
+    version('3.8.5', sha256='44650e25b90311cd3741757614e8421f27b5e7a771c4b6486f8dc7c22e72ed2e')
     version('3.8.4', sha256='56dfd6fd12575b4efd53797ce825a6e3bfa9f4d2a6dd70345c07cf1b433bf92b')
-
-    version('3.4.0',
-            sha256='648d4c73d4794ee5b1763b2b574c357fcf9ea7e44c980f4aaeeee2edca6084b7')
-    version(
-        '3.1.0', sha256='bec5ce7e809cc4ac08e524da8dde6f1967170488a7d27b5fe4fb2a41330ebedb')
+    version('3.4.0', sha256='648d4c73d4794ee5b1763b2b574c357fcf9ea7e44c980f4aaeeee2edca6084b7')
+    version('3.1.0', sha256='bec5ce7e809cc4ac08e524da8dde6f1967170488a7d27b5fe4fb2a41330ebedb')
 
     # FIXME: Add dependencies if required.
     depends_on('apmon-cpp')
