@@ -25,6 +25,9 @@ class O2Aliceo2(CMakePackage):
     variant('analysis', default=False, description='Enable analysis code')
     variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")
     variant('upgrades',default=False,description='Include code for detector upgrades')
+    variant('tsan',default=False,description='Build with ThreadSanitizer')
+    variant('asan',default=False,description='Build with AddressSanitizer')
+    variant('usan',default=False,description='Build with UndefinedBehaviorSanitizer')
 
     depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd cxxstd=17')
     depends_on('benchmark')
@@ -54,7 +57,7 @@ class O2Aliceo2(CMakePackage):
     if sys.platform == 'darwin' and platform.machine() == 'arm64':
         patch('no_cpuid_on_apple_silicon.patch')
 
-    patch('analysis-changes.patch',when='+analysis')
+    #patch('analysis-changes.patch',when='+analysis')
     patch('phos-base-geometry.patch',when='@21.05')
 
 #    def build(self, spec, prefix):
@@ -70,6 +73,20 @@ class O2Aliceo2(CMakePackage):
         args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
         if sys.platform == 'darwin':
             args.append(self.define("CMAKE_CXX_EXTENSIONS",False))
+        if self.spec.satisfies('+asan'):
+            args.append(self.define("CMAKE_C_FLAGS","-g -fno-omit-frame-pointer -fsanitize=address"))
+            args.append(self.define("CMAKE_CXX_FLAGS","-g -fno-omit-frame-pointer -fsanitize=address"))
+            args.append(self.define("CMAKE_EXE_LINKER_FLAGS","-fsanitize=address"))
+            args.append(self.define("CMAKE_SHARED_LINKER_FLAGS","-fsanitize=address"))
+            args.append(self.define("CMAKE_MODULE_LINKER_FLAGS","-fsanitize=address"))
+        if self.spec.satisfies('+tsan'):
+            args.append(self.define("CMAKE_CXX_FLAGS","-fsanitize=thread"))
+        if self.spec.satisfies('+usan'):
+            args.append(self.define("CMAKE_C_FLAGS","-g -fno-omit-frame-pointer -fsanitize=undefined"))
+            args.append(self.define("CMAKE_CXX_FLAGS","-g -fno-omit-frame-pointer -fsanitize=undefined"))
+            args.append(self.define("CMAKE_EXE_LINKER_FLAGS","-fsanitize=undefined"))
+            args.append(self.define("CMAKE_SHARED_LINKER_FLAGS","-fsanitize=undefined"))
+            args.append(self.define("CMAKE_MODULE_LINKER_FLAGS","-fsanitize=undefined"))
         return args
   
     def setup_root_include_path(self,env):
@@ -100,12 +117,13 @@ class O2Aliceo2(CMakePackage):
 
 
     def patch(self):
-        filter_file(r'find_package\(fmt\)',
-                    '\n\n'+r'find_package(VMC)' + '\n\n'
-                    r'find_package(fmt)',
-                    'dependencies/O2Dependencies.cmake')
-        filter_file(r'ROOT::ROOTDataFrame', r'ROOT::ROOTDataFrame ROOT::VMC',
-                    'dependencies/FindFairRoot.cmake')
-        filter_file(r'NAMES libpythia6.so libpythia6.dylib',
-                'NAMES libpythia6.so libpythia6.dylib libPythia6.so libPythia6.dylib',
-                'dependencies/Findpythia6.cmake')
+        # filter_file(r'find_package\(fmt\)',
+        #             '\n\n'+r'find_package(VMC)' + '\n\n'
+        #             r'find_package(fmt)',
+        #             'dependencies/O2Dependencies.cmake')
+        # filter_file(r'ROOT::ROOTDataFrame', r'ROOT::ROOTDataFrame ROOT::VMC',
+        #             'dependencies/FindFairRoot.cmake')
+        # filter_file(r'NAMES libpythia6.so libpythia6.dylib',
+        #         'NAMES libpythia6.so libpythia6.dylib libPythia6.so libPythia6.dylib',
+        #         'dependencies/Findpythia6.cmake')
+        pass
