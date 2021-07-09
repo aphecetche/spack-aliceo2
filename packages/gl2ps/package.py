@@ -37,6 +37,7 @@ class Gl2ps(CMakePackage):
             self.define_from_variant('ENABLE_PNG', 'png'),
             self.define_from_variant('ENABLE_ZLIB', 'zlib'),
         ]
+        args.append("-DCMAKE_MACOSX_RPATH=ON")
         if '~doc' in self.spec:
             # Make sure we don't look.
             args.append(self.define('CMAKE_DISABLE_FIND_PACKAGE_LATEX','ON'))
