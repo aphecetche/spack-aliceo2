@@ -34,6 +34,7 @@ class Asio(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version('1.19.1', sha256='7adb7c7cbcf38adab02cc9df97de6cb852ef7d25d83dd09e5df19f8c694199de')
     version('1.18.1', sha256='2a31f63e2b075a24634f2850c35004cefc7c7b3b3f0d0da335480f6cc20265d5')
 
     # FIXME: Add dependencies if required.
