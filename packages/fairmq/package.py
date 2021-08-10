@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 from spack import *
-
+import sys
 
 class Fairmq(CMakePackage):
     """C++ Message Queuing Library and Framework"""
@@ -62,7 +62,8 @@ class Fairmq(CMakePackage):
             multi=False,
             description='Force the specified C++ standard when building.')
     variant('pmix',default=False,description='Enable PMIx plugin')
-    variant('dds',default=True,description='Enable DDS plugin')
+    #variant('dds',default=True,description='Enable DDS plugin')
+    variant('dds',default=(sys.platform!='darwin'),description='Enable DDS plugin')
     variant('sdk',default=True,description='Build controller SDK')
 
     conflicts('cxxstd=11', when='@1.4.11:')
@@ -93,19 +94,24 @@ class Fairmq(CMakePackage):
     depends_on('dds@2.5-odc', when='@1.4.10 +dds')
     depends_on('dds@3.0:', when='@1.4.11: +dds')
     depends_on('dds@3.5.3:', when='@1.4.27: +dds')
+    depends_on('dds@3.5.16:', when='@1.4.40: +dds')
     depends_on('flatbuffers', when='@1.4.9:')
     depends_on('pmix@2.1.4:', when='@1.4: +pmix')
     depends_on('asio@1.18.0:',when='+sdk')
-    depends_on('picosha2',when='+sdk')
+    depends_on('picosha2') #,when='+sdk')
     depends_on('cmake@3.9.4:', type='build', when='@1.3')
     depends_on('cmake@3.10:', type='build', when='@1.4.0:1.4.7')
     depends_on('cmake@3.11:', type='build', when='@1.4.8:1.4.12')
     depends_on('cmake@3.12:', type='build', when='@1.4.13:,develop')
     depends_on('git', type='build')
     depends_on('ninja', type='build')
+    depends_on('faircmakemodules',type='build', when='@1.4.40:')
 
     def patch(self):
-        filter_file(r'build_bundled\(PicoSHA2',r'#build_bundled(PicoSH2','CMakeLists.txt')
+        if self.spec.satisfies('@:1.4.39'):
+          filter_file(r'build_bundled\(PicoSHA2',r'#build_bundled(PicoSHA2','CMakeLists.txt')
+        else:
+          filter_file(r'build_bundled\(PicoSHA2',r'#build_bundled(PicoSHA2','cmake/FairMQDependencies.cmake')
         filter_file(r'get_git_version\(\)','get_git_version(DEFAULT_VERSION {})'.format(self.version),'CMakeLists.txt')
 
     def cmake_args(self):
