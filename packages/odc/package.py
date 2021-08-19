@@ -18,7 +18,7 @@ class Odc(CMakePackage):
     variant('grpc_client',default=True,description='Build gRPC client')
     variant('grpc_server', default=True, description='Build gRPC server')
     variant('cli_server',default=True,description='Build CLI server')
-    variant('examples',default=False,description='Build examples')
+    variant('examples',default=True,description='Build examples')
     variant('default_plugins',default=True,description='Build default plugins')
     variant('epn_plugin',default=True,description='Build EPN plugins')
     variant('infologger',default=False,description='Enable InfoLogger support')
@@ -33,9 +33,15 @@ class Odc(CMakePackage):
     depends_on('fairmq@1.4.26:')
     depends_on('fairlogger')
     depends_on('flatbuffers')
+    depends_on('picosha2')
 
     depends_on('ninja',type='build')
     generator='Ninja'
+
+    def patch(self):
+      filter_file(r'\${PROJECT_VERSION} PARENT_SCOPE',
+      '{} PARENT_SCOPE'.format(self.version),
+      'cmake/ODCUtils.cmake')
 
     def cmake_args(self):
         args = []
