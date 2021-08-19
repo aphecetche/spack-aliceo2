@@ -52,6 +52,8 @@ class Dds(CMakePackage):
     patch('fix_wn_bin_3.5.3.patch', when='@3.5.3')
     patch('fix_wn_bin_master.patch', when='@develop')
     patch('fix_wn_bin_3.5.4_3.5.10.patch', when='@3.5.4:3.5.10')
+    patch('fix_wn_bin_3.5.14.patch', when='@3.5.14')
+    patch('fix_wn_bin_3.5.16.patch', when='@3.5.16')
     # TODO Upstream the wn_bin fix
     patch('fix_uuid_init.patch', when='@2.5-odc:3.0')
 

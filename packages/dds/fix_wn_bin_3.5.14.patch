@@ -1,5 +1,17 @@
+commit bf91582c16ecce132ab9377727717062af8056a5
+Author: Christian Tacke <58549698+ChristianTackeGSI@users.noreply.github.com>
+Date:   Mon Mar 8 14:55:25 2021 +0100
+
+    wn_bin pkg: Rewrite using modern cmake
+    
+    Modern cmake has better tools to collect the prereqs of
+    binaries. Let's use them.
+    
+    The original patches are by Dennis Klein. He deserves most
+    of the credit for developing this.
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ac59845..9e21c78 100644
+index c072db1..1340c72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -10,7 +10,8 @@ set(DDS_PROTOCOL_VERSION "2")
@@ -10,9 +22,9 @@ index ac59845..9e21c78 100644
 +cmake_minimum_required( VERSION 3.16.0 FATAL_ERROR )
 +cmake_policy(VERSION 3.16)
  
- set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+ string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
  
-@@ -413,69 +414,31 @@ set( WN_PKG_DIR "${CMAKE_BINARY_DIR}/dds-wrk-bin" )
+@@ -415,68 +416,31 @@ set( WN_PKG_DIR "${CMAKE_BINARY_DIR}/dds-wrk-bin" )
  set( WN_PKG_NAME_ARCH "${WN_PKG_NAME}.tar.gz" )
  set( WN_PKG_REMOTE_DIR "/u/ddswww/web-docs/releases/add/${DDS_VERSION}" )
  
@@ -45,16 +57,8 @@ index ac59845..9e21c78 100644
 -
 -set(DDS_AGENT_BIN_PATH $<TARGET_FILE:dds-agent>)
 -set(DDS_PREREQ_SOURCE_BIN_PATH $<TARGET_FILE:dds-commander>)
-+# Generate a list of what CMake considers to be system prefixes
-+list(APPEND WN_PKG_EXCLUDED_SYSTEM_PREFIXES
-+  ${CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES}
-+  ${CMAKE_INSTALL_LIBDIR} )
-+list(REMOVE_DUPLICATES WN_PKG_EXCLUDED_SYSTEM_PREFIXES)
-+separate_arguments(CLI_WN_PKG_EXCLUDED_SYSTEM_PREFIXES
-+  UNIX_COMMAND "${WN_PKG_EXCLUDED_SYSTEM_PREFIXES}" )
- 
--set(PREREQ_DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 -
+-set(PREREQ_DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}")
 -
 -# WORKAROUND: don't generate helper script when building an xcode project
 -# The reason: "Evaluation file to be written multiple times for different configurations or languages with different content"
@@ -84,7 +88,14 @@ index ac59845..9e21c78 100644
 -			  	INPUT ${CMAKE_CURRENT_BINARY_DIR}/cmake/modules/DDS_CollectPrerequisitesGen_Tests.cmake.configured CONDITION 1)
 -	endif( BUILD_TESTS )
 -endif()
--
++# Generate a list of what CMake considers to be system prefixes
++list(APPEND WN_PKG_EXCLUDED_SYSTEM_PREFIXES
++  ${CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES}
++  ${CMAKE_INSTALL_LIBDIR} )
++list(REMOVE_DUPLICATES WN_PKG_EXCLUDED_SYSTEM_PREFIXES)
++separate_arguments(CLI_WN_PKG_EXCLUDED_SYSTEM_PREFIXES
++  UNIX_COMMAND "${WN_PKG_EXCLUDED_SYSTEM_PREFIXES}" )
+ 
 -#
 -# TODO: replace DDS_CollectPrerequisites.cmake by DDS_CollectPrerequisitesGen.cmake and make the script more generic
 -#
@@ -102,9 +113,9 @@ index ac59845..9e21c78 100644
  	COMMAND ${CMAKE_COMMAND} -E tar czf ${WN_PKG_NAME_ARCH} "${WN_PKG_DIR}"
  	COMMAND chmod go+xr ${WN_PKG_NAME_ARCH}
  	COMMENT "Generate WN binary package"
-@@ -498,19 +461,6 @@ add_dependencies( wn_bin_upload
+@@ -499,19 +463,6 @@ add_dependencies( wn_bin_upload
  
- INSTALL(FILES ${CMAKE_BINARY_DIR}/${WN_PKG_NAME_ARCH} DESTINATION bin/wn_bins OPTIONAL)
+ INSTALL(FILES ${CMAKE_BINARY_DIR}/${WN_PKG_NAME_ARCH} DESTINATION "${PROJECT_INSTALL_BINDIR}/wn_bins" OPTIONAL)
  
 -
 -# WORKAROUND: don't generate helper script when building an xcode project
@@ -112,7 +123,7 @@ index ac59845..9e21c78 100644
 -if (NOT CMAKE_GENERATOR STREQUAL "Xcode")
 -	# WORKAROUND: create destination "lib" directory.
 -	# INSTALL SCRIPT is called before any other lib is installed, therefore we need to create a dest. dir.
--	INSTALL(DIRECTORY DESTINATION lib)
+-	INSTALL(DIRECTORY DESTINATION "${PROJECT_INSTALL_LIBDIR}")
 -	INSTALL(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/cmake/modules/DDS_CollectPrerequisitesGen.cmake)
 -	if( BUILD_TESTS )
 -		INSTALL(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/cmake/modules/DDS_CollectPrerequisitesGen_Tests.cmake)
@@ -124,7 +135,7 @@ index ac59845..9e21c78 100644
  #
 diff --git a/cmake/DDSCollectWNPkgFiles.cmake b/cmake/DDSCollectWNPkgFiles.cmake
 new file mode 100644
-index 0000000..1b31397
+index 0000000..b360928
 --- /dev/null
 +++ b/cmake/DDSCollectWNPkgFiles.cmake
 @@ -0,0 +1,24 @@
@@ -198,15 +209,18 @@ index 27c7a05..0000000
 \ No newline at end of file
 diff --git a/cmake/modules/DDS_CollectPrerequisitesGen.cmake.in b/cmake/modules/DDS_CollectPrerequisitesGen.cmake.in
 deleted file mode 100644
-index 6759585..0000000
+index fc7857a..0000000
 --- a/cmake/modules/DDS_CollectPrerequisitesGen.cmake.in
 +++ /dev/null
-@@ -1,51 +0,0 @@
+@@ -1,57 +0,0 @@
 -# Copyright 2017 GSI, Inc. All rights reserved.
 -#
 -#
 -include(GetPrerequisites)
 -
+-
+-cmake_policy(PUSH)
+-cmake_policy(SET CMP0012 NEW) # if() recognizes numbers and booleans
 -# WORKAROUND: if "macro" is used it doesn't outoup "message" messages.
 -#macro(DDS_CollectPrerequisites)
 -	
@@ -236,8 +250,9 @@ index 6759585..0000000
 -		# link only third-party libs
 -		# Skip DDS libs
 -		if(NOT ${resolved_file} STREQUAL "@PREREQ_DESTINATION@/${PREREQNAME}")
--			if(${PREREQNAME} MATCHES "^libboost_*")
--				# skip existing files. Fixes GH-323
+-			if(@CREATE_BOOST_SYMLINKS@ AND (${PREREQNAME} MATCHES "^libboost_*"))
+-				
+-					# skip existing files. Fixes GH-323
 -				if(EXISTS "@PREREQ_DESTINATION@/${PREREQNAME}")
 -					message("DDS Commander prerequisite: creating a symlink: destination exists. SKIPPING: @PREREQ_DESTINATION@/${PREREQNAME}")
 -					continue()
@@ -251,5 +266,7 @@ index 6759585..0000000
 -		endif()
 -	endforeach()
 -	###################################################
+-
+-cmake_policy(POP)
 -
 -#endmacro(DDS_CollectPrerequisites)

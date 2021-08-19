@@ -19,6 +19,8 @@ class O2Aliceo2(CMakePackage):
     git = "https://github.com/AliceO2Group/AliceO2.git"
 
     version('dev', branch='dev')
+    version('20210818', sha256='c2fd2fb27185a8aed107d262280d63b5f28e99d26ecc5814a4300ee928848e62')
+
     version('20210516', sha256='5d5626647666969df74573e6ba6f3f7f4a904c081332e3218a2670b7d1ad5733')
 
     variant('sim', default=False, description='Enable simulation engines and event generators')
