@@ -13,6 +13,8 @@ class O2Control(Package):
     url = "https://github.com/AliceO2Group/Control/archive/v0.20.3.tar.gz"
     git = "https://github.com/AliceO2Group/Control.git"
 
+    version('0.26.2', sha256='1b11ccdad0a8978fb3ca4d2e3853549cefd6651e6c9fb95f78afa618abbf6931')
+
     version('0.23.1', sha256='d3af6914723268a3067b182532e3ec6dff225fe043f160a4e48e9a1848d51a9a')
     #version('0.20.3', sha256='4dc36bff618e9aec24d3dd6ee2b1f8db75713c144c349a9c5abd48542d956af4')
 
@@ -31,6 +33,7 @@ class O2Control(Package):
     depends_on('abseil-cpp',when='+occ')
     depends_on('grpc@1.34: +shared',when='+occ')
     depends_on('rapidjson',when='+occ')
+    depends_on('go',when='+coconut')
 
     depends_on('cmake', type='build', when='+occ')
     depends_on('ninja', type='build', when='+occ')
@@ -38,6 +41,8 @@ class O2Control(Package):
     def install(self,spec,prefix):
        if self.spec.satisfies('+occ'):
            self.build_occ()
+       if self.spec.satisfies('+coconut'):
+           self.build_coconut()
 
     def cmake_args(self):
         args = ['-DBUILD_SHARED_LIBS=ON']
@@ -51,3 +56,8 @@ class O2Control(Package):
                 cmake('..','-DBUILD_SHARED_LIBS=ON',*args)
                 make()
                 make("install")
+
+    def build_coconut(self):
+        make("vendor")
+        make("WHAT=coconut")
+        make("install")

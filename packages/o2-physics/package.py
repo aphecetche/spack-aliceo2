@@ -40,7 +40,8 @@ class O2Physics(CMakePackage):
 
     generator = 'Ninja'
 
-    depends_on('o2-aliceo2+sim')
+    depends_on('o2-aliceo2+sim+analysis')
+    depends_on('onnxruntime')
 
     def cmake_args(self):
         # FIXME: Add arguments other than

@@ -16,6 +16,8 @@ class Arrow(CMakePackage, CudaPackage):
     homepage = "http://arrow.apache.org"
     url = "https://github.com/apache/arrow/archive/apache-arrow-0.9.0.tar.gz"
 
+    version('5.0.0', sha256='ec3bdae6ccc08de5b5adcf9cbe7cbc085cab0ba06c8e6d3abfc3ed1cd4c1c9a2')
+
     version('4.0.1', sha256='79d3e807df4a179cfab1e7a1ab5f79d95f7b72ac2c33aba030febd125d77eb3b')
     version('4.0.0', sha256='a27971e2a71c412ae43d998b7b6d06201c7a3da382c804dcdc4a8126ccbabe67')
 
@@ -56,7 +58,7 @@ class Arrow(CMakePackage, CudaPackage):
     depends_on('zlib+pic', when='+zlib')
     # depends_on('zstd+pic', when='+zstd')
     depends_on('zstd', when='+zstd')
-    depends_on('openssl',when='@4.0.0:')
+    depends_on('openssl',when='@4.0.0:5.0.0')
 
     variant('brotli', default=False, description='Build support for Brotli compression')
     variant('build_type', default='Release', description='CMake build type', values=('Debug', 'FastDebug', 'Release'))
