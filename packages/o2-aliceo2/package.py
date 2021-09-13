@@ -19,8 +19,12 @@ class O2Aliceo2(CMakePackage):
     git = "https://github.com/AliceO2Group/AliceO2.git"
 
     version('dev', branch='dev')
-    version('20210818', sha256='c2fd2fb27185a8aed107d262280d63b5f28e99d26ecc5814a4300ee928848e62')
 
+    version('20210913', sha256='93a6b9a2b934d239c7fa326913ef56e7a12d633f4ed52cac07c3991aec3c5a7a')
+    version('20210912', sha256='07d0c6b9c3997b0a173e5d3f6aace1611e4248227feee76b102015a7b7599ce5')
+
+    version('20210901', sha256='ac1626dd85d7c0f12fba2aa93eb571da1af68c8aae6e3e5782896ba92ee6317f')
+    version('20210818', sha256='c2fd2fb27185a8aed107d262280d63b5f28e99d26ecc5814a4300ee928848e62')
     version('20210516', sha256='5d5626647666969df74573e6ba6f3f7f4a904c081332e3218a2670b7d1ad5733')
 
     variant('sim', default=False, description='Enable simulation engines and event generators')
@@ -52,7 +56,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('root+http+dataframe+arrow+pythia6+pythia8~vmc', when='+sim')
     depends_on('vc')
     depends_on('vmc')
-
+    depends_on('libjalieno2')
     depends_on('fftw precision=float ~mpi')
 
     depends_on('ninja', type='build')

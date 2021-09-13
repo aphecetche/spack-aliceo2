@@ -9,10 +9,13 @@ class O2Qualitycontrol(CMakePackage):
     """Data Quality Control (QC) software for the ALICE O2 system"""
 
     homepage = "https://github.com/AliceO2Group/QualityControl"
-    url      = "https://github.com/AliceO2Group/QualityControl/archive/v1.10.0.tar.gz"
+    url="https://github.com/AliceO2Group/QualityControl/archive/refs/tags/v1.28.0.tar.gz"
     git      = "https://github.com/AliceO2Group/QualityControl.git"
 
     version('master',branch='master')
+
+    version('1.29.1', sha256='fb1bbabec2414f90000be21421dca8feae05f84133298fededbae217502b6681')
+    version('1.28.0', sha256='1170972409b1421b3a2520e55caa6222ef8d769323ad3014d566b584035b80c8')
 
     version('1.24.1', sha256='4b87c3301e3c201807b0e42385bfee722e77130d99eef39d92e1681918c830df')
     version('1.18.1', sha256='4dfb8972ba41cfa031fcc85da529c1e0183d4459be059d43899182b55c6b5e1e')

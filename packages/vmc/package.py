@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 from spack import *
-
+import os
 
 class Vmc(CMakePackage):
     """The Virtual Monte Carlo (VMC) library"""
@@ -27,3 +27,6 @@ class Vmc(CMakePackage):
         filter_file(r'set\(VMC_LIBRARIES "VMCLibrary"\)',
         r'set(VMC_LIBRARIES "VMCLibrary")' + '\n' + r'add_library(ROOT::VMC ALIAS VMCLibrary)',
         'cmake/VMCConfig.cmake.in')
+
+    def setup_environment(self,spack_env,run_env):
+        run_env.append_path('ROOT_INCLUDE_PATH',os.path.join(self.prefix,'include','vmc'))
