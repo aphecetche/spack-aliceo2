@@ -58,6 +58,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('vmc')
     depends_on('libjalieno2')
     depends_on('fftw precision=float ~mpi')
+    depends_on('o2-debuggui')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'
