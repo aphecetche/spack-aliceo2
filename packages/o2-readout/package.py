@@ -18,6 +18,7 @@ class O2Readout(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version('2.5.2', sha256='91a99faf4df366a8af77dd2a9f12fef00b14aef6145f1312d4cd58b4fd6091e9')
     version('1.5.6',
             sha256='7934ff4965ef44070d4b22f87a42bb0728bfb60a8298c13141d80b8a7a5c9766')
     version('1.5.5',

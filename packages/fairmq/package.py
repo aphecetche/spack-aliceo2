@@ -18,6 +18,8 @@ class Fairmq(CMakePackage):
     generator = 'Ninja'
 
     version('develop', branch='dev', submodules=True, get_full_repo=True)
+
+    version('1.4.42', sha256='9a702cfb17cc82089c7802c8ba94637f6227a8c221f477780c8861ac97f83033')
     version('1.4.40', sha256='e19436ced0d7071749552565241faed11f88fbe0f8794b38492538dc8a07644d')
 
     version('1.4.38', sha256='ed2e37cf3b360c8b556065abd6e118c0f20241fd2c7f46681c8abb46c814cbf0')

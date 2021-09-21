@@ -12,6 +12,7 @@ class O2Datadistribution(CMakePackage):
     homepage = "https://github.com/AliceO2Group/DataDistribution/tree/v0.8.0"
     url      = "https://github.com/AliceO2Group/DataDistribution/archive/v0.8.0.tar.gz"
 
+    version('1.0.10', sha256='a3986411c0cfbf6acabe26798251fd80d1302495301660d3eddae2f90b86b69d')
     version('1.0.9', sha256='a9675936b8212285399f3ede3a1a19e94cf34889a36cf6e7c5bb503351fead49')
     version('1.0.8', sha256='8d26162fc97d24986b0fd097617c858e494a71cf32df9d16ae6de53568786a8c')
     version('1.0.7', sha256='0b2f15a0216a355cf3f8a0651b514699f0d928ab34143007f563cbe64c7bf4fe')

@@ -23,6 +23,7 @@ class Dds(CMakePackage):
 
     version('develop', branch='master', get_full_repo=True)
 
+    version('3.5.17', sha256='35723797e0cc39177946655192fa861c2fcae91deae82a5acd6e2ce1b67bc974')
     version('3.5.16', sha256='8f4922d95f93f7e731c239be990c4515299eccb9d067678012b8553b37c2d318')
     version('3.5.12', sha256='2f76e70d4f689020030b3ea780916d01acb1cc31e0e34edd4c168046d9491ff3')
     version('3.5.11', sha256='c478f3907a74681fd4cb51887a03f3497010e286531563943706d557ed472ec1')
