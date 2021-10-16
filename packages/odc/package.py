@@ -13,6 +13,7 @@ class Odc(CMakePackage):
     url = "https://github.com/FairRootGroup/ODC/archive/refs/tags/0.36.tar.gz"
     git = "https://github.com/FairRootGroup/ODC.git"
 
+    version('0.52', sha256='2c8e62fca4baf78bd72039c9277be346c98e3a0277fcd406b7d1cf9d05953aaf')
     version('0.36', sha256='04d0d94c55568bf084ba0ff575a7bdcd18761b43564845dda66866697dc6ccf3')
 
     variant('grpc_client',default=True,description='Build gRPC client')

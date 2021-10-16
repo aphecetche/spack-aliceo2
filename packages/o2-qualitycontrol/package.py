@@ -12,8 +12,13 @@ class O2Qualitycontrol(CMakePackage):
     url="https://github.com/AliceO2Group/QualityControl/archive/refs/tags/v1.28.0.tar.gz"
     git      = "https://github.com/AliceO2Group/QualityControl.git"
 
+    depends_on('ninja', type='build')
+    generator = 'Ninja'
+
     version('master',branch='master')
 
+    version('1.34.1', sha256='3de819ce4ece7f9027fc0f6781ffb78b78ef980efe123dc7feeb562c81337dca')
+    version('1.34.0', sha256='f7da4253c08d823bc5447f2730ecbf5e0db96c15483554ca3b59ba0637997913')
     version('1.29.1', sha256='fb1bbabec2414f90000be21421dca8feae05f84133298fededbae217502b6681')
     version('1.28.0', sha256='1170972409b1421b3a2520e55caa6222ef8d769323ad3014d566b584035b80c8')
 
@@ -25,6 +30,9 @@ class O2Qualitycontrol(CMakePackage):
     version('1.11.0', sha256='b764f8ed16707493003b66845a90c9c79d49bb3d6b2d57f38760fbf324ab6308')
    
     variant('sim',default=False,description='Enable sim version of AliceO2')
+    variant('tsan',default=False,description='Build with ThreadSanitizer')
+    variant('asan',default=False,description='Build with AddressSanitizer')
+    variant('usan',default=False,description='Build with UndefinedBehaviorSanitizer')
 
     depends_on('o2-aliceo2+sim',when='+sim')
     depends_on('o2-aliceo2', when='~sim')
@@ -33,4 +41,19 @@ class O2Qualitycontrol(CMakePackage):
 
     def cmake_args(self):
         args = []
+        args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
+        if self.spec.satisfies('+asan'):
+            args.append(self.define("CMAKE_C_FLAGS","-g -fno-omit-frame-pointer -fsanitize=address"))
+            args.append(self.define("CMAKE_CXX_FLAGS","-g -fno-omit-frame-pointer -fsanitize=address"))
+            args.append(self.define("CMAKE_EXE_LINKER_FLAGS","-fsanitize=address"))
+            args.append(self.define("CMAKE_SHARED_LINKER_FLAGS","-fsanitize=address"))
+            args.append(self.define("CMAKE_MODULE_LINKER_FLAGS","-fsanitize=address"))
+        if self.spec.satisfies('+tsan'):
+            args.append(self.define("CMAKE_CXX_FLAGS","-fsanitize=thread"))
+        if self.spec.satisfies('+usan'):
+            args.append(self.define("CMAKE_C_FLAGS","-g -fno-omit-frame-pointer -fsanitize=undefined"))
+            args.append(self.define("CMAKE_CXX_FLAGS","-g -fno-omit-frame-pointer -fsanitize=undefined"))
+            args.append(self.define("CMAKE_EXE_LINKER_FLAGS","-fsanitize=undefined"))
+            args.append(self.define("CMAKE_SHARED_LINKER_FLAGS","-fsanitize=undefined"))
+            args.append(self.define("CMAKE_MODULE_LINKER_FLAGS","-fsanitize=undefined"))
         return args

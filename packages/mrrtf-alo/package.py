@@ -22,10 +22,11 @@ class MrrtfAlo(CMakePackage):
     variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")
 
     depends_on('o2-aliceo2+sim',when='+o2')
-    depends_on('flatbuffers',when='+o2')
-
-    #variant('aliroot', default=False, description='Enable AliRoot part')
-    #depends_on('o2-aliroot',when='+aliroot')
+    depends_on('root')
+    depends_on('flatbuffers')
+    depends_on('yaml-cpp')
+    depends_on('rapidjson')
+    depends_on('boost +program_options +test +filesystem +serialization')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'

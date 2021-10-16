@@ -20,6 +20,9 @@ class O2Aliceo2(CMakePackage):
 
     version('dev', branch='dev')
 
+    version('20211015', sha256='07e55f34f6b435b081345d48321fa02df89dd7ae0d6efb4107d5e4f88cfb7b61')
+ 
+    version('20211012', sha256='b8e3c149b27f8a98cf780f2403817b3ef0d0becc8a9419ab87a7434bdc257a0b')
     version('20210913', sha256='93a6b9a2b934d239c7fa326913ef56e7a12d633f4ed52cac07c3991aec3c5a7a')
     version('20210912', sha256='07d0c6b9c3997b0a173e5d3f6aace1611e4248227feee76b102015a7b7599ce5')
 
