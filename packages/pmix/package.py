@@ -5,7 +5,6 @@
 
 
 from spack import *
-import spack.architecture
 import os
 
 
@@ -118,7 +117,7 @@ class Pmix(AutotoolsPackage):
         # Versions < 2.1.1 have a bug in the test code that *sometimes*
         # causes problems on strict alignment architectures such as
         # aarch64.  Work-around is to just not build the test code.
-        if 'aarch64' in spack.architecture.sys_type() and \
+        if self.spec.satisfies('target=aarch64:') and \
            self.spec.version < Version('2.1.1'):
             config_args.append('--without-tests-examples')
 
