@@ -20,6 +20,8 @@ class O2Infologger(CMakePackage):
     # maintainers = ['github_user1', 'github_user2']
 
     version('master', branch='master')
+
+    version('2.4.1', sha256='416431ef6bd6996ca14b97733f54061ba45ba4de35b468e0c30c47243d56b183')
     version('2.4.0', sha256='01caaad596622cbe32fd4ebfadb0d93857bce379850c31ec2b7d03534e0a41d7')
     version('2.2.0', sha256='04eea3ca40e562bddd1b442a999acd3487d0749e2200a967a7d7a98f2c64ad5e')
     version('2.1.1', sha256='418c2d582117f9d9dc7a2d5c5b4b1c3190542bd565954b1bbba434cd6649f764')
