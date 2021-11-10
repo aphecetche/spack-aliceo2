@@ -58,13 +58,14 @@ class O2Aliceo2(CMakePackage):
     depends_on('pythia8',when='+sim')
     depends_on('hepmc3',when='+sim')
     depends_on('rapidjson')
-    depends_on('root+http+dataframe+arrow~vmc', when='~sim')
-    depends_on('root+http+dataframe+arrow+pythia6+pythia8~vmc', when='+sim')
+    depends_on('root+xrootd+http+dataframe+arrow~vmc', when='~sim')
+    depends_on('root+xrootd+http+dataframe+arrow+pythia6+pythia8~vmc', when='+sim')
     depends_on('vc')
     depends_on('vmc')
     depends_on('libjalieno2')
     depends_on('fftw precision=float ~mpi')
     depends_on('o2-debuggui')
+    depends_on('jalien-root')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'
