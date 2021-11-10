@@ -273,7 +273,7 @@ class Root(CMakePackage):
     depends_on('vc',        when='+vc')
     depends_on('vdt',       when='+vdt')
     depends_on('libxml2',   when='+xml')
-    depends_on('xrootd@:4.99.99',    when='+xrootd')
+    depends_on('xrootd',    when='+xrootd')
 
     # ###################### Conflicts ######################
 
@@ -547,6 +547,9 @@ class Root(CMakePackage):
          '\$LinkedLibs\"\n'+
          'rm -f ${COMPILEDATA}.tmp',
          'build/unix/compiledata.sh') 
+ 
+        # prepend a custom ROOT_PLUGIN_PATH to allow e.g. JAliEn plugin
+        filter_file(r'#Unix.*.Root.PluginPath','Unix.*.Root.PluginPath: $(ROOT_PLUGIN_PATH):@plugindir@','config/rootrc.in')
 
         if sys.platform=='darwin' and platform.machine()=='arm64':
             # gfortran from gcc 10 dev does not accept -m64 option
