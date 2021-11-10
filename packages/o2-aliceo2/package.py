@@ -70,8 +70,8 @@ class O2Aliceo2(CMakePackage):
     depends_on('ninja', type='build')
     generator = 'Ninja'
 
-    if sys.platform == 'darwin' and platform.machine() == 'arm64':
-        patch('no_cpuid_on_apple_silicon.patch')
+    # if sys.platform == 'darwin' and platform.machine() == 'arm64':
+    #     patch('no_cpuid_on_apple_silicon.patch')
 
     #patch('analysis-changes.patch',when='+analysis')
     patch('phos-base-geometry.patch',when='@21.05')

@@ -5,11 +5,11 @@
 import os.path
 import re
 import sys
+import platform
 
 import llnl.util.tty as tty
-
 import spack.util.executable
-import platform
+
 
 class Llvm(CMakePackage, CudaPackage):
     """The LLVM Project is a collection of modular and reusable compiler and
@@ -28,10 +28,7 @@ class Llvm(CMakePackage, CudaPackage):
     family = "compiler"  # Used by lmod
 
     # fmt: off
-    version('main', branch='main')
-    version('12.0.1', sha256='66b64aa301244975a4aea489f402f205cde2f53dd722dad9e7b77a0459b4c8df')
-    version('12.0.0', sha256='8e6c99e482bb16a450165176c2d881804976a2d770e0445af4375e78a1fbf19c')
-    version('11.1.0', sha256='53a0719f3f4b0388013cfffd7b10c7d5682eece1929a9553c722348d1f866e79')
+    version('master', branch='master')
     version('11.0.1', sha256='9c7ad8e8ec77c5bde8eb4afa105a318fd1ded7dff3747d14f012758719d7171b')
     version('11.0.0', sha256='8ad4ddbafac4f2c8f2ea523c2c4196f940e8e16f9e635210537582a48622a5d5')
     version('10.0.1', sha256='c7ccb735c37b4ec470f66a6c35fbae4f029c0f88038f6977180b1a8ddc255637')
@@ -67,12 +64,6 @@ class Llvm(CMakePackage, CudaPackage):
         "clang",
         default=True,
         description="Build the LLVM C/C++/Objective-C compiler frontend",
-    )
-    variant(
-        "flang",
-        default=False,
-        description="Build the LLVM Fortran compiler frontend "
-        "(experimental - parser only, needs GCC)",
     )
     variant(
         "omp_debug",
@@ -151,22 +142,13 @@ class Llvm(CMakePackage, CudaPackage):
     # Build dependency
     depends_on("cmake@3.4.3:", type="build")
     depends_on("python@2.7:2.8", when="@:4.999 ~python", type="build")
-    if sys.platform == "darwin" and platform.machine()=="arm64":
-        depends_on("python@3.9:", when="@5: ~python", type="build")
-    else:
-        depends_on("python", when="@5: ~python", type="build")
+    depends_on("python", when="@5: ~python", type="build")
     depends_on("pkgconfig", type="build")
 
     # Universal dependency
     depends_on("python@2.7:2.8", when="@:4.999+python")
-    if sys.platform == "darwin" and platform.machine()=="arm64":
-        depends_on("python@3.9:", when="@5:+python")
-    else:
-        depends_on("python", when="@5:+python")
+    depends_on("python", when="@5:+python")
     depends_on("z3", when="@9:")
-
-    if sys.platform == "darwin" and platform.machine()=="arm64":
-        depends_on('libffi')
 
     # openmp dependencies
     depends_on("perl-data-dumper", type=("build"))
@@ -183,7 +165,7 @@ class Llvm(CMakePackage, CudaPackage):
     depends_on("py-six", when="@5.0.0: +lldb +python")
 
     # gold support, required for some features
-    depends_on("binutils+gold+ld+plugins", when="+gold")
+    depends_on("binutils+gold", when="+gold")
 
     # polly plugin
     depends_on("gmp", when="@:3.6.999 +polly")
@@ -194,12 +176,8 @@ class Llvm(CMakePackage, CudaPackage):
     conflicts("+libcxx", when="~clang")
     conflicts("+internal_unwind", when="~clang")
     conflicts("+compiler-rt", when="~clang")
-    conflicts("+flang", when="~clang")
-    # Introduced in version 11 as a part of LLVM and not a separate package.
-    conflicts("+flang", when="@:10.999")
 
-    # Older LLVM do not build with newer GCC
-    conflicts("%gcc@11:", when="@:7")
+    # LLVM 4 and 5 does not build with GCC 8
     conflicts("%gcc@8:", when="@:5")
     conflicts("%gcc@:5.0.999", when="@8:")
 
@@ -232,12 +210,6 @@ class Llvm(CMakePackage, CudaPackage):
 
     # Github issue #4986
     patch("llvm_gcc7.patch", when="@4.0.0:4.0.1+lldb %gcc@7.0:")
-
-    # https://github.com/spack/spack/issues/24270
-    patch('https://src.fedoraproject.org/rpms/llvm10/raw/7ce7ebd066955ea95ba2b491c41fbc6e4ee0643a/f/llvm10-gcc11.patch',
-          sha256='958c64838c9d469be514eef195eca0f8c3ab069bc4b64a48fad59991c626bab8',
-          when='@8:10 %gcc@11:')
-
     # Backport from llvm master + additional fix
     # see  https://bugs.llvm.org/show_bug.cgi?id=39696
     # for a bug report about this problem in llvm master.
@@ -253,21 +225,23 @@ class Llvm(CMakePackage, CudaPackage):
     patch("thread-p9.patch", when="@develop+libcxx")
 
     # https://github.com/spack/spack/issues/19625,
-    # merged in llvm-11.0.0_rc2, but not found in 11.0.1
-    patch("lldb_external_ncurses-10.patch", when="@10.0.0:11.0.1+lldb")
+    # merged in llvm-11.0.0_rc2
+    patch("lldb_external_ncurses-10.patch", when="@10.0.0:10.99+lldb")
 
     # https://github.com/spack/spack/issues/19908
     # merged in llvm main prior to 12.0.0
     patch("llvm_python_path.patch", when="@11.0.0")
 
-    # Workaround for issue https://github.com/spack/spack/issues/18197
-    patch('llvm7_intel.patch', when='@7 %intel@18.0.2,19.0.4')
+    if sys.platform=='darwin' and platform.machine()=='arm64':
+        # https://reviews.llvm.org/D91002
+        # https://bugs.llvm.org/show_bug.cgi?id=47609
+        patch('openmp_arm.patch',when='@11.0.1')
 
     # The functions and attributes below implement external package
     # detection for LLVM. See:
     #
     # https://spack.readthedocs.io/en/latest/packaging_guide.html#making-a-package-discoverable-with-spack-external-find
-    executables = ['clang', 'flang', 'ld.lld', 'lldb']
+    executables = ['clang', 'ld.lld', 'lldb']
 
     @classmethod
     def filter_detected_exes(cls, prefix, exes_in_prefix):
@@ -320,10 +294,6 @@ class Llvm(CMakePackage, CudaPackage):
                 compilers['cxx'] = exe
             elif 'clang' in exe:
                 compilers['c'] = exe
-            elif 'flang' in exe:
-                variants.append('+flang')
-                compilers['fc'] = exe
-                compilers['f77'] = exe
             elif 'ld.lld' in exe:
                 lld_found = True
                 compilers['ld'] = exe
@@ -369,34 +339,6 @@ class Llvm(CMakePackage, CudaPackage):
             result = os.path.join(self.spec.prefix.bin, 'clang++')
         return result
 
-    def setup_build_environment(self, env):
-        env.append_flags("CXXFLAGS", self.compiler.cxx11_flag)
-        env.set("SPACK_TARGET_ARGS","")
-        if sys.platform == 'darwin':
-            env.set('MACOSX_DEPLOYMENT_TARGET', platform.mac_ver()[0])
-
-    @property
-    def fc(self):
-        msg = "cannot retrieve Fortran compiler [spec is not concrete]"
-        assert self.spec.concrete, msg
-        if self.spec.external:
-            return self.spec.extra_attributes['compilers'].get('fc', None)
-        result = None
-        if '+flang' in self.spec:
-            result = os.path.join(self.spec.prefix.bin, 'flang')
-        return result
-
-    @property
-    def f77(self):
-        msg = "cannot retrieve Fortran 77 compiler [spec is not concrete]"
-        assert self.spec.concrete, msg
-        if self.spec.external:
-            return self.spec.extra_attributes['compilers'].get('f77', None)
-        result = None
-        if '+flang' in self.spec:
-            result = os.path.join(self.spec.prefix.bin, 'flang')
-        return result
-
     @run_before('cmake')
     def codesign_check(self):
         if self.spec.satisfies("+code_signing"):
@@ -423,22 +365,16 @@ class Llvm(CMakePackage, CudaPackage):
                         'create this identity.'
                     )
 
-    def flag_handler(self, name, flags):
-        if name == 'cxxflags':
-            flags.append(self.compiler.cxx11_flag)
-            return(None, flags, None)
-        elif name == 'ldflags' and self.spec.satisfies('%intel'):
-            flags.append('-shared-intel')
-            return(None, flags, None)
-        return(flags, None, None)
+    def setup_build_environment(self, env):
+        env.append_flags("CXXFLAGS", self.compiler.cxx11_flag)
+        env.set("SPACK_TARGET_ARGS","")
+        # if sys.platform == 'darwin':
+        #   env.set('MACOSX_DEPLOYMENT_TARGET', platform.mac_ver()[0])
 
     def setup_run_environment(self, env):
         if "+clang" in self.spec:
             env.set("CC", join_path(self.spec.prefix.bin, "clang"))
             env.set("CXX", join_path(self.spec.prefix.bin, "clang++"))
-        if "+flang" in self.spec:
-            env.set("FC", join_path(self.spec.prefix.bin, "flang"))
-            env.set("F77", join_path(self.spec.prefix.bin, "flang"))
 
     root_cmakelists_dir = "llvm"
 
@@ -509,8 +445,6 @@ class Llvm(CMakePackage, CudaPackage):
             projects.append("clang")
             projects.append("clang-tools-extra")
             projects.append("openmp")
-        if "+flang" in spec:
-            projects.append("flang")
         if "+lldb" in spec:
             projects.append("lldb")
         if "+lld" in spec:
@@ -574,16 +508,7 @@ class Llvm(CMakePackage, CudaPackage):
             cmake_args.append("-DLIBOMP_TSAN_SUPPORT=ON")
 
         if self.compiler.name == "gcc":
-            compiler = Executable(self.compiler.cc)
-            gcc_output = compiler('-print-search-dirs', output=str, error=str)
-
-            for line in gcc_output.splitlines():
-                if line.startswith("install:"):
-                    # Get path and strip any whitespace
-                    # (causes oddity with ancestor)
-                    gcc_prefix = line.split(":")[1].strip()
-                    gcc_prefix = ancestor(gcc_prefix, 4)
-                    break
+            gcc_prefix = ancestor(self.compiler.cc, 2)
             cmake_args.append("-DGCC_INSTALL_PREFIX=" + gcc_prefix)
 
         if spec.satisfies("@4.0.0:"):
