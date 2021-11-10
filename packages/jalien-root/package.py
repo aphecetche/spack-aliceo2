@@ -32,7 +32,7 @@ class JalienRoot(CMakePackage):
         copytree(self.spec['alice-grid-utils'].prefix.include,'inc',dirs_exist_ok=True)
    
     def setup_runt_environment(self,env): 
-        env.set('ROOT_PLUGIN_PATH',os.join(self.prefix,'etc','plugins');
+        env.set('ROOT_PLUGIN_PATH',os.path.join(self.prefix,'etc','plugins'))
 
     def cmake_args(self):
         args = []
