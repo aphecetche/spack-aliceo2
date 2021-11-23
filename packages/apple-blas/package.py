@@ -33,10 +33,14 @@ class AppleBlas(Package):
         # - for the rest of the build systems we'll assume that
         # setting the C_INCLUDE_PATH will be enough for the compilation phase
         # and *** for the link phase.
-        env.prepend_path("C_INCLUDE_PATH","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX")
+        env.prepend_path("C_INCLUDE_PATH","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers")
         env.set("SPACK_APPLE_BLAS","1")
+
+    @property
+    def headers(self):
+        return HeaderList('/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers')
 
     @property
     def libs(self):
         # OPENGL_glu_LIBRARY:FILEPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/OpenGL.framework
-        return LibraryList('/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/vecLib.framework')
+        return LibraryList('/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework')

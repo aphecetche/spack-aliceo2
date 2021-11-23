@@ -66,6 +66,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('fftw precision=float ~mpi')
     depends_on('o2-debuggui')
     depends_on('jalien-root')
+    depends_on('o2-mcsteplogger',when='+sim')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'

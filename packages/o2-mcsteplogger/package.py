@@ -11,11 +11,15 @@ class O2Mcsteplogger(CMakePackage):
 
     homepage = "https://github.com/AliceO2Group/VMCStepLogger"
     git = "https://github.com/AliceO2Group/VMCStepLogger.git"
+    url = "https://github.com/AliceO2Group/VMCStepLogger/archive/refs/tags/v0.2.0.tar.gz"
 
     version('master', branch='master')
+    version('0.2.0', sha256='cb9ce822ea17172476cc050ba788f811a1e14cb1a86135d7ce9b6f2669cb80e5')
 
-    depends_on('root+http+xml~x~opengl+vmc')
-    depends_on('cmake', type='build')
+    depends_on('boost')
+    depends_on('root')
+    depends_on('vmc')
+    #depends_on('root+http+xml~x~opengl+vmc')
 
     def cmake_args(self):
         args = ["-DBUILD_SHARED_LIBS=ON",
