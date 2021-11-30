@@ -17,8 +17,8 @@ class Aliroot(CMakePackage):
 
     version('5-09-58b', sha256='f232372df319ba770d58d94e0afaf6eb499f3c5b833eed5a16f1f5aedb86ae77')
 
-    depends_on('root~vmc')
-    depends_on('vmc')
+    depends_on('root+tmva')
+    # depends_on('vmc')
     depends_on('geant3')
     depends_on('geant4-vmc')
     depends_on('vc')
