@@ -15,6 +15,7 @@ class AppleBlas(Package):
     version('4.0.0')
 
     provides('blas')
+    provides('lapack')
 
     # Only supported on 'platform=darwin' and compiler=apple-clang
     conflicts('platform=linux')
