@@ -13,6 +13,7 @@ class O2Debuggui(CMakePackage):
     homepage = "https://github.com/AliceO2Group/DebugGUI"
     url      = "https://github.com/AliceO2Group/DebugGUI/archive/refs/tags/v0.6.1.tar.gz"
 
+    version('0.6.2', sha256='c5beb47332cf312af00d2a45c3e59d2d5e53cc117c6da6fd3732dfa7fdb50520')
     version('0.6.1', sha256='c9cc4552dbd737d6f5532d8d52347a2ee37a7cdf89a1d4ea35123540f106a08b')
 
     depends_on('glfw+shared')
