@@ -20,6 +20,10 @@ class O2Aliceo2(CMakePackage):
 
     version('dev', branch='dev')
 
+    # wrong usage of typeof in EventVizualisation version('20211206', sha256='9d1f7fda7389ed6933dda72a08ab58cfe0a18469663b4182ccd30973d04310da')
+
+    version('20211204', sha256='33fc6e4893e326a878a6de46d919073c04cdc64def90c45153c9a2d2abef0030')
+
     version('20211024', sha256='e0c5bcd4afce8ff0933ad5117459bd93a89b9000ffdbdc3c53e04e5ca5e1fede')
     version('20211020', sha256='f17aca217a7cd0c66df5b0ecc668e9d1be6b17f59141106c26b38a0a339f2770')
     version('20211019', sha256='9005405c1f18efde46567e581172e0b3a957f9d5a09025824dbfce17714d228b')
@@ -67,6 +71,8 @@ class O2Aliceo2(CMakePackage):
     depends_on('o2-debuggui')
     depends_on('jalien-root')
     depends_on('o2-mcsteplogger',when='+sim')
+    depends_on('fastjet',when='+analysis')
+    depends_on('fjcontrib',when='+analysis')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'
