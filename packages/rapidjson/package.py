@@ -14,6 +14,7 @@ class Rapidjson(CMakePackage):
     homepage = "http://rapidjson.org"
     url = "https://github.com/Tencent/rapidjson/archive/v1.1.0.tar.gz"
 
+    version('2020.01.04', sha256='7021c782e4b78391320efabb4d35554e406c1a2c6255c2dfc01089b38398c042', url='https://github.com/Tencent/rapidjson/tarball/585042c02ba6350e10fc43df8beee1bc097f4c5f', preferred=True)
     version(
         '1.0.2', sha256='c3711ed2b3c76a5565ee9f0128bb4ec6753dbcc23450b713842df8f236d08666')
     version(
