@@ -14,6 +14,7 @@ class Cppgsl(CMakePackage):
     git      = "https://github.com/Microsoft/GSL.git"
 
     version('master', branch='master')
+    version('2021.12.10',sha256='1df874e76544563d3e65f55afb75aed42e99005b4ed123e29ca98ac9901a3fbb',url='https://github.com/microsoft/GSL/tarball/c412deb31e73c9b824abeb6619e11511b279222f')
     version('3.1.0', sha256='d3234d7f94cea4389e3ca70619b82e8fb4c2f33bb3a070799f1e18eef500a083')
     version('2.1.0', sha256='ef73814657b073e1be86c8f7353718771bf4149b482b6cb54f99e79b23ff899d')
     version('2.0.0', sha256='6cce6fb16b651e62711a4f58e484931013c33979b795d1b1f7646f640cfa9c8e')
