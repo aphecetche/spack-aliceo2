@@ -206,7 +206,7 @@ class Root(CMakePackage):
     depends_on('pkgconfig', type='build')
     depends_on('ninja', type='build', when='+ninja')
 
-    depends_on('blas')
+    depends_on('blas',when='+tmva')
     depends_on('freetype')
     depends_on('jpeg')
     depends_on('libice')
