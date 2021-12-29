@@ -31,6 +31,7 @@ class PyXjalienfs(PythonPackage):
     depends_on('py-cryptography')
     depends_on('py-async-stagger')
     depends_on('alien-cas')
+    depends_on('py-setuptools',type='build')
 
     def build_args(self, spec, prefix):
         # FIXME: Add arguments other than --prefix

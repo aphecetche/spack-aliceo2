@@ -24,6 +24,13 @@ class Aliroot(CMakePackage):
     depends_on('vc')
     depends_on('ninja',type='build')
 
+    def setup_environment(self,spack_env,run_env):
+        run_env.set("ALICE_ROOT",self.prefix)
+        run_env.append_path("ROOT_INCLUDE_PATH",self.prefix.include)
+
+    def setup_build_environment(self,env):
+        self.setup_environment(None,env)
+
     def cmake_args(self):
         args = []
         args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
