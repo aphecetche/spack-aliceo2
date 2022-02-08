@@ -73,6 +73,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('o2-mcsteplogger',when='+sim')
     depends_on('fastjet',when='+analysis')
     depends_on('fjcontrib',when='+analysis')
+    depends_on('intel-tbb')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'
@@ -140,13 +141,6 @@ class O2Aliceo2(CMakePackage):
 
 
     def patch(self):
-        # filter_file(r'find_package\(fmt\)',
-        #             '\n\n'+r'find_package(VMC)' + '\n\n'
-        #             r'find_package(fmt)',
-        #             'dependencies/O2Dependencies.cmake')
-        # filter_file(r'ROOT::ROOTDataFrame', r'ROOT::ROOTDataFrame ROOT::VMC',
-        #             'dependencies/FindFairRoot.cmake')
-        # filter_file(r'NAMES libpythia6.so libpythia6.dylib',
-        #         'NAMES libpythia6.so libpythia6.dylib libPythia6.so libPythia6.dylib',
-        #         'dependencies/Findpythia6.cmake')
+        # filter_file(r'set\(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE\)',
+        # '\n','dependencies/O2Dependencies.cmake')
         pass
