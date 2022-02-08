@@ -15,6 +15,8 @@ class O2Mcsteplogger(CMakePackage):
 
     version('master', branch='master')
 
+    version('0.4.0', sha256='45ee718de82ceee873becf69e4827c9b29a1be2874cbcfc0f34768f7761be853')
+
     depends_on('boost')
     depends_on('root')
     depends_on('vmc')

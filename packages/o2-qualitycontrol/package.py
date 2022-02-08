@@ -17,6 +17,7 @@ class O2Qualitycontrol(CMakePackage):
 
     version('master',branch='master')
 
+    version('1.45.1', sha256='55644e0d86d1399ffc4ee73f69d275321a2cc214adc2155af0d40aa56361b4b3')
     version('1.35.1', sha256='5579241ada6f4915eb0270ca9efa374fd2769cdd1190678d11402ae36efdd89e')
     version('1.35.0', sha256='56b704534d90b7cc04bfc92661382cc5469446325daf612079f77312b379e384')
     version('1.34.1', sha256='3de819ce4ece7f9027fc0f6781ffb78b78ef980efe123dc7feeb562c81337dca')

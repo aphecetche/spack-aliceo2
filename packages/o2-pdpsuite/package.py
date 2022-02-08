@@ -15,8 +15,7 @@ class O2Pdpsuite(BundlePackage):
     version("latest")
 
     depends_on('o2-aliceo2 +sim+analysis')
-    #depends_on('o2-sim')
     depends_on('o2-datadistribution')
     depends_on('o2-qualitycontrol')
-    depends_on('o2-dataprocessing')
+    depends_on('o2-dpg')
 

@@ -21,6 +21,7 @@ class O2Infologger(CMakePackage):
 
     version('master', branch='master')
 
+    version('2.4.3', sha256='7ef7f01e3e2dba41413556135dd5c4e4d7bf6a031bc5b54b739bbade0fc4f526')
     version('2.4.1', sha256='416431ef6bd6996ca14b97733f54061ba45ba4de35b468e0c30c47243d56b183')
     version('2.4.0', sha256='01caaad596622cbe32fd4ebfadb0d93857bce379850c31ec2b7d03534e0a41d7')
     version('2.2.0', sha256='04eea3ca40e562bddd1b442a999acd3487d0749e2200a967a7d7a98f2c64ad5e')
