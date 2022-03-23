@@ -13,6 +13,8 @@ class Libwebsockets(CMakePackage):
     url = "https://github.com/warmcat/libwebsockets/archive/v2.1.0.tar.gz"
     maintainers = ['ax3l']
 
+    version('4.3.1', sha256='8fdb1454a1b34cd9a6351beaab237a485e6853806101de7e62bd2bc250bb50af')
+
     version(
         '4.1.6', sha256='402e9a8df553c9cd2aff5d7a9758e9e5285bf3070c82539082864633db3deb83')
     version(
@@ -51,3 +53,4 @@ class Libwebsockets(CMakePackage):
                         r'#define MSG_NOSIGNAL SO_NOSIGPIPE' + '\n' +
                         r'#endif'+'\n',
                         'lib/core/private.h')
+            filter_file(r'\-Werror','-Werror -Wno-unused-but-set-variable', 'CMakeLists.txt')

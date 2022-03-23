@@ -74,6 +74,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('fastjet',when='+analysis')
     depends_on('fjcontrib',when='+analysis')
     depends_on('intel-tbb')
+    depends_on('llvm-openmp')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'
