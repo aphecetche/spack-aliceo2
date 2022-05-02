@@ -20,8 +20,9 @@ class O2Aliceo2(CMakePackage):
 
     version('dev', branch='dev')
 
-    # wrong usage of typeof in EventVizualisation version('20211206', sha256='9d1f7fda7389ed6933dda72a08ab58cfe0a18469663b4182ccd30973d04310da')
+    version('20220412', sha256='5995aecb166776c9310f2067fecd6e421bf9571e4bd9cbe37b5f96da819e197b')
 
+    # wrong usage of typeof in EventVizualisation version('20211206', sha256='9d1f7fda7389ed6933dda72a08ab58cfe0a18469663b4182ccd30973d04310da')
     version('20211204', sha256='33fc6e4893e326a878a6de46d919073c04cdc64def90c45153c9a2d2abef0030')
 
     version('20211024', sha256='e0c5bcd4afce8ff0933ad5117459bd93a89b9000ffdbdc3c53e04e5ca5e1fede')
@@ -48,7 +49,8 @@ class O2Aliceo2(CMakePackage):
     depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd cxxstd=17')
     depends_on('benchmark')
 
-    depends_on('cppgsl@3: cxxstd=17',when='cxxstd=17')
+    depends_on('cppgsl@3: cxxstd=17',when='cxxstd=17 @:20220410')
+    depends_on('cppgsl@4: cxxstd=17',when='cxxstd=17 @20220411:')
 
     depends_on('fairroot', when='+sim')
     depends_on('fairroot~sim', when='~sim')

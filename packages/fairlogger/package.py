@@ -19,6 +19,7 @@ class Fairlogger(CMakePackage):
 
     version('develop', branch='dev', get_full_repo=True)
 
+    version('1.11.0', sha256='9fe46ec09bd7f5ab70746069bac9e6e7917fd8e7feffe18108f5eec9d323aecb')
     version('1.10.4', sha256='2fa321893f2c8c599cca160db243299ce1e941fbfb3f935b1139caa943bc0dba')
     version('1.10.3', sha256='50c7bc09b783cf0f9aa5989c98c72086b39aba024093fd652b31eef359f7b429')
     version('1.10.1', sha256='3c9262c7ff3b3ffd3c66523a957522b9376201495b59f7e6afffe4b730f18ad3')

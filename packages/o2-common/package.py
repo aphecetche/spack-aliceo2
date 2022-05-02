@@ -35,6 +35,7 @@ class O2Common(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version('1.6.0', sha256='063cc232b212831eb959b2a1e95d9f3f905475ed0c41d087bce44bb0fbd29949')
     version(
         '1.5.0', sha256='0b320b24f797a197dd6e8b2db9f873e4eb305a904a321b2b0be7fac58f8b8379')
     version(
