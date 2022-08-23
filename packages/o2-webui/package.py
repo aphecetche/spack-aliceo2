@@ -37,7 +37,10 @@ class O2Webui(Package):
     version('2', sha256='ebdcc4a66e7e360908075db74d106c6e700fe5345fa66b4408e57a1ec44e1d82')
 
     # FIXME: Add dependencies if required.
-    depends_on('node-js')
+    #depends_on('node-js')
+    depends_on("cairo",type=("build"))
+    depends_on("pixman",type=("build"))
+    depends_on("pkgconfig",type=("build"))
 
     def install(self, spec, prefix):
         # FIXME: Unknown build system
