@@ -18,7 +18,7 @@ class O2Aegis(CMakePackage):
     version('1.4', sha256='14238e5eb128dd817013001bcce51470b08818a647477755055d9bc5fbc84947')
 
     depends_on('root+pythia6+pythia8~vmc')
-    depends_on('pythia6+root')
+    depends_on('pythia6')
     depends_on('hijing')
     depends_on('vmc')
 

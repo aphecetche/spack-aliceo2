@@ -131,6 +131,7 @@ class O2Aliceo2(CMakePackage):
           env.set('PYTHIA6_ROOT',self.spec['pythia6'].prefix)
           env.set('PYTHIA_ROOT',self.spec['pythia8'].prefix)
           env.set('HEPMC3_ROOT',self.spec['hepmc3'].prefix)
+        env.set('ALIBUILD_O2_WARNINGS',True)
         self.setup_root_include_path(env)
 
     def setup_environment(self, spack_env, run_env):

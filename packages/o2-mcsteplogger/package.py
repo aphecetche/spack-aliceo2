@@ -15,6 +15,7 @@ class O2Mcsteplogger(CMakePackage):
 
     version('master', branch='master')
 
+    version('0.5.0', sha256='2f25438d83c780143957050ed574b952fa5a29c00ba9f99cfd11211a4fdd4d41')
     version('0.4.0', sha256='45ee718de82ceee873becf69e4827c9b29a1be2874cbcfc0f34768f7761be853')
 
     depends_on('boost')
