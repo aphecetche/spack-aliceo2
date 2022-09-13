@@ -39,8 +39,12 @@ class O2Dpg(Package):
     version('20220201-1146', sha256='ae6c4a5275a855fd89ae5d3eee1ca5bafbed04e689b4e7d90673d727d79d32ce')
     version('202107-22', sha256='b12ea55fa568818055aa2dad5efda02b8df4a27613ed9cd51bc60d1924cf3712')
 
+    variant('python',default=False,description='enable python modules (for RelVal)')
+
     depends_on("coreutils")
     depends_on("o2-qualitycontrol")
+    depends_on("jq")
+    depends_on('py-matplotlib',when='+python')
 
     def install(self, spec, prefix):
         copytree('.',prefix,dirs_exist_ok=True)
