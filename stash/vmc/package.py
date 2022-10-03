@@ -24,3 +24,11 @@ class Vmc(CMakePackage):
     patch('dict_fixes_101.patch', when='@1-0-p1')
 
     depends_on('root@6.18.04: ~vmc')
+
+    def setup_build_environment(self,env):
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")
+
+    def setup_dependent_build_environment(self, env, dependent_spec):
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")

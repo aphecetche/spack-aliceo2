@@ -48,3 +48,6 @@ class Geant3(CMakePackage):
             args.append('-DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch -fallow-invalid-boz"')
         args.append(self.define_from_variant('CMAKE_CXX_STANDARD','cxxstd'))
         return args
+    def setup_build_environment(self, env):
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")

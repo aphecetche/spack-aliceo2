@@ -13,6 +13,7 @@ class Libwebsockets(CMakePackage):
     url = "https://github.com/warmcat/libwebsockets/archive/v2.1.0.tar.gz"
     maintainers = ['ax3l']
 
+    version("4.3.2", sha256="6a85a1bccf25acc7e8e5383e4934c9b32a102880d1e4c37c70b27ae2a42406e1")
     version('4.3.1', sha256='8fdb1454a1b34cd9a6351beaab237a485e6853806101de7e62bd2bc250bb50af')
 
     version(

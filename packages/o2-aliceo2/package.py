@@ -46,12 +46,13 @@ class O2Aliceo2(CMakePackage):
     variant('asan',default=False,description='Build with AddressSanitizer')
     variant('usan',default=False,description='Build with UndefinedBehaviorSanitizer')
 
-    depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd cxxstd=17')
+    depends_on('arrow~brotli+compute+gandiva~glog~hdfs+ipc~jemalloc+lz4~parquet~python+shared~snappy+tensorflow+zlib~zstd')
     depends_on('benchmark')
 
     depends_on('cppgsl@3: cxxstd=17',when='cxxstd=17 @:20220410')
     depends_on('cppgsl@4: cxxstd=17',when='cxxstd=17 @20220411:')
 
+    depends_on('boost +container +thread +system +timer +program_options +random +filesystem +chrono +exception +regex +serialization +log +test +date_time +iostreams')
     depends_on('fairroot', when='+sim')
     depends_on('fairroot~sim', when='~sim')
     depends_on('libuv')
@@ -64,12 +65,15 @@ class O2Aliceo2(CMakePackage):
     depends_on('pythia8',when='+sim')
     depends_on('hepmc3',when='+sim')
     depends_on('rapidjson')
-    depends_on('root+xrootd+http+dataframe+arrow~vmc', when='~sim')
-    depends_on('root+xrootd+http+dataframe+arrow+pythia6+pythia8~vmc', when='+sim')
+    # depends_on('root+xrootd+http+dataframe+arrow~vmc', when='~sim')
+    #depends_on('root+xrootd+http+dataframe+arrow+pythia6+pythia8~vmc', when='+sim')
+    # temporary while getting root changes to upstream
+    depends_on('root+xrootd+http~vmc', when='~sim')
+    depends_on('root+xrootd+http+pythia6+pythia8~vmc', when='+sim')
     depends_on('vc')
     depends_on('vmc')
     depends_on('libjalieno2')
-    depends_on('fftw precision=float ~mpi')
+    depends_on('fftw@3: precision=float ~mpi')
     depends_on('o2-debuggui')
     depends_on('jalien-root')
     depends_on('o2-mcsteplogger',when='+sim')
@@ -98,6 +102,7 @@ class O2Aliceo2(CMakePackage):
         args.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         args.append(self.define_from_variant("ENABLE_UPGRADES", "upgrades"))
         args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
+        args.append(self.define("BUILD_TESTING",self.run_tests))
         if sys.platform == 'darwin':
             args.append(self.define("CMAKE_CXX_EXTENSIONS",False))
         if self.spec.satisfies('+asan'):
@@ -133,6 +138,8 @@ class O2Aliceo2(CMakePackage):
           env.set('HEPMC3_ROOT',self.spec['hepmc3'].prefix)
         env.set('ALIBUILD_O2_WARNINGS',True)
         self.setup_root_include_path(env)
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")
 
     def setup_environment(self, spack_env, run_env):
         run_env.set('O2_ROOT',self.prefix)

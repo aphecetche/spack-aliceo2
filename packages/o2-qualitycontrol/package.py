@@ -60,3 +60,8 @@ class O2Qualitycontrol(CMakePackage):
             args.append(self.define("CMAKE_SHARED_LINKER_FLAGS","-fsanitize=undefined"))
             args.append(self.define("CMAKE_MODULE_LINKER_FLAGS","-fsanitize=undefined"))
         return args
+
+    def setup_build_environment(self,env):
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")
+

@@ -18,6 +18,7 @@ class Fairroot(CMakePackage):
 
     version('develop', branch='dev')
 
+    version("18.4.9", sha256="a62363888fe5535c4c49c4d1603056e4397073f3643aac589db6410b76bd5c5f")
     version('18.6.3',sha256='050132cacd298580dcebe562506e6246eabfcbfd8686d98a5694b38861ee8cd2')
     version('18.6.2',sha256='45762788db5cb705a312fb1b32066677ae8036f588152989554dd8899a42e791')
     version('18.6.1',sha256='8a590b30a3b8dadf6361ea21c073efb9f458f20bf3f25b6937a153068a492998')
@@ -43,7 +44,7 @@ class Fairroot(CMakePackage):
     depends_on('ninja', type='build')
     generator = 'Ninja'
     depends_on('cmake@3.13.4:', type='build')
-    depends_on('boost@1.68.0: +container')
+    depends_on('boost@1.68.0: +container +filesystem +serialization')
     depends_on('fairlogger@1.4.0:')
     depends_on('fairmq@1.4.11:')
     # depends_on('fairsoft-config', when='@:18,develop')
@@ -79,6 +80,8 @@ class Fairroot(CMakePackage):
         env.unset('SIMPATH')
         env.unset('FAIRSOFT')
         env.unset('FAIRSOFT_ROOT')
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")
 
     def cmake_args(self):
         options = []

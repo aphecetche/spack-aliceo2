@@ -31,3 +31,8 @@ class Aliroot(CMakePackage):
         args.append(self.define("CMAKE_CXX_STANDARD",'17'))
         args.append(self.define("CMAKE_GENERATOR","Ninja"))
         return args
+
+    def setup_build_environment(self, env):
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")
+

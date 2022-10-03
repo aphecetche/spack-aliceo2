@@ -31,6 +31,10 @@ class JalienRoot(CMakePackage):
     def copy_alice_grid_utils(self):
         copytree(self.spec['alice-grid-utils'].prefix.include,'inc',dirs_exist_ok=True)
    
+    def setup_build_environment(self,env): 
+        if "platform=darwin" in self.spec:
+            env.unset("MACOSX_DEPLOYMENT_TARGET")
+
     def setup_run_environment(self,env): 
         env.set('ROOT_PLUGIN_PATH',os.path.join(self.prefix,'etc','plugins'))
         env.set('ROOT_INCLUDE_PATH',os.path.join(self.prefix,'include'))
