@@ -17,8 +17,8 @@ class AlienCas(Package):
 
     version('master', branch='master')
 
-    def setup_environment(self, spack_env, run_env):
-        run_env.set('X509_CERT_DIR',prefix.share)
+    def setup_run_environment(self,  env):
+        env.set('X509_CERT_DIR',prefix.share)
 
     def install(self, spec, prefix):
         os.mkdir(prefix.share)

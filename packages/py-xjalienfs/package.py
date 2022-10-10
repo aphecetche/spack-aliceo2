@@ -17,6 +17,7 @@ class PyXjalienfs(PythonPackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version("1.4.5", sha256="2cf4944a850d5a70d386df4370ba62a67da28125367cb5f2ddff0dbcb5aba339")
     version('1.4.2', sha256='aaeba5d1acf2c3d11806ae657c401e35a2ce5fdcef66af457902e1b7dda765c3')
     version('1.3.3', sha256='1185076ba1c2574b31056eef2bf76508e8532a808a8fc743a81b44e67bf482a7')
 
@@ -32,6 +33,7 @@ class PyXjalienfs(PythonPackage):
     depends_on('py-cryptography')
     depends_on('py-async-stagger')
     depends_on("py-requests")
+    depends_on("py-rich")
     depends_on('alien-cas')
 
     def build_args(self, spec, prefix):
