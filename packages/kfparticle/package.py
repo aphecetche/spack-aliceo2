@@ -24,3 +24,7 @@ class Kfparticle(CMakePackage):
     def cmake_args(self):
         args = []
         return args
+
+    def setup_build_environment(self,env):
+        if self.spec.satisfies("platform=darwin"):
+            env.unset("MACOSX_DEPLOYMENT_TARGET")

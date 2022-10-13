@@ -20,26 +20,16 @@ class O2Physics(CMakePackage):
 
     depends_on('o2-aliceo2+sim+analysis')
     depends_on('onnxruntime')
+    depends_on('kfparticle')
     depends_on('ninja',type='build')
-    depends_on('pkg-config',type='build')
+    depends_on('pkgconfig',type='build')
     depends_on('fjcontrib')
-
-    @run_before('cmake')
-    def copy_find_onnxruntime(self):
-        copy(os.path.join(os.path.dirname(__file__),'FindONNXRuntime::ONNXRuntime.cmake'),'cmake/FindONNXRuntime::ONNXRuntime.cmake')
-        copy(os.path.join(os.path.dirname(__file__),'Findfjcontrib.cmake'),'cmake/Findfjcontrib.cmake')
-
-    def patch(self):
-       filter_file(r'find_package\(O2 CONFIG REQUIRED\)',
-       '\n' + 'find_package(O2 CONFIG REQUIRED)' + 
-       '\n' + 'find_package(fjcontrib REQUIRED)',
-       'CMakeLists.txt')
-       filter_file(r'find_package\(ONNXRuntime::ONNXRuntime CONFIG REQUIRED\)',
-       '\n' + 'find_package(ONNXRuntime::ONNXRuntime REQUIRED)',
-       'CMakeLists.txt')
 
     def cmake_args(self):
         args = []
         args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
-        args.append(self.define("fjcontrib_ROOT",self.spec["fjcontrib"].prefix))
         return args
+
+    def setup_build_environment(self,env):
+        if self.spec.satisfies("platform=darwin"):
+            env.unset("MACOSX_DEPLOYMENT_TARGET")

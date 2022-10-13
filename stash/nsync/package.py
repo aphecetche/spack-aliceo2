@@ -34,6 +34,7 @@ class Nsync(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version("1.25.0", sha256="2be9dbfcce417c7abcc2aa6fee351cd4d292518d692577e74a2c6c05b049e442")
     version('1.24.0', sha256='47a6eb2a295be5121a1904a6a775722338a20dc02ee3eec4169ed2c3f203617a')
 
     # FIXME: Add dependencies if required.
