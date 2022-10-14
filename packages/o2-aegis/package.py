@@ -34,6 +34,6 @@ class O2Aegis(CMakePackage):
         filter_file('\${ROOT_LIBRARIES}','PUBLIC VMCLibrary','GeneratorParam/CMakeLists.txt')
         filter_file('find_package\(ROOT REQUIRED COMPONENTS EG\)','find_package(ROOT REQUIRED COMPONENTS EG)\nfind_package(VMC)\n','GeneratorParam/CMakeLists.txt')
 
-    def setup_environment(self,spack_env,run_env):
-        run_env.set('AEGIS_ROOT',self.prefix)
-        run_env.append_path('ROOT_INCLUDE_PATH',self.prefix.include)
+    def setup_run_environment(self,env):
+        env.set('AEGIS_ROOT',self.prefix)
+        env.append_path('ROOT_INCLUDE_PATH',self.prefix.include)

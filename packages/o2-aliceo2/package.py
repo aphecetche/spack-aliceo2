@@ -141,14 +141,14 @@ class O2Aliceo2(CMakePackage):
         if "platform=darwin" in self.spec:
             env.unset("MACOSX_DEPLOYMENT_TARGET")
 
-    def setup_environment(self, spack_env, run_env):
-        run_env.set('O2_ROOT',self.prefix)
-        run_env.set('VMCWORKDIR',os.path.join(self.prefix,"share"))
-        run_env.append_path("ROOT_INCLUDE_PATH",self.prefix.include)
-        run_env.append_path("ROOT_INCLUDE_PATH",os.path.join(self.prefix.include,"GPU"))
+    def setup_run_environment(self, env):
+        env.set('O2_ROOT',self.prefix)
+        env.set('VMCWORKDIR',os.path.join(self.prefix,"share"))
+        env.append_path("ROOT_INCLUDE_PATH",self.prefix.include)
+        env.append_path("ROOT_INCLUDE_PATH",os.path.join(self.prefix.include,"GPU"))
         # if self.spec.satisfies('+sim'):
         #     run_env.set('HEPMC3_ROOT',self.spec['hepmc3'].prefix)
-        self.setup_root_include_path(run_env)
+        self.setup_root_include_path(env)
 
 
     def patch(self):

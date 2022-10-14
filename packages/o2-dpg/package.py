@@ -49,5 +49,5 @@ class O2Dpg(Package):
     def install(self, spec, prefix):
         copytree('.',prefix,dirs_exist_ok=True)
 
-    def setup_environment(self,spack_env,run_env):
-        run_env.set('O2DPG_ROOT',self.prefix)
+    def setup_run_environment(self,env):
+        env.set('O2DPG_ROOT',self.prefix)
