@@ -65,3 +65,5 @@ class O2Qualitycontrol(CMakePackage):
         if "platform=darwin" in self.spec:
             env.unset("MACOSX_DEPLOYMENT_TARGET")
 
+    def setup_run_environment(self,env):
+        env.append_path("ROOT_DYN_PATH",self.prefix.lib)
