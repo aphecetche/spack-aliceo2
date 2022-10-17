@@ -37,11 +37,9 @@ class JalienRoot(CMakePackage):
             env.unset("MACOSX_DEPLOYMENT_TARGET")
 
     def setup_run_environment(self,env): 
-        env.set('ROOT_PLUGIN_PATH',os.path.join(self.prefix,'etc','plugins'))
-        env.set('ROOT_INCLUDE_PATH',os.path.join(self.prefix,'include'))
-
-    # def setup_dependent_build_environment(self, env, dependent_spec):
-    #     self.setup_run_environment(env)
+        env.append_path('ROOT_DYN_PATH',self.prefix.lib)
+        env.prepend_path('ROOT_PLUGIN_PATH',os.path.join(self.prefix,'etc','plugins'))
+        env.prepend_path('ROOT_INCLUDE_PATH',self.prefix.include)
 
     def cmake_args(self):
         args = []
