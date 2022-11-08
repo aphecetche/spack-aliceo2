@@ -70,7 +70,7 @@ class Fairroot(CMakePackage):
     patch('support_geant4_with_external_clhep.patch', when='@18.4 +sim ^Geant4@:10.5')
     patch('darwin_fortran_compiler_detection.patch',when='@18.4.2:')
     if sys.platform=='darwin' and platform.machine() == 'arm64':
-        patch('darwin_arm64_do_not_force_compiler.patch',when='@18.4:')
+        patch('darwin_arm64_do_not_force_compiler.patch',when='@18.4:18.4.8')
 
     def setup_build_environment(self, env):
         super(Fairroot, self).setup_build_environment(env)
