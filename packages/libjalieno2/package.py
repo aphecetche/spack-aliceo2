@@ -15,6 +15,7 @@ class Libjalieno2(CMakePackage):
     url      = "https://gitlab.cern.ch/jalien/libjalieno2/-/archive/0.1.3/libjalieno2-0.1.3.tar.gz"
     git = "https://gitlab.cern.ch/jalien/libjalieno2.git"
 
+    version("0.1.4", sha256="3959af5cc94ec58dd56f3bf44c748de7a03828043db2b62d2e4b74703d26aa50")
     version('0.1.3', sha256='962d8350ea7da58294034392c04525c89d75eb3fde469d126150b74a76390b8f')
 
     depends_on('openssl')

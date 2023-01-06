@@ -35,6 +35,7 @@ class O2Monitoring(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version("3.15.1", sha256="2e094116270db4e692b920d3368c44ad0006e74fdb59fec9db0c7ef112804a53")
     version("3.13.2", sha256="e247c2434a759b26bc63200f6610f941c5102fe551d258f692fc179edf7e125c")
     version('3.12.2', sha256='87e7fa6439156114709b3c1dd3c445803bb30374a47db4fe628b2555476dacff')
     version('3.11.0', sha256='b93fe1f77672e7bc01e22208a19ef70928dfc10a0ad29e90c1607c4cb1c165f9')

@@ -20,6 +20,7 @@ class O2Aliceo2(CMakePackage):
 
     version('dev', branch='dev')
 
+    version("20230105", sha256="f2a0c0a6377cabc49915d3447613d4950b7fb85ae8c3ca303f128098bc6af0c4")
     version('20220412', sha256='5995aecb166776c9310f2067fecd6e421bf9571e4bd9cbe37b5f96da819e197b')
 
     # wrong usage of typeof in EventVizualisation version('20211206', sha256='9d1f7fda7389ed6933dda72a08ab58cfe0a18469663b4182ccd30973d04310da')
@@ -80,7 +81,8 @@ class O2Aliceo2(CMakePackage):
     depends_on('fastjet',when='+analysis')
     depends_on('fjcontrib',when='+analysis')
     depends_on('intel-tbb')
-    depends_on('llvm-openmp')
+    depends_on('o2-itsresponse',when='@20230105:')
+    depends_on('o2-itsresponse',when='@dev')
 
     depends_on('ninja', type='build')
     generator = 'Ninja'

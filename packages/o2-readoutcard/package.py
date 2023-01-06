@@ -18,6 +18,8 @@ class O2Readoutcard(CMakePackage):
     # notify when the package is updated.
     # maintainers = ['github_user1', 'github_user2']
 
+    version("0.40.0", sha256="34265e5544d73f6c0dc92ca86814087af5f92444066f15e6f4a39d0daf213139")
+
     version('0.32.3', sha256='6859cadc431abedd3035deba1298f12fa952bee45b2830555549154577d15115')
     version('0.26.0', sha256='5ffe927559fb345851e5ef99eb644e65f09851f2ec635371cb99137042ddec75')
     version('0.21.1', sha256='cf918d1960d5657ac36e448357b94c5ec9d37a38725a27ecd787bfca494c28ad')

@@ -47,7 +47,7 @@ class Fftw(CMakePackage):
     variant('mpi', default=False, description='Activate MPI support')
 
     depends_on('mpi', when='+mpi')
-    depends_on('llvm-openmp', when='%apple-clang +openmp')
+    #depends_on('llvm-openmp', when='%apple-clang +openmp')%%
 
     provides('fftw-api@3', when='@3:')
 

@@ -13,6 +13,7 @@ class O2Control(Package):
     url = "https://github.com/AliceO2Group/Control/archive/v0.20.3.tar.gz"
     git = "https://github.com/AliceO2Group/Control.git"
 
+    version("0.58.1", sha256="f9efcfd68b933b0e0b50871683010c927feaeb776881ac258b024144e87d0c8a")
     version("0.53.0", sha256="33812f864d7544ab22851c2fac3359247e2d8d37f080a20e5766bce9580eab85")
 
     version('0.50.0', sha256='75fa2dd4cc35639dfe0d421a65025bf8eef630b03c289532f08c0dafa6ef9ae4')

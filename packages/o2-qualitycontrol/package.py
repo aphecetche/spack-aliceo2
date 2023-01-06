@@ -66,4 +66,4 @@ class O2Qualitycontrol(CMakePackage):
             env.unset("MACOSX_DEPLOYMENT_TARGET")
 
     def setup_run_environment(self,env):
-        env.append_path("ROOT_DYN_PATH",self.prefix.lib)
+        env.append_path("ROOT_DYN_PATH", self.prefix.lib)

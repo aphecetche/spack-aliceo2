@@ -36,4 +36,10 @@ class O2Aegis(CMakePackage):
 
     def setup_run_environment(self,env):
         env.set('AEGIS_ROOT',self.prefix)
-        env.append_path('ROOT_INCLUDE_PATH',self.prefix.include)
+        env.append_path('ROOT_INCLUDE_PATH', self.prefix.include)
+        env.append_path('ROOT_DYN_PATH', self.prefix.lib)
+
+    def setup_build_environment(self,env):
+        if "platform=darwin" in self.spec:
+            env.unset('MACOSX_DEPLOYMENT_TARGET')
+
