@@ -19,6 +19,7 @@ class Fairmq(CMakePackage):
 
     version('develop', branch='dev', submodules=True, get_full_repo=True)
 
+    version("1.4.56", sha256="64e81c21ad4ff0ce6a453a475cf95c7609df5f199372fe7bf21be47683586083")
     version('1.4.55', sha256='c601ffdaa107e33dfe5925f35757850e087f9f30b4fcbc78fa324d31f149c184')
     version('1.4.53', sha256='483583b39c8afdf71516e138a434d4e695c21a1392ecebd4f42be71c10436bcb')
     version('1.4.52', sha256='84eb4b4426f55e9fc9cabcadabdfd3cdfb26e4ca7d9b8a14a18a7b7e156b8a54')

@@ -17,7 +17,7 @@ class O2Aegis(CMakePackage):
     variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")
     version('1.4', sha256='14238e5eb128dd817013001bcce51470b08818a647477755055d9bc5fbc84947')
 
-    depends_on('root+pythia6+pythia8~vmc')
+    depends_on('root+pythia6+pythia8')
     depends_on('pythia6')
     depends_on('hijing')
     depends_on('vmc')

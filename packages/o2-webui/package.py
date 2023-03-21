@@ -28,22 +28,28 @@ class O2Webui(Package):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url      = "https://github.com/AliceO2Group/WebUi/archive/refs/tags/@aliceo2/web-ui@1.21.0.tar.gz"
 
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers = ['github_user1', 'github_user2']
+    url = "https://github.com/AliceO2Group/WebUi/archive/refs/tags/@aliceo2/web-ui@2.1.0.tar.gz"
+    git = "https://github.com/AliceO2Group/WebUI.git"
 
-    version('2', sha256='ebdcc4a66e7e360908075db74d106c6e700fe5345fa66b4408e57a1ec44e1d82')
+    version("master",branch="master")
+    version("2", sha256="f0181ec4788a02f5cfcd46d1c9821d851deb1c641e03b38fa1fe0836c4df43e5")
 
     # FIXME: Add dependencies if required.
     #depends_on('node-js')
+    depends_on("zlib",type=("build"))
+    depends_on("harfbuzz",type=("build"))
+    depends_on("gobject-introspection",type=("build"))
+    depends_on("pango",type=("build"))
     depends_on("cairo",type=("build"))
     depends_on("pixman",type=("build"))
     depends_on("pkgconfig",type=("build"))
+    depends_on("libpng",type=("build"))
+    depends_on("python",type=("build"))
 
     def install(self, spec, prefix):
         # FIXME: Unknown build system
+        with working_dir("QualityControl"):
+            npm = which("npm")
+            npm('install')
         npm('install')
-        # make()
-        # make('install')

@@ -54,7 +54,7 @@ class O2Aliceo2(CMakePackage):
     depends_on('cppgsl@4: cxxstd=17',when='cxxstd=17 @20220411:')
 
     depends_on('boost +container +thread +system +timer +program_options +random +filesystem +chrono +exception +regex +serialization +log +test +date_time +iostreams')
-    depends_on('fairroot', when='+sim')
+    depends_on('fairroot+sim', when='+sim')
     depends_on('fairroot~sim', when='~sim')
     depends_on('libuv')
     depends_on('o2-common')
@@ -69,8 +69,8 @@ class O2Aliceo2(CMakePackage):
     # depends_on('root+xrootd+http+dataframe+arrow~vmc', when='~sim')
     #depends_on('root+xrootd+http+dataframe+arrow+pythia6+pythia8~vmc', when='+sim')
     # temporary while getting root changes to upstream
-    depends_on('root+xrootd+http~vmc', when='~sim')
-    depends_on('root+xrootd+http+pythia6+pythia8~vmc', when='+sim')
+    depends_on('root+xrootd+http', when='~sim')
+    depends_on('root+xrootd+http+pythia6+pythia8', when='+sim')
     depends_on('vc')
     depends_on('vmc')
     depends_on('libjalieno2')
@@ -81,9 +81,10 @@ class O2Aliceo2(CMakePackage):
     depends_on('fastjet',when='+analysis')
     depends_on('fjcontrib',when='+analysis')
     depends_on('intel-tbb')
-    depends_on('o2-itsresponse',when='@20230105:')
-    depends_on('o2-itsresponse',when='@dev')
 
+    # depends_on('o2-itsresponse',when='@20230105:',type='build')
+    # depends_on('o2-itsresponse',when='@dev',type='build')
+    depends_on('o2-itsresponse',type='build')
     depends_on('ninja', type='build')
     generator = 'Ninja'
 
@@ -104,7 +105,8 @@ class O2Aliceo2(CMakePackage):
         args.append(self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"))
         args.append(self.define_from_variant("ENABLE_UPGRADES", "upgrades"))
         args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
-        args.append(self.define("BUILD_TESTING",self.run_tests))
+        #args.append(self.define("BUILD_TESTING",self.run_tests))
+        args.append(self.define("BUILD_TESTING",True))
         if sys.platform == 'darwin':
             args.append(self.define("CMAKE_CXX_EXTENSIONS",False))
         if self.spec.satisfies('+asan'):

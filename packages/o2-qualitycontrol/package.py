@@ -39,6 +39,7 @@ class O2Qualitycontrol(CMakePackage):
 
     depends_on('o2-aliceo2+sim',when='+sim')
     depends_on('o2-aliceo2', when='~sim')
+    depends_on("o2-bookkeeping")
 
     depends_on('o2-control+occ')
 

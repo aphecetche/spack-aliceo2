@@ -21,7 +21,6 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
-import os
 
 class O2Itsresponse(Package):
     """FIXME: Put a proper description of your package here."""
@@ -42,14 +41,8 @@ class O2Itsresponse(Package):
     def setup_run_environment(self,env):
         env.set("ITSRESPONSE_ROOT",prefix)
 
-    def setup_build_environment(self,env):
+    def setup_dependent_build_environment(self,env, dependent_spec):
         env.set("ITSRESPONSE_ROOT",prefix)
 
     def install(self, spec, prefix):
-        # FIXME: Unknown build system
-        dest = os.path.join(self.prefix,"response")
-        os.mkdir(dest)
-        path = os.walk(".")
-        for root, directories, files in path:
-                for file in files:
-                    copy(os.path.join(root,file),dest)
+        install_tree(".",join_path(self.prefix,"response"))

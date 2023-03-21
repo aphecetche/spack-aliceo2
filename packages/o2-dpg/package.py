@@ -45,6 +45,7 @@ class O2Dpg(Package):
     depends_on("o2-qualitycontrol")
     depends_on("jq")
     depends_on('py-matplotlib',when='+python')
+    depends_on('py-psutil',when='+python')
 
     def install(self, spec, prefix):
         copytree('.',prefix,dirs_exist_ok=True)
