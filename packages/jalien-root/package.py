@@ -15,6 +15,7 @@ class JalienRoot(CMakePackage):
     homepage = "https://gitlab.cern.ch/jalien/jalien-root"
     url      = "https://gitlab.cern.ch/jalien/jalien-root/-/archive/0.6.x/jalien-root-0.6.x.tar.gz"
 
+    version("0.7.1", sha256="9c046d90d7f4d13dd83e8e1ac03f89e0c92e5c742e9e158027a69d6708abaf73")
     version("0.6.9", sha256="6080525acc64352485e2eb39f590d1a16a8a700679dc48ed63b22940ccd087a2")
     version("0.6.8", sha256="38001924536a9fc95ae8bb8bc8d5b839ad594bec0d32107ed32d330480d69062")
     version('0.6.6', sha256='3e40fef387ff9cf95cbcc6fe40aa8161f129c5e45a39fc5ebb9ecade29ceaf0d')

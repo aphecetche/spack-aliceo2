@@ -68,3 +68,4 @@ class O2Qualitycontrol(CMakePackage):
 
     def setup_run_environment(self,env):
         env.append_path("ROOT_DYN_PATH", self.prefix.lib)
+        env.set("QUALITYCONTROL_ROOT", self.prefix)

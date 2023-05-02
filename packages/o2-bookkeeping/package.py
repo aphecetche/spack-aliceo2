@@ -9,13 +9,11 @@ from spack.package import *
 class O2Bookkeeping(CMakePackage):
 
     homepage = "https://github.com/AliceO2Group/Bookkeeping.git"
-    url = "https://github.com/AliceO2Group/Bookkeeping/releases/download/%40aliceo2%2Fbookkeeping%400.52.0/aliceo2-bookkeeping-0.52.0.tgz"
+    git = "https://github.com/AliceO2Group/Bookkeeping.git"
 
-    version("0.52.0", sha256="94ec9e0e7c910ca5af846231181dbbb207cae21e95540a771ab5b85c1774e638")
+    version("0.52.0", tag="@aliceo2/bookkeeping@0.52.0")
 
     variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")
-
-    root_cmakelists_dir = 'src'
 
     depends_on("protobuf")
     depends_on("grpc")

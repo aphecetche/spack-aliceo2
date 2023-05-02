@@ -3,47 +3,28 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install o2-evtgen
-#
-# You can edit this file again by typing:
-#
-#     spack edit o2-evtgen
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack import *
 
 
-class O2Evtgen(AutotoolsPackage):
+class O2Evtgen(CMakePackage):
     """FIXME: Put a proper description of your package here."""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url      = "https://github.com/PMunkes/evtgen/archive/refs/tags/R01-06-00.tar.gz"
+    homepage = "https://github.com/alisw/EVTGEN"
+    url ="https://github.com/alisw/EVTGEN/archive/refs/tags/R02-02-00.tar.gz"
 
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers = ['github_user1', 'github_user2']
+    version("02-02-00", sha256="a79fe1ad794d11b0c2a1e74522556f80f3f4f2747d37b17d3a2ff01f12e103aa")
 
-    version('01-06-00', sha256='96f0c8c482272e794273fcf56d5505a09be410c3981d5383b2129c691b13632d')
-
-    # FIXME: Add dependencies if required.
     depends_on('hepmc')
     depends_on('pythia8')
     depends_on('tauola +lhapdf')
     depends_on('photos')
 
-    def configure_args(self):
-        # FIXME: Add arguments other than --prefix
-        # FIXME: If not needed delete this function
+    def cmake_args(self):
         args = []
         return args
+
+    def setup_run_environment(self,env):
+      env.set('EVTGEN_ROOT',self.prefix)
+      env.append_path('ROOT_INCLUDE_PATH',self.prefix.include)
+      env.append_path('ROOT_DYN_PATH',self.prefix.lib)
+
