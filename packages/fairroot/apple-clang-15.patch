@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b5d0b1c00..3b10e00be 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,6 +51,8 @@ set(PROJECT_INSTALL_BINDIR ${CMAKE_INSTALL_BINDIR})
+ set(PROJECT_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+ set(PROJECT_INSTALL_DATADIR ${CMAKE_INSTALL_DATADIR}/fairbase) # TODO: change 'fairbase' to ${PROJECT_NAME_LOWER}
+ 
++add_compile_definitions(_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
++
+ # https://cmake.org/Wiki/CMake_RPATH_handling
+ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}" isSystemDir)
+
