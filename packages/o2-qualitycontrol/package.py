@@ -5,17 +5,17 @@
 
 from spack import *
 
+
 class O2Qualitycontrol(CMakePackage):
     """Data Quality Control (QC) software for the ALICE O2 system"""
 
     homepage = "https://github.com/AliceO2Group/QualityControl"
-    url="https://github.com/AliceO2Group/QualityControl/archive/refs/tags/v1.28.0.tar.gz"
-    git      = "https://github.com/AliceO2Group/QualityControl.git"
+    url = "https://github.com/AliceO2Group/QualityControl/archive/refs/tags/v1.28.0.tar.gz"
+    git = "https://github.com/AliceO2Group/QualityControl.git"
 
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    generator('ninja')
 
-    version('master',branch='master')
+    version('master', branch='master')
 
     version('1.45.1', sha256='55644e0d86d1399ffc4ee73f69d275321a2cc214adc2155af0d40aa56361b4b3')
     version('1.35.1', sha256='5579241ada6f4915eb0270ca9efa374fd2769cdd1190678d11402ae36efdd89e')
@@ -31,13 +31,14 @@ class O2Qualitycontrol(CMakePackage):
     version('1.17.0', sha256='0806b1c1445bf9bc418d91bb949cd005009213a88a2145311349d2250230b515')
 
     version('1.11.0', sha256='b764f8ed16707493003b66845a90c9c79d49bb3d6b2d57f38760fbf324ab6308')
-   
-    variant('sim',default=False,description='Enable sim version of AliceO2')
-    variant('tsan',default=False,description='Build with ThreadSanitizer')
-    variant('asan',default=False,description='Build with AddressSanitizer')
-    variant('usan',default=False,description='Build with UndefinedBehaviorSanitizer')
 
-    depends_on('o2-aliceo2+sim',when='+sim')
+    variant('sim', default=False, description='Enable sim version of AliceO2')
+    variant('tsan', default=False, description='Build with ThreadSanitizer')
+    variant('asan', default=False, description='Build with AddressSanitizer')
+    variant('usan', default=False,
+            description='Build with UndefinedBehaviorSanitizer')
+
+    depends_on('o2-aliceo2+sim', when='+sim')
     depends_on('o2-aliceo2', when='~sim')
     depends_on("o2-bookkeeping")
 
@@ -45,27 +46,37 @@ class O2Qualitycontrol(CMakePackage):
 
     def cmake_args(self):
         args = []
-        args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS",True))
+        args.append(self.define("CMAKE_EXPORT_COMPILE_COMMANDS", True))
         if self.spec.satisfies('+asan'):
-            args.append(self.define("CMAKE_C_FLAGS","-g -fno-omit-frame-pointer -fsanitize=address"))
-            args.append(self.define("CMAKE_CXX_FLAGS","-g -fno-omit-frame-pointer -fsanitize=address"))
-            args.append(self.define("CMAKE_EXE_LINKER_FLAGS","-fsanitize=address"))
-            args.append(self.define("CMAKE_SHARED_LINKER_FLAGS","-fsanitize=address"))
-            args.append(self.define("CMAKE_MODULE_LINKER_FLAGS","-fsanitize=address"))
+            args.append(self.define("CMAKE_C_FLAGS",
+                        "-g -fno-omit-frame-pointer -fsanitize=address"))
+            args.append(self.define("CMAKE_CXX_FLAGS",
+                        "-g -fno-omit-frame-pointer -fsanitize=address"))
+            args.append(self.define(
+                "CMAKE_EXE_LINKER_FLAGS", "-fsanitize=address"))
+            args.append(self.define(
+                "CMAKE_SHARED_LINKER_FLAGS", "-fsanitize=address"))
+            args.append(self.define(
+                "CMAKE_MODULE_LINKER_FLAGS", "-fsanitize=address"))
         if self.spec.satisfies('+tsan'):
-            args.append(self.define("CMAKE_CXX_FLAGS","-fsanitize=thread"))
+            args.append(self.define("CMAKE_CXX_FLAGS", "-fsanitize=thread"))
         if self.spec.satisfies('+usan'):
-            args.append(self.define("CMAKE_C_FLAGS","-g -fno-omit-frame-pointer -fsanitize=undefined"))
-            args.append(self.define("CMAKE_CXX_FLAGS","-g -fno-omit-frame-pointer -fsanitize=undefined"))
-            args.append(self.define("CMAKE_EXE_LINKER_FLAGS","-fsanitize=undefined"))
-            args.append(self.define("CMAKE_SHARED_LINKER_FLAGS","-fsanitize=undefined"))
-            args.append(self.define("CMAKE_MODULE_LINKER_FLAGS","-fsanitize=undefined"))
+            args.append(self.define("CMAKE_C_FLAGS",
+                        "-g -fno-omit-frame-pointer -fsanitize=undefined"))
+            args.append(self.define("CMAKE_CXX_FLAGS",
+                        "-g -fno-omit-frame-pointer -fsanitize=undefined"))
+            args.append(self.define(
+                "CMAKE_EXE_LINKER_FLAGS", "-fsanitize=undefined"))
+            args.append(self.define(
+                "CMAKE_SHARED_LINKER_FLAGS", "-fsanitize=undefined"))
+            args.append(self.define(
+                "CMAKE_MODULE_LINKER_FLAGS", "-fsanitize=undefined"))
         return args
 
-    def setup_build_environment(self,env):
+    def setup_build_environment(self, env):
         if "platform=darwin" in self.spec:
             env.unset("MACOSX_DEPLOYMENT_TARGET")
 
-    def setup_run_environment(self,env):
+    def setup_run_environment(self, env):
         env.append_path("ROOT_DYN_PATH", self.prefix.lib)
         env.set("QUALITYCONTROL_ROOT", self.prefix)

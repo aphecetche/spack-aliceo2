@@ -15,7 +15,8 @@ class Fairlogger(CMakePackage):
     url = "https://github.com/FairRootGroup/FairLogger/archive/v1.2.0.tar.gz"
     git = 'https://github.com/FairRootGroup/FairLogger.git'
     maintainers = ['dennisklein', 'ChristianTackeGSI']
-    # generator = 'Ninja'
+
+    generator('ninja')
 
     version('develop', branch='dev', get_full_repo=True)
 
@@ -23,21 +24,36 @@ class Fairlogger(CMakePackage):
     version('1.10.4', sha256='2fa321893f2c8c599cca160db243299ce1e941fbfb3f935b1139caa943bc0dba')
     version('1.10.3', sha256='50c7bc09b783cf0f9aa5989c98c72086b39aba024093fd652b31eef359f7b429')
     version('1.10.1', sha256='3c9262c7ff3b3ffd3c66523a957522b9376201495b59f7e6afffe4b730f18ad3')
-    version('1.9.3', sha256='0c02076ed708372d5ae7bdebcefc8e45a8cbfa480eea781308336d60a2781f3a')
-    version('1.9.2', sha256='41fa83ef276d21713eadf8a55d166d268c81f2f95f7b6f2e8a5005c6d6d3af27')
-    version('1.9.1', sha256='d60544c00fe940d52a7448feb29f7030fc2e921811953ccf82a4e890ddd11792')
-    version('1.9.0', sha256='13bcaa0d4129f8d4e69a0a2ece8e5b7073760082c8aa028e3fc0c11106503095')
-    version('1.8.0', sha256='3f0a38dba1411b542d998e02badcc099c057b33a402954fc5c2ab74947a0c42c')
-    version('1.7.0', sha256='ef467f0a70afc0549442323d70b165fa0b0b4b4e6f17834573ca15e8e0b007e4')
-    version('1.6.2', sha256='5c6ef0c0029eb451fee71756cb96e6c5011040a9813e8889667b6f3b6b04ed03')
-    version('1.6.1', sha256='3894580f4c398d724ba408e410e50f70c9f452e8cfaf7c3ff8118c08df28eaa8')
-    version('1.6.0', sha256='721e8cadfceb2f63014c2a727e098babc6deba653baab8866445a772385d0f5b')
-    version('1.5.0', sha256='8e74e0b1e50ee86f4fca87a44c6b393740b32099ac3880046bf252c31c58dd42')
-    version('1.4.0', sha256='75457e86984cc03ce87d6ad37adc5aab1910cabd39a9bbe5fb21ce2475a91138')
-    version('1.3.0', sha256='5cedea2773f7091d69aae9fd8f724e6e47929ee3784acdd295945a848eb36b93')
-    version('1.2.0', sha256='bc0e049cf84ceb308132d8679e7f22fcdca5561dda314d5233d0d5fe2b0f8c62')
-    version('1.1.0', sha256='e185e5bd07df648224f85e765d18579fae0de54adaab9a194335e3ad6d3d29f7')
-    version('1.0.6', sha256='2fc266a6e494adda40837be406aef8d9838f385ffd64fbfafb1164833906b4e0')
+    version(
+        '1.9.3', sha256='0c02076ed708372d5ae7bdebcefc8e45a8cbfa480eea781308336d60a2781f3a')
+    version(
+        '1.9.2', sha256='41fa83ef276d21713eadf8a55d166d268c81f2f95f7b6f2e8a5005c6d6d3af27')
+    version(
+        '1.9.1', sha256='d60544c00fe940d52a7448feb29f7030fc2e921811953ccf82a4e890ddd11792')
+    version(
+        '1.9.0', sha256='13bcaa0d4129f8d4e69a0a2ece8e5b7073760082c8aa028e3fc0c11106503095')
+    version(
+        '1.8.0', sha256='3f0a38dba1411b542d998e02badcc099c057b33a402954fc5c2ab74947a0c42c')
+    version(
+        '1.7.0', sha256='ef467f0a70afc0549442323d70b165fa0b0b4b4e6f17834573ca15e8e0b007e4')
+    version(
+        '1.6.2', sha256='5c6ef0c0029eb451fee71756cb96e6c5011040a9813e8889667b6f3b6b04ed03')
+    version(
+        '1.6.1', sha256='3894580f4c398d724ba408e410e50f70c9f452e8cfaf7c3ff8118c08df28eaa8')
+    version(
+        '1.6.0', sha256='721e8cadfceb2f63014c2a727e098babc6deba653baab8866445a772385d0f5b')
+    version(
+        '1.5.0', sha256='8e74e0b1e50ee86f4fca87a44c6b393740b32099ac3880046bf252c31c58dd42')
+    version(
+        '1.4.0', sha256='75457e86984cc03ce87d6ad37adc5aab1910cabd39a9bbe5fb21ce2475a91138')
+    version(
+        '1.3.0', sha256='5cedea2773f7091d69aae9fd8f724e6e47929ee3784acdd295945a848eb36b93')
+    version(
+        '1.2.0', sha256='bc0e049cf84ceb308132d8679e7f22fcdca5561dda314d5233d0d5fe2b0f8c62')
+    version(
+        '1.1.0', sha256='e185e5bd07df648224f85e765d18579fae0de54adaab9a194335e3ad6d3d29f7')
+    version(
+        '1.0.6', sha256='2fc266a6e494adda40837be406aef8d9838f385ffd64fbfafb1164833906b4e0')
 
     variant('build_type', default='RelWithDebInfo',
             values=('Debug', 'Release', 'RelWithDebInfo', 'AdressSan'),

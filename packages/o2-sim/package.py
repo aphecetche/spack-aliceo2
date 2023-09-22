@@ -14,7 +14,11 @@ class O2Sim(BundlePackage):
 
     version('latest')
 
-    depends_on('o2-physics')
-    depends_on('o2-dpg')
     depends_on('o2-aegis')
+    depends_on('o2-dpg')
     depends_on('o2-evtgen')
+    depends_on('o2-physics')
+    depends_on('o2-qualitycontrol')
+    depends_on('py-pandas')
+    depends_on('py-psutil')
+

@@ -41,10 +41,7 @@ class O2ControlOccplugin(CMakePackage):
     depends_on('grpc')
     depends_on('rapidjson')
 
-    depends_on('cmake', type='build')
-    depends_on('ninja', type='build')
-
-    generator = 'Ninja'
+    generator('ninja')
 
     def cmake_args(self):
         # FIXME: Add arguments other than

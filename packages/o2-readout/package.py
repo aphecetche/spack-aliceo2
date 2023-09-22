@@ -19,8 +19,10 @@ class O2Readout(CMakePackage):
     # maintainers = ['github_user1', 'github_user2']
 
     version("2.15.2", sha256="84068ef0c20b75d7438f4bbcd5e4cc4af59d553468126b6f98a9bffdcd7d88a8")
-    version('2.7.0', sha256='47207c5e7c82d6ecf4de5f8585f6849791eb385c2f1c280045447785ec6b9872')
-    version('2.5.2', sha256='91a99faf4df366a8af77dd2a9f12fef00b14aef6145f1312d4cd58b4fd6091e9')
+    version(
+        '2.7.0', sha256='47207c5e7c82d6ecf4de5f8585f6849791eb385c2f1c280045447785ec6b9872')
+    version(
+        '2.5.2', sha256='91a99faf4df366a8af77dd2a9f12fef00b14aef6145f1312d4cd58b4fd6091e9')
     version('1.5.6',
             sha256='7934ff4965ef44070d4b22f87a42bb0728bfb60a8298c13141d80b8a7a5c9766')
     version('1.5.5',
@@ -53,9 +55,7 @@ class O2Readout(CMakePackage):
     depends_on('lz4')
     depends_on('o2-control-occplugin')
 
-    depends_on('cmake', type='build')
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    generator('ninja')
 
     def cmake_args(self):
         # FIXME: Add arguments other than

@@ -80,13 +80,13 @@ class O2Aliceo2(CMakePackage):
     depends_on('o2-mcsteplogger',when='+sim')
     depends_on('fastjet',when='+analysis')
     depends_on('fjcontrib',when='+analysis')
-    depends_on('intel-tbb')
+    depends_on('tbb')
+    depends_on('abseil-cpp')
 
     # depends_on('o2-itsresponse',when='@20230105:',type='build')
     # depends_on('o2-itsresponse',when='@dev',type='build')
     depends_on('o2-itsresponse',type='build')
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    generator ('ninja')
 
     # if sys.platform == 'darwin' and platform.machine() == 'arm64':
     #     patch('no_cpuid_on_apple_silicon.patch')

@@ -7,6 +7,7 @@ from spack import *
 import sys
 import platform
 
+
 class Ppconsul(CMakePackage):
     """FIXME: Put a proper description of your package here."""
 
@@ -30,16 +31,13 @@ class Ppconsul(CMakePackage):
     depends_on('boost')
     depends_on('curl')
 
-    depends_on('cmake', type='build')
-    depends_on('ninja', type='build')
-
-    generator = 'Ninja'
+    generator('ninja')
 
     def cmake_args(self):
-        args = [ self.define("BUILD_SHARED_LIBS",True) ]
-        if sys.platform == 'darwin' and platform.machine()=='arm64':
-            # disable tests on Apple M1 as the ppbconsul internal Catch 
-            # framework does not compile (and did not have time to investigate 
+        args = [self.define("BUILD_SHARED_LIBS", True)]
+        if sys.platform == 'darwin' and platform.machine() == 'arm64':
+            # disable tests on Apple M1 as the ppbconsul internal Catch
+            # framework does not compile (and did not have time to investigate
             # why)
-            args.append(self.define("BUILD_TESTS",False))
+            args.append(self.define("BUILD_TESTS", False))
         return args

@@ -11,6 +11,7 @@ class O2Bookkeeping(CMakePackage):
     homepage = "https://github.com/AliceO2Group/Bookkeeping.git"
     git = "https://github.com/AliceO2Group/Bookkeeping.git"
 
+    version("0.59.0", tag="@aliceo2/bookkeeping@0.59.0")
     version("0.52.0", tag="@aliceo2/bookkeeping@0.52.0")
 
     variant('cxxstd',default='17',values=('17','20'),multi=False,description="Force a specific C++ standard")

@@ -41,8 +41,8 @@ class Fairroot(CMakePackage):
     variant('examples', default=False,
             description='Install examples')
 
-    depends_on('ninja', type='build')
-    generator = 'Ninja'
+    generator('ninja')
+
     depends_on('cmake@3.13.4:', type='build')
     depends_on('boost@1.68.0: +container +filesystem +serialization')
     depends_on('fairlogger@1.4.0:')
@@ -82,6 +82,9 @@ class Fairroot(CMakePackage):
         env.unset('FAIRSOFT_ROOT')
         if "platform=darwin" in self.spec:
             env.unset("MACOSX_DEPLOYMENT_TARGET")
+            if self.spec.satisfies("%apple-clang@15:"):
+                env.append_flags('CXXFLAGS',
+                '-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION')
 
     def cmake_args(self):
         options = []
